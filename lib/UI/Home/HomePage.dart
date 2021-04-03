@@ -1,16 +1,27 @@
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:i_movie_app/App/Globals.dart';
+import 'package:i_movie_app/App/api.dart';
+
 import 'package:i_movie_app/App/colors.dart';
+import 'package:i_movie_app/Model/GenreMoviesModel.dart';
+import 'package:i_movie_app/Model/GenresModel.dart';
+import 'package:i_movie_app/Model/TopRatedMoviesModel.dart';
+import 'package:i_movie_app/Model/TrendingMoviesModel.dart';
+import 'package:i_movie_app/Model/TrendingPeople.dart' as tp;
+import 'package:i_movie_app/UI/Widgets/MyLoadingWidget.dart';
 import 'package:i_movie_app/UI/Widgets/Responsive.dart';
 import 'package:i_movie_app/UI/Widgets/Utils.dart';
+import 'package:shimmer/shimmer.dart';
 
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
   var _list = [1, 2, 3, 4, 5];
   TabController _tabController;
   final int tabs = 2;
@@ -52,150 +63,73 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               //Trending Movies Image.
-              Container(
-                height: get200Size(context) + get50Size(context),
-                width: getMediaWidth(context),
-                child: Carousel(
-                  dotSize: 6.0,
-                  boxFit: BoxFit.fill,
-                  autoplay: false,
-                  // dotColor: Colors.yellow,
-                  dotIncreasedColor: Colors.yellow,
-                  dotBgColor: Colors.purple.withOpacity(0.0),
-                  images: [
-                    for (var item in _list)
-                      GestureDetector(
-                        onTap: () {},
-                        child: MoviePosterImage(item),
-                      )
-                  ],
-                ),
-              ),
+              TrendingMovies(),
               //TabBars
               mHeight(get30Size(context)),
-              TabBar(
-                unselectedLabelColor: Colors.grey,
-                labelColor: primeryColor,
-                indicatorColor: primeryColor,
-                tabs: List.generate(
-                  tabs,
-                  (index) {
-                    return Tab(
-                      child: Text("Tab${index + 1}"),
+              FutureBuilder<GenresModel>(
+                future: ApiClient.apiClient.getGenres(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return TabsAndMovies(
+                      data: snapshot.data,
                     );
-                  },
-                ).toList(),
-                controller: _tabController,
-                indicatorSize: TabBarIndicatorSize.tab,
+                  } else {
+                    // return ListView(
+                    //   scrollDirection: Axis.horizontal,
+                    //   children: [
+                    //     Shimmer.fromColors(
+                    //       baseColor: Colors.grey[400].withOpacity(0.3),
+                    //       highlightColor: Colors.grey[200].withOpacity(0.3),
+                    //       loop: 4,
+                    //       child: Container(
+                    //         height: get30Size(context),
+                    //         width: get40Size(context),
+                    //         color: Colors.red,
+                    //         margin: const EdgeInsets.all(4),
+                    //       ),
+                    //     ),
+                    //     //
+                    //     Shimmer.fromColors(
+                    //       baseColor: Colors.grey[400].withOpacity(0.3),
+                    //       highlightColor: Colors.grey[200].withOpacity(0.3),
+                    //       loop: 4,
+                    //       child: Container(
+                    //         height: get30Size(context),
+                    //         width: get40Size(context),
+                    //         color: Colors.red,
+                    //         margin: const EdgeInsets.all(4),
+                    //       ),
+                    //     ),
+                    //   ],
+                    // );
+                    return MyLoadingWidget();
+                  }
+                },
               ),
-              Container(
-                height: get200Size(context) + get100Size(context),
-                child: TabBarView(
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        // Movies
-                        Container(
-                          height: get200Size(context) + get100Size(context),
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemBuilder: (context, index) {
-                              return Container(
-                                // margin: const EdgeInsets.all(8),
-                                height: get100Size(context),
-                                // color: Colors.red,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Flexible(
-                                      flex: 2,
-                                      child: Container(
-                                        padding: const EdgeInsets.all(8.0),
-                                        height: get200Size(context),
-                                        // width: ,
-                                        child: Image.network(
-                                          "https://picsum.photos/150/200?random=$index",
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    ),
-                                    Flexible(
-                                      flex: 1,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          "Movie Name",
-                                          maxLines: 3,
-                                        ),
-                                      ),
-                                    ),
-                                    Flexible(
-                                      flex: 0,
-                                      child: Container(
-                                        padding: const EdgeInsets.all(8.0),
-                                        // width: get120Size(context),
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          children: [
-                                            Text("1"),
-                                            Container(
-                                              child: RatingBar.builder(
-                                                initialRating: 3,
-                                                itemSize: 15,
-                                                minRating: 1,
-                                                direction: Axis.horizontal,
-                                                allowHalfRating: true,
-                                                itemCount: 5,
-                                                itemPadding:
-                                                    EdgeInsets.symmetric(horizontal: 0.0),
-                                                itemBuilder: (context, _) => Icon(
-                                                  Icons.star,
-                                                  color: Colors.amber,
-                                                ),
-                                                onRatingUpdate: (rating) {
-                                                  print(rating);
-                                                },
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                    // ----SECOND TAB------ //
-                    // ----SECOND TAB------ //
-                    // ----SECOND TAB------ //
-                    Text('Person'),
-                  ],
-                  controller: _tabController,
-                ),
-              ),
-
-              // --- Authors --- //
+              // --- GetTrendinPersons --- //
               Padding(
                 padding: const EdgeInsets.all(8),
                 child: Text("Trending Persons This Week"),
               ),
               Container(
                 height: get160Size(context),
-                child: ListView(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    trendingMovie(),
-                    trendingMovie(),
-                  ],
+                child: FutureBuilder<tp.TreindingPeopleModel>(
+                  future: ApiClient.apiClient.getTrendinPersons(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return ListView.builder(
+                        itemCount: snapshot.data.results.length,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) {
+                          return TrendingPeople(
+                            data: snapshot.data.results[index],
+                          );
+                        },
+                      );
+                    } else {
+                      return MyLoadingWidget();
+                    }
+                  },
                 ),
               ),
               mHeight(get30Size(context)),
@@ -205,14 +139,44 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                 child: Text("Trending Movies This Week"),
               ),
               Container(
-                height: get160Size(context),
-                child: ListView(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    trendingMovie(),
-                    trendingMovie(),
-                  ],
+                // height: get160Size(context),
+                child: FutureBuilder<TrendingMoviesModel>(
+                  future: ApiClient.apiClient.getTrendingMovies(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return GridView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          childAspectRatio: 0.6,
+                        ),
+                        itemCount: snapshot.data.results.length,
+                        itemBuilder: (context, index) {
+                          return Container(
+                            margin: const EdgeInsets.all(4),
+                            child: Container(
+                              height: get200Size(context) + get50Size(context),
+                              width: getMediaWidth(context),
+                              decoration: BoxDecoration(
+                                color: Colors.transparent,
+                                image: DecorationImage(
+                                  fit: BoxFit.cover,
+                                  image: NetworkImage(
+                                    imgBaseURL +
+                                        snapshot.data.results[index].posterPath,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    } else {
+                      return MyLoadingWidget();
+                    }
+                  },
                 ),
               ),
             ],
@@ -221,8 +185,18 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       ),
     );
   }
+}
 
-  Widget trendingMovie() {
+class TrendingPeople extends StatelessWidget {
+  final tp.Result data;
+
+  const TrendingPeople({
+    Key key,
+    @required this.data,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       child: Column(
         children: [
@@ -236,21 +210,21 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             height: get80Size(context),
             clipBehavior: Clip.antiAlias,
             child: Image.network(
-              "https://picsum.photos/800/500?random=1",
+              "$imgBaseURL${data.profilePath}",
               fit: BoxFit.cover,
             ),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              "ActorName",
+              "${data.name}",
               style: getTextTheme(context).button,
             ),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              "Trending for Acting",
+              "Trending for ${data.knownForDepartment ?? ""}",
               style: getTextTheme(context).caption,
             ),
           ),
@@ -258,8 +232,18 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       ),
     );
   }
+}
 
-  Widget MoviePosterImage(item) {
+class MoviePosterImage extends StatelessWidget {
+  final item;
+
+  const MoviePosterImage({
+    Key key,
+    @required this.item,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       height: get200Size(context) + get50Size(context),
       width: getMediaWidth(context),
@@ -269,11 +253,6 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           GredientImage(
             imageName: item.toString(),
           ),
-          // Image.network(
-          //   "https://picsum.photos/800/500?random=$item",
-          //   fit: BoxFit.fitWidth,
-          //   width: getMediaWidth(context),
-          // ),
           Image.asset(
             getImageAsset("ic_play2.png"),
             height: 50,
@@ -300,9 +279,9 @@ class GredientImage extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.transparent,
             image: DecorationImage(
-              fit: BoxFit.fill,
+              fit: BoxFit.cover,
               image: NetworkImage(
-                "https://picsum.photos/800/500?random=$imageName",
+                "$imageName",
               ),
             ),
           ),
@@ -315,12 +294,231 @@ class GredientImage extends StatelessWidget {
               end: FractionalOffset.bottomCenter,
               colors: [
                 Colors.transparent,
-                Color(0xFF2A1C40),
+                // Color(0xFF2A1C40),
+                primaryColor,
               ],
               stops: [0.0, 1.0],
             ),
           ),
         )
+      ],
+    );
+  }
+}
+
+class TrendingMovies extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: get200Size(context) + get50Size(context),
+      width: getMediaWidth(context),
+      child: FutureBuilder<TopRatedMviesModel>(
+        future: ApiClient.apiClient.getTopRatedMovies(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Carousel(
+              dotSize: 6.0,
+              boxFit: BoxFit.fill,
+              autoplay: false,
+              dotIncreasedColor: Colors.yellow,
+              dotBgColor: Colors.purple.withOpacity(0.0),
+              images: List.generate(
+                10,
+                (index) {
+                  return GestureDetector(
+                    onTap: () async {},
+                    child: MoviePosterImage(
+                      item:
+                          imgBaseURL + snapshot.data.results[index].posterPath,
+                    ),
+                  );
+                },
+              ).toList(),
+            );
+          } else {
+            return Shimmer.fromColors(
+              baseColor: Colors.grey[400].withOpacity(0.3),
+              highlightColor: Colors.grey[200].withOpacity(0.3),
+              loop: 4,
+              child: Container(
+                height: get200Size(context) + get50Size(context),
+                width: getMediaWidth(context),
+                color: Colors.red,
+                margin: const EdgeInsets.all(4),
+              ),
+            );
+          }
+        },
+      ),
+    );
+  }
+}
+
+class TabsAndMovies extends StatefulWidget {
+  final GenresModel data;
+
+  const TabsAndMovies({
+    Key key,
+    @required this.data,
+  }) : super(key: key);
+  @override
+  _TabsAndMoviesState createState() => _TabsAndMoviesState();
+}
+
+class _TabsAndMoviesState extends State<TabsAndMovies>
+    with SingleTickerProviderStateMixin {
+  TabController _tabController;
+  int movies = 0;
+
+  @override
+  void initState() {
+    _tabController = new TabController(
+      length: widget?.data?.genres?.length,
+      vsync: this,
+    );
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        TabBar(
+          unselectedLabelColor: Colors.grey,
+          labelColor: secondaryColor,
+          indicatorColor: secondaryColor,
+          tabs: List.generate(
+            widget?.data?.genres?.length,
+            (index) {
+              return Tab(
+                child: Text("${widget?.data?.genres[index]?.name ?? ""}"),
+              );
+            },
+          ).toList(),
+          controller: _tabController,
+          isScrollable: true,
+          indicatorSize: TabBarIndicatorSize.tab,
+        ),
+        // ------- //
+        Container(
+          height: get200Size(context) + get100Size(context),
+          child: TabBarView(
+            children: List.generate(
+              widget.data.genres.length,
+              (index) {
+                return FutureBuilder<GenreMoviesModel>(
+                    future: ApiClient.apiClient
+                        .getGenreMovies(widget.data.genres[index].id),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            // Movies
+                            Container(
+                              height: get200Size(context) + get100Size(context),
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: snapshot.data.results.length,
+                                itemBuilder: (context, index) {
+                                  return Container(
+                                    // margin: const EdgeInsets.all(8),
+                                    height: get100Size(context),
+                                    // color: Colors.red,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Flexible(
+                                          flex: 2,
+                                          child: Container(
+                                            padding: const EdgeInsets.all(8.0),
+                                            height: get200Size(context),
+                                            // width: ,
+                                            child: Image.network(
+                                              // "https://picsum.photos/150/200?random=$index",
+                                              "$imgBaseURL${snapshot.data.results[index].posterPath}",
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                                        Flexible(
+                                          flex: 1,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: SizedBox(
+                                              width: get100Size(context) +
+                                                  get50Size(context),
+                                              child: Text(
+                                                "${snapshot.data.results[index].title}",
+                                                maxLines: 3,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Flexible(
+                                          flex: 0,
+                                          child: Container(
+                                            padding: const EdgeInsets.all(8.0),
+                                            // width: get120Size(context),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                    "${snapshot.data.results[index].voteAverage}"),
+                                                Container(
+                                                  child: RatingBar.builder(
+                                                    initialRating: snapshot
+                                                            .data
+                                                            .results[index]
+                                                            .voteAverage /
+                                                        2,
+                                                    itemSize: 15,
+                                                    minRating: 0,
+                                                    maxRating: 5,
+                                                    ignoreGestures: true,
+                                                    direction: Axis.horizontal,
+                                                    allowHalfRating: true,
+                                                    itemCount: 5,
+                                                    itemPadding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 0.0),
+                                                    itemBuilder: (context, _) =>
+                                                        Icon(
+                                                      Icons.star,
+                                                      color: Colors.amber,
+                                                    ),
+                                                    onRatingUpdate: (rating) {
+                                                      print(rating);
+                                                    },
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        );
+                      } else {
+                        return MyLoadingWidget();
+                      }
+                    });
+              },
+            ).toList(),
+            controller: _tabController,
+          ),
+        ),
       ],
     );
   }

@@ -186,7 +186,7 @@ Widget buttonTextGreen(BuildContext context, String txt) {
   return Ink(
     decoration: BoxDecoration(
       gradient: LinearGradient(
-        colors: [greenColor, greenColor],
+        colors: [primaryColor, primaryColor],
         begin: Alignment.centerLeft,
         end: Alignment.centerRight,
       ),

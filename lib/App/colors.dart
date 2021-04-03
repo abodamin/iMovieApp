@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
-Color primeryDarkColor = Color(0xFFA47E5D);
-Color primeryColor = Color(0xFFDCA46F);
-Color primeryLightColor = Color(0xFFDCA46F);
-Color yellowColor = Color(0xFFFDBD2F);
-Color yellowColor2 = Color(0xFFFFDED0);
-Color accentColor = Colors.white;
-Color greenColor = Color(0xFF406455);
-Color lightGreenColor = Color(0xFF669E87);
+// Color primeryDarkColor = Color(0xFFA47E5D);
+// Color primeryColor = Color(0xFFDCA46F);
+// Color primeryLightColor = Color(0xFFDCA46F);
+// Color yellowColor = Color(0xFFFDBD2F);
+// Color yellowColor2 = Color(0xFFFFDED0);
+// Color accentColor = Colors.white;
+// Color greenColor = Color(0xFF406455);
+// Color lightGreenColor = Color(0xFF669E87);
+
+Color primaryColor = Color(0xFF2A1C40);
+Color secondaryColor = Color(0xFFFDBD2F);
 
 const errorColor = const Color(0xFFC5032B);
 

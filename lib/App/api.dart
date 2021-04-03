@@ -3,6 +3,16 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:i_movie_app/App/Globals.dart';
+import 'package:i_movie_app/Model/GenreMoviesModel.dart';
+import 'package:i_movie_app/Model/GenresModel.dart';
+import 'package:i_movie_app/Model/TopRatedMoviesModel.dart';
+import 'package:i_movie_app/Model/TrendingMoviesModel.dart';
+import 'package:i_movie_app/Model/TrendingPeople.dart';
+
+class TempClass {
+  static Future<TempClass> fromJson(parsed) {}
+}
 
 class ApiClient {
   ApiClient._();
@@ -10,35 +20,135 @@ class ApiClient {
   static final ApiClient apiClient = ApiClient._();
   static final http.Client _httpClient = http.Client();
   //Dev API
-  static final String _DEV_URL = "http://blabla-dev.com";
+  static final String _DEV_URL = "https://api.themoviedb.org";
+
+  ///movie/latest
   //Prod API
   // static final String _DEV_URL = "https://blabla-prod.com/";
-  static final String _BASE_URL = "$_DEV_URL";
+  static final String BASE_URL = "$_DEV_URL";
 
-  // Future<TempClass> postTemplate(String id) async {
-  //   Map<String, String> header = {
-  //     'Content-type': 'application/json',
-  //     'token': mUserToken,
-  //   };
+  Future<TrendingMoviesModel> getTrendingMovies() async {
+    Map<String, String> header = {
+      'Content-type': 'application/json',
+      // 'token': mUserToken,
+    };
 
-  //   try {
-  //     final response = await _httpClient.get(
-  //       "$_BASE_URL/AAA/BBB?xxxID=" + id,
-  //       headers: header,
-  //     );
+    try {
+      final response = await _httpClient.get(
+        "$BASE_URL/3/trending/movie/week?api_key=$mApiKey",
+        headers: header,
+      );
 
-  //     print("PostTemplate " + response.body);
-  //     //return parseOtp(response.body);
-  //     final parsed = json.decode(response.body);
-  //     return TempClass.fromJson(parsed);
-  //   } on SocketException {
-  //     return Future.error("check your internet connection");
-  //   } on http.ClientException {
-  //     return Future.error("check your internet connection");
-  //   } catch (e) {
-  //     return Future.error("Server Error");
-  //   }
-  // }
+      print("getTrendingMovies " + response.body);
+      //return parseOtp(response.body);
+      final parsed = json.decode(response.body);
+      return TrendingMoviesModel.fromJson(parsed);
+    } on SocketException {
+      return Future.error("check your internet connection");
+    } on http.ClientException {
+      return Future.error("check your internet connection");
+    } catch (e) {
+      return Future.error("Server Error");
+    }
+  }
+
+  Future<GenresModel> getGenres() async {
+    Map<String, String> header = {
+      'Content-type': 'application/json',
+      // 'token': mUserToken,
+    };
+
+    try {
+      final response = await _httpClient.get(
+        "$BASE_URL/3/genre/movie/list?api_key=$mApiKey&language=en-US",
+        headers: header,
+      );
+
+      print("getGenres " + response.body);
+      //return parseOtp(response.body);
+      final parsed = json.decode(response.body);
+      return GenresModel.fromJson(parsed);
+    } on SocketException {
+      return Future.error("check your internet connection");
+    } on http.ClientException {
+      return Future.error("check your internet connection");
+    } catch (e) {
+      return Future.error("Server Error");
+    }
+  }
+
+  Future<GenreMoviesModel> getGenreMovies(int id) async {
+    Map<String, String> header = {
+      'Content-type': 'application/json',
+      // 'token': mUserToken,
+    };
+
+    try {
+      final response = await _httpClient.get(
+        "$BASE_URL/3/discover/movie?api_key=$mApiKey&with_genres=$id",
+        headers: header,
+      );
+
+      print("getGenreMovies " + response.body);
+      //return parseOtp(response.body);
+      final parsed = json.decode(response.body);
+      return GenreMoviesModel.fromJson(parsed);
+    } on SocketException {
+      return Future.error("check your internet connection");
+    } on http.ClientException {
+      return Future.error("check your internet connection");
+    } catch (e) {
+      return Future.error("Server Error");
+    }
+  }
+
+  Future<TreindingPeopleModel> getTrendinPersons() async {
+    Map<String, String> header = {
+      'Content-type': 'application/json',
+      // 'token': mUserToken,
+    };
+
+    try {
+      final response = await _httpClient.get(
+        "$BASE_URL/3/person/popular?api_key=$mApiKey&language=en-US&page=1",
+        headers: header,
+      );
+
+      print("getTrendinPersons " + response.body);
+      //return parseOtp(response.body);
+      final parsed = json.decode(response.body);
+      return TreindingPeopleModel.fromJson(parsed);
+    } on SocketException {
+      return Future.error("check your internet connection");
+    } on http.ClientException {
+      return Future.error("check your internet connection");
+    } catch (e) {
+      return Future.error("Server Error");
+    }
+  }
+
+  Future<TopRatedMviesModel> getTopRatedMovies() async {
+    Map<String, String> header = {
+      'Content-type': 'application/json',
+      // 'token': mUserToken,
+    };
+    try {
+      final response = await _httpClient.get(
+        "$BASE_URL/3/movie/top_rated?api_key=$mApiKey&language=en-US&page=1",
+        headers: header,
+      );
+      print("TopRatedMviesModel " + response.body);
+      //return parseOtp(response.body);
+      final parsed = json.decode(response.body);
+      return TopRatedMviesModel.fromJson(parsed);
+    } on SocketException {
+      return Future.error("check your internet connection");
+    } on http.ClientException {
+      return Future.error("check your internet connection");
+    } catch (e) {
+      return Future.error("Server Error");
+    }
+  }
 
   // Future<TempClass> getTemplate(String url) async {
   //   try {
@@ -208,8 +318,4 @@ class ApiClient {
   //   }
   // }
 
-}
-
-class TempClass {
-  static Future<TempClass> fromJson(parsed) {}
 }
