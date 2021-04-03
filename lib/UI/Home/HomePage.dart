@@ -14,6 +14,7 @@ import 'package:i_movie_app/UI/Home/DetailsPage.dart';
 import 'package:i_movie_app/UI/Widgets/MyLoadingWidget.dart';
 import 'package:i_movie_app/UI/Widgets/Responsive.dart';
 import 'package:i_movie_app/UI/Widgets/Utils.dart';
+import 'package:i_movie_app/UI/Home/DetailsPage.dart' as details;
 import 'package:shimmer/shimmer.dart';
 
 class HomePage extends StatelessWidget {
@@ -95,47 +96,48 @@ class HomePage extends StatelessWidget {
                 padding: const EdgeInsets.all(8),
                 child: Text("Trending Movies This Week"),
               ),
-              Container(
-                // height: get160Size(context),
-                child: FutureBuilder<TrendingMoviesModel>(
-                  future: ApiClient.apiClient.getTrendingMovies(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return GridView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          childAspectRatio: 0.6,
-                        ),
-                        itemCount: snapshot.data.results.length,
-                        itemBuilder: (context, index) {
-                          return Container(
-                            margin: const EdgeInsets.all(4),
-                            child: Container(
-                              height: get200Size(context) + get50Size(context),
-                              width: getMediaWidth(context),
-                              decoration: BoxDecoration(
-                                color: Colors.transparent,
-                                image: DecorationImage(
-                                  fit: BoxFit.cover,
-                                  image: NetworkImage(
-                                    imgBaseURL +
-                                        snapshot.data.results[index].posterPath,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    } else {
-                      return MyLoadingWidget();
-                    }
-                  },
-                ),
-              ),
+              details.TrendingMovies(),
+              // Container(
+              //   // height: get160Size(context),
+              //   child: FutureBuilder<TrendingMoviesModel>(
+              //     future: ApiClient.apiClient.getTrendingMovies(),
+              //     builder: (context, snapshot) {
+              //       if (snapshot.hasData) {
+              //         return GridView.builder(
+              //           shrinkWrap: true,
+              //           physics: NeverScrollableScrollPhysics(),
+              //           gridDelegate:
+              //               const SliverGridDelegateWithFixedCrossAxisCount(
+              //             crossAxisCount: 3,
+              //             childAspectRatio: 0.6,
+              //           ),
+              //           itemCount: snapshot.data.results.length,
+              //           itemBuilder: (context, index) {
+              //             return Container(
+              //               margin: const EdgeInsets.all(4),
+              //               child: Container(
+              //                 height: get200Size(context) + get50Size(context),
+              //                 width: getMediaWidth(context),
+              //                 decoration: BoxDecoration(
+              //                   color: Colors.transparent,
+              //                   image: DecorationImage(
+              //                     fit: BoxFit.cover,
+              //                     image: NetworkImage(
+              //                       imgBaseURL +
+              //                           snapshot.data.results[index].posterPath,
+              //                     ),
+              //                   ),
+              //                 ),
+              //               ),
+              //             );
+              //           },
+              //         );
+              //       } else {
+              //         return MyLoadingWidget();
+              //       }
+              //     },
+              //   ),
+              // ),
             ],
           ),
         ),
@@ -399,6 +401,7 @@ class _TabsAndMoviesState extends State<TabsAndMovies>
                                     child: Container(
                                       // margin: const EdgeInsets.all(8),
                                       height: get100Size(context),
+                                      // width: get140Size(context),
                                       // color: Colors.red,
                                       child: Column(
                                         mainAxisAlignment:
@@ -415,9 +418,9 @@ class _TabsAndMoviesState extends State<TabsAndMovies>
                                               height: get200Size(context),
                                               // width: ,
                                               child: Image.network(
-                                                // "https://picsum.photos/150/200?random=$index",
                                                 "$imgBaseURL${snapshot.data.results[index].posterPath}",
-                                                fit: BoxFit.cover,
+                                                fit: BoxFit.fill,
+                                                width: get120Size(context),
                                               ),
                                             ),
                                           ),
@@ -427,8 +430,7 @@ class _TabsAndMoviesState extends State<TabsAndMovies>
                                               padding:
                                                   const EdgeInsets.all(8.0),
                                               child: SizedBox(
-                                                width: get100Size(context) +
-                                                    get50Size(context),
+                                                width: get120Size(context),
                                                 child: Text(
                                                   "${snapshot.data.results[index].title}",
                                                   maxLines: 3,
