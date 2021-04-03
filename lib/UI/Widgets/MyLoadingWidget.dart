@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class MyLoadingWidget extends StatelessWidget {
@@ -5,7 +8,9 @@ class MyLoadingWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: Center(
-        child: CircularProgressIndicator(),
+        child: Platform.isIOS
+            ? CupertinoActivityIndicator()
+            : CircularProgressIndicator(),
       ),
     );
   }

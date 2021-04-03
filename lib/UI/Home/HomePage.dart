@@ -10,31 +10,13 @@ import 'package:i_movie_app/Model/GenresModel.dart';
 import 'package:i_movie_app/Model/TopRatedMoviesModel.dart';
 import 'package:i_movie_app/Model/TrendingMoviesModel.dart';
 import 'package:i_movie_app/Model/TrendingPeople.dart' as tp;
+import 'package:i_movie_app/UI/Home/DetailsPage.dart';
 import 'package:i_movie_app/UI/Widgets/MyLoadingWidget.dart';
 import 'package:i_movie_app/UI/Widgets/Responsive.dart';
 import 'package:i_movie_app/UI/Widgets/Utils.dart';
 import 'package:shimmer/shimmer.dart';
 
-class HomePage extends StatefulWidget {
-  @override
-  _HomePageState createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage>
-    with SingleTickerProviderStateMixin {
-  var _list = [1, 2, 3, 4, 5];
-  TabController _tabController;
-  final int tabs = 2;
-
-  @override
-  void initState() {
-    _tabController = new TabController(
-      length: tabs,
-      vsync: this,
-    );
-    super.initState();
-  }
-
+class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,38 +52,13 @@ class _HomePageState extends State<HomePage>
                 future: ApiClient.apiClient.getGenres(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
+                    //we call API then give it the required data
+                    //this is better for performance & code cleaning.
                     return TabsAndMovies(
                       data: snapshot.data,
                     );
                   } else {
-                    // return ListView(
-                    //   scrollDirection: Axis.horizontal,
-                    //   children: [
-                    //     Shimmer.fromColors(
-                    //       baseColor: Colors.grey[400].withOpacity(0.3),
-                    //       highlightColor: Colors.grey[200].withOpacity(0.3),
-                    //       loop: 4,
-                    //       child: Container(
-                    //         height: get30Size(context),
-                    //         width: get40Size(context),
-                    //         color: Colors.red,
-                    //         margin: const EdgeInsets.all(4),
-                    //       ),
-                    //     ),
-                    //     //
-                    //     Shimmer.fromColors(
-                    //       baseColor: Colors.grey[400].withOpacity(0.3),
-                    //       highlightColor: Colors.grey[200].withOpacity(0.3),
-                    //       loop: 4,
-                    //       child: Container(
-                    //         height: get30Size(context),
-                    //         width: get40Size(context),
-                    //         color: Colors.red,
-                    //         margin: const EdgeInsets.all(4),
-                    //       ),
-                    //     ),
-                    //   ],
-                    // );
+                    //TODO: Shimmer
                     return MyLoadingWidget();
                   }
                 },
@@ -112,7 +69,7 @@ class _HomePageState extends State<HomePage>
                 child: Text("Trending Persons This Week"),
               ),
               Container(
-                height: get160Size(context),
+                height: get160Size(context) + 10,
                 child: FutureBuilder<tp.TreindingPeopleModel>(
                   future: ApiClient.apiClient.getTrendinPersons(),
                   builder: (context, snapshot) {
@@ -326,7 +283,14 @@ class TrendingMovies extends StatelessWidget {
                 10,
                 (index) {
                   return GestureDetector(
-                    onTap: () async {},
+                    onTap: () async {
+                      navigateTo(
+                        context,
+                        DetailsPage(
+                          id: snapshot.data.results[index].id.toString(),
+                        ),
+                      );
+                    },
                     child: MoviePosterImage(
                       item:
                           imgBaseURL + snapshot.data.results[index].posterPath,
@@ -422,87 +386,102 @@ class _TabsAndMoviesState extends State<TabsAndMovies>
                                 scrollDirection: Axis.horizontal,
                                 itemCount: snapshot.data.results.length,
                                 itemBuilder: (context, index) {
-                                  return Container(
-                                    // margin: const EdgeInsets.all(8),
-                                    height: get100Size(context),
-                                    // color: Colors.red,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Flexible(
-                                          flex: 2,
-                                          child: Container(
-                                            padding: const EdgeInsets.all(8.0),
-                                            height: get200Size(context),
-                                            // width: ,
-                                            child: Image.network(
-                                              // "https://picsum.photos/150/200?random=$index",
-                                              "$imgBaseURL${snapshot.data.results[index].posterPath}",
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
+                                  return InkWell(
+                                    onTap: () {
+                                      navigateTo(
+                                        context,
+                                        DetailsPage(
+                                          id: snapshot.data.results[index].id
+                                              .toString(),
                                         ),
-                                        Flexible(
-                                          flex: 1,
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: SizedBox(
-                                              width: get100Size(context) +
-                                                  get50Size(context),
-                                              child: Text(
-                                                "${snapshot.data.results[index].title}",
-                                                maxLines: 3,
+                                      );
+                                    },
+                                    child: Container(
+                                      // margin: const EdgeInsets.all(8),
+                                      height: get100Size(context),
+                                      // color: Colors.red,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Flexible(
+                                            flex: 2,
+                                            child: Container(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              height: get200Size(context),
+                                              // width: ,
+                                              child: Image.network(
+                                                // "https://picsum.photos/150/200?random=$index",
+                                                "$imgBaseURL${snapshot.data.results[index].posterPath}",
+                                                fit: BoxFit.cover,
                                               ),
                                             ),
                                           ),
-                                        ),
-                                        Flexible(
-                                          flex: 0,
-                                          child: Container(
-                                            padding: const EdgeInsets.all(8.0),
-                                            // width: get120Size(context),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                    "${snapshot.data.results[index].voteAverage}"),
-                                                Container(
-                                                  child: RatingBar.builder(
-                                                    initialRating: snapshot
-                                                            .data
-                                                            .results[index]
-                                                            .voteAverage /
-                                                        2,
-                                                    itemSize: 15,
-                                                    minRating: 0,
-                                                    maxRating: 5,
-                                                    ignoreGestures: true,
-                                                    direction: Axis.horizontal,
-                                                    allowHalfRating: true,
-                                                    itemCount: 5,
-                                                    itemPadding:
-                                                        EdgeInsets.symmetric(
-                                                            horizontal: 0.0),
-                                                    itemBuilder: (context, _) =>
-                                                        Icon(
-                                                      Icons.star,
-                                                      color: Colors.amber,
-                                                    ),
-                                                    onRatingUpdate: (rating) {
-                                                      print(rating);
-                                                    },
-                                                  ),
+                                          Flexible(
+                                            flex: 1,
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: SizedBox(
+                                                width: get100Size(context) +
+                                                    get50Size(context),
+                                                child: Text(
+                                                  "${snapshot.data.results[index].title}",
+                                                  maxLines: 3,
                                                 ),
-                                              ],
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                      ],
+                                          Flexible(
+                                            flex: 0,
+                                            child: Container(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              // width: get120Size(context),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                      "${snapshot.data.results[index].voteAverage}"),
+                                                  Container(
+                                                    child: RatingBar.builder(
+                                                      initialRating: snapshot
+                                                              .data
+                                                              .results[index]
+                                                              .voteAverage /
+                                                          2,
+                                                      itemSize: 15,
+                                                      minRating: 0,
+                                                      maxRating: 5,
+                                                      ignoreGestures: true,
+                                                      direction:
+                                                          Axis.horizontal,
+                                                      allowHalfRating: true,
+                                                      itemCount: 5,
+                                                      itemPadding:
+                                                          EdgeInsets.symmetric(
+                                                              horizontal: 0.0),
+                                                      itemBuilder:
+                                                          (context, _) => Icon(
+                                                        Icons.star,
+                                                        color: Colors.amber,
+                                                      ),
+                                                      onRatingUpdate: (rating) {
+                                                        print(rating);
+                                                      },
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   );
                                 },
