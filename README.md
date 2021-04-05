@@ -6,9 +6,7 @@ A flutter project half complete, for making application that looks like Netflix 
 
 Sample UI from application
 
-<img src="https://ibb.co/xjwTHMQ" >
-
-<img src="https://ibb.co/xjwTHMQ" alt="alternatetext">
+<a href="https://ibb.co/VHdWhTr"><img src="https://i.ibb.co/gvGMXJH/Screen-Shot-2021-04-05-at-7-05-42-PM.png" alt="Screen-Shot-2021-04-05-at-7-05-42-PM" border="0"></a>
  
 https://ibb.co/Wx3pfpB
 
