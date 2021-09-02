@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+final mHor16Vert8 = const EdgeInsets.symmetric(horizontal: 16, vertical: 8);
+final mHor8Vert8 = const EdgeInsets.symmetric(horizontal: 8, vertical: 8);
+
 double getMediaHeight(BuildContext context) {
   return MediaQuery.of(context).size.height;
 }

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:i_movie_app/App/Globals.dart';
@@ -12,6 +13,8 @@ import 'package:i_movie_app/UI/Home/HomePage.dart';
 import 'package:i_movie_app/UI/Widgets/MyLoadingWidget.dart';
 import 'package:i_movie_app/UI/Widgets/Responsive.dart';
 import 'package:i_movie_app/UI/Widgets/Utils.dart';
+import 'package:i_movie_app/UI/Widgets/avatar_photo.dart';
+import 'package:i_movie_app/UI/Widgets/global_icons.dart';
 import 'package:intl/intl.dart';
 
 class DetailsPage extends StatelessWidget {
@@ -137,16 +140,16 @@ class DetailsPage extends StatelessWidget {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      TitleAndValue(
+                                      _TitleAndValue(
                                         title: "Budget",
                                         value:
                                             "${_currency.format(snapshot.data.budget)}\$",
                                       ),
-                                      TitleAndValue(
+                                      _TitleAndValue(
                                         title: "Duration",
                                         value: "${snapshot.data.runtime} min",
                                       ),
-                                      TitleAndValue(
+                                      _TitleAndValue(
                                         title: "Release Date",
                                         value:
                                             "${DateFormat('yyyy-MM-dd').format(snapshot.data.releaseDate)}",
@@ -209,15 +212,16 @@ class DetailsPage extends StatelessWidget {
                                           scrollDirection: Axis.horizontal,
                                           itemCount: snapshot.data.cast.length,
                                           itemBuilder: (context, index) {
-                                            return Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: ActorImage(
-                                                img:
+                                            return AspectRatio(
+                                              // padding:
+                                              //     const EdgeInsets.all(8.0),
+                                              aspectRatio: 0.8,
+                                              child: _CastCard(
+                                                imagePath:
                                                     "$imgBaseURL${snapshot.data.cast[index].profilePath}",
-                                                title:
+                                                actorName:
                                                     "${snapshot.data.cast[index].name}",
-                                                subtitle:
+                                                bio:
                                                     "${snapshot.data.cast[index].character}",
                                               ),
                                             );
@@ -229,10 +233,11 @@ class DetailsPage extends StatelessWidget {
                                     }),
                               ),
                               // --- Similar Movies --- //
+                              mHeight(get20Size(context)),
                               Padding(
-                                padding: const EdgeInsets.all(8.0),
+                                padding: mHor8Vert8,
                                 child: Text(
-                                  "Similar Movies".toUpperCase(),
+                                  "SIMILAR MOVIES",
                                   style:
                                       getTextTheme(context).bodyText2.copyWith(
                                             color: Colors.grey,
@@ -285,14 +290,7 @@ class DetailsPage extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: Align(
                   alignment: Alignment.topLeft,
-                  child: IconButton(
-                    icon: Platform.isAndroid
-                        ? Icon(Icons.arrow_back)
-                        : Icon(Icons.arrow_back_ios),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
+                  child: BackArrowIcon(),
                 ),
               ),
             ],
@@ -303,10 +301,10 @@ class DetailsPage extends StatelessWidget {
   }
 }
 
-class TitleAndValue extends StatelessWidget {
+class _TitleAndValue extends StatelessWidget {
   final String title, value;
 
-  const TitleAndValue({
+  const _TitleAndValue({
     Key key,
     @required this.title,
     @required this.value,
@@ -357,19 +355,21 @@ class _Genre extends StatelessWidget {
   }
 }
 
-class ActorImage extends StatelessWidget {
-  final String img, title, subtitle;
+class _CastCard extends StatelessWidget {
+  final String imagePath, actorName, bio;
 
-  const ActorImage({
+  const _CastCard({
     Key key,
-    @required this.img,
-    @required this.title,
-    @required this.subtitle,
+    @required this.imagePath,
+    @required this.actorName,
+    @required this.bio,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Container(
           decoration: containerColorRadiusBorder(
@@ -380,25 +380,19 @@ class ActorImage extends StatelessWidget {
           width: get80Size(context),
           height: get80Size(context),
           clipBehavior: Clip.antiAlias,
-          child: Image.network(
-            // "$imgBaseURL${data.profilePath}",
-            "${img ?? "https://picsum.photos/200/300?random=2"}",
-            fit: BoxFit.cover,
+          child: AvatarPhoto(
+            photoPath: "$imagePath",
+            height: get20Size(context),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            "${title ?? "--"}",
-            style: getTextTheme(context).button,
-          ),
+        Text(
+          "${actorName ?? "NA"}",
+          style: getTextTheme(context).button,
         ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            "${subtitle ?? "--"}",
-            style: getTextTheme(context).caption,
-          ),
+        AutoSizeText(
+          "${bio ?? "..."}",
+          style: getTextTheme(context).caption,
+          textAlign: TextAlign.center,
         ),
       ],
     );

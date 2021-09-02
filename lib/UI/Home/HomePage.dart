@@ -269,7 +269,7 @@ class TrendingMovies extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: get200Size(context) + get50Size(context),
+      height: get200Size(context) + get200Size(context),
       width: getMediaWidth(context),
       child: FutureBuilder<TopRatedMviesModel>(
         future: ApiClient.apiClient.getTopRatedMovies(),
@@ -386,23 +386,19 @@ class _TabsAndMoviesState extends State<TabsAndMovies>
                               height: get200Size(context) + get100Size(context),
                               child: ListView.builder(
                                 scrollDirection: Axis.horizontal,
-                                itemCount: snapshot.data.results.length,
+                                itemCount: snapshot?.data?.results?.length??0,
                                 itemBuilder: (context, index) {
                                   return InkWell(
                                     onTap: () {
                                       navigateTo(
                                         context,
                                         DetailsPage(
-                                          id: snapshot.data.results[index].id
-                                              .toString(),
+                                          id: "${snapshot?.data?.results[index]?.id??0}",
                                         ),
                                       );
                                     },
                                     child: Container(
-                                      // margin: const EdgeInsets.all(8),
                                       height: get100Size(context),
-                                      // width: get140Size(context),
-                                      // color: Colors.red,
                                       child: Column(
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
@@ -416,9 +412,8 @@ class _TabsAndMoviesState extends State<TabsAndMovies>
                                               padding:
                                                   const EdgeInsets.all(8.0),
                                               height: get200Size(context),
-                                              // width: ,
                                               child: Image.network(
-                                                "$imgBaseURL${snapshot.data.results[index].posterPath}",
+                                                "$imgBaseURL${snapshot?.data?.results[index]?.posterPath??""}",
                                                 fit: BoxFit.fill,
                                                 width: get120Size(context),
                                               ),
@@ -432,7 +427,7 @@ class _TabsAndMoviesState extends State<TabsAndMovies>
                                               child: SizedBox(
                                                 width: get120Size(context),
                                                 child: Text(
-                                                  "${snapshot.data.results[index].title}",
+                                                  "${snapshot?.data?.results[index]?.title??""}",
                                                   maxLines: 3,
                                                 ),
                                               ),
@@ -449,13 +444,13 @@ class _TabsAndMoviesState extends State<TabsAndMovies>
                                                     MainAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                      "${snapshot.data.results[index].voteAverage}"),
+                                                      "${snapshot?.data?.results[index]?.voteAverage??""}"),
                                                   Container(
                                                     child: RatingBar.builder(
                                                       initialRating: snapshot
-                                                              .data
-                                                              .results[index]
-                                                              .voteAverage /
+                                                              ?.data
+                                                              ?.results[index]
+                                                              ?.voteAverage??0 /
                                                           2,
                                                       itemSize: 15,
                                                       minRating: 0,
