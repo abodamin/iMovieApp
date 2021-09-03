@@ -15,6 +15,7 @@ import 'package:i_movie_app/UI/Widgets/Responsive.dart';
 import 'package:i_movie_app/UI/Widgets/Utils.dart';
 import 'package:i_movie_app/UI/Widgets/avatar_photo.dart';
 import 'package:i_movie_app/UI/Widgets/global_icons.dart';
+import 'package:i_movie_app/UI/Widgets/trending_movies.dart';
 import 'package:intl/intl.dart';
 
 class DetailsPage extends StatelessWidget {
@@ -213,10 +214,8 @@ class DetailsPage extends StatelessWidget {
                                           itemCount: snapshot.data.cast.length,
                                           itemBuilder: (context, index) {
                                             return AspectRatio(
-                                              // padding:
-                                              //     const EdgeInsets.all(8.0),
                                               aspectRatio: 0.8,
-                                              child: _CastCard(
+                                              child: CastCard(
                                                 imagePath:
                                                     "$imgBaseURL${snapshot.data.cast[index].profilePath}",
                                                 actorName:
@@ -246,7 +245,6 @@ class DetailsPage extends StatelessWidget {
                               ),
                               Container(
                                 padding: const EdgeInsets.all(8),
-                                // height: get200Size(context),
                                 child: FutureBuilder<SimilarMoviesModel>(
                                     future: ApiClient.apiClient.getSimilarMovis(
                                       snapshot.data.id.toString(),
@@ -267,6 +265,7 @@ class DetailsPage extends StatelessWidget {
                                             ],
                                           );
                                         } else {
+                                          //if there is similar movies show them
                                           return SimilarMovies(
                                             data: snapshot.data,
                                           );
@@ -355,10 +354,10 @@ class _Genre extends StatelessWidget {
   }
 }
 
-class _CastCard extends StatelessWidget {
+class CastCard extends StatelessWidget {
   final String imagePath, actorName, bio;
 
-  const _CastCard({
+  const CastCard({
     Key key,
     @required this.imagePath,
     @required this.actorName,
@@ -390,7 +389,7 @@ class _CastCard extends StatelessWidget {
           style: getTextTheme(context).button,
         ),
         AutoSizeText(
-          "${bio ?? "..."}",
+          "${bio ?? ". . ."}",
           style: getTextTheme(context).caption,
           textAlign: TextAlign.center,
         ),
@@ -442,46 +441,3 @@ class SimilarMovies extends StatelessWidget {
   }
 }
 
-class TrendingMovies extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<TrendingMoviesModel>(
-        future: ApiClient.apiClient.getTrendingMovies(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return Container(
-              // height: get200Size(context),
-              child: GridView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  childAspectRatio: 0.6,
-                ),
-                itemCount: snapshot.data.results.length,
-                itemBuilder: (context, index) {
-                  return Container(
-                    margin: const EdgeInsets.all(4),
-                    child: Container(
-                      height: get200Size(context) + get50Size(context),
-                      width: getMediaWidth(context),
-                      decoration: BoxDecoration(
-                        color: Colors.transparent,
-                        image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: NetworkImage(
-                            "${imgBaseURL + snapshot.data.results[index].posterPath}",
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            );
-          } else {
-            return MyLoadingWidget();
-          }
-        });
-  }
-}
