@@ -24,6 +24,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Color(0xFF2A1C40),
         appBarTheme: AppBarTheme(centerTitle: true),
         primarySwatch: Colors.indigo,
+        accentColor: Colors.orange,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: HomePage(),

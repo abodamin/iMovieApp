@@ -71,6 +71,7 @@ class HomePage extends StatelessWidget {
                 },
               ),
               // --- GetTrendinPersons --- //
+              mHeight(get20Size(context)),
               Padding(
                 padding: const EdgeInsets.all(8),
                 child: Text("Trending Actors This Week",
@@ -292,6 +293,7 @@ class _TabsAndMoviesState extends State<TabsAndMovies>
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         return Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -320,75 +322,66 @@ class _TabsAndMoviesState extends State<TabsAndMovies>
                                             CrossAxisAlignment.start,
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          Flexible(
-                                            flex: 2,
-                                            child: Container(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              height: get200Size(context),
-                                              child: Image.network(
-                                                "$imgBaseURL${snapshot?.data?.results[index]?.posterPath ?? ""}",
-                                                fit: BoxFit.fill,
-                                                width: get120Size(context),
+                                          Container(
+                                            padding:
+                                                const EdgeInsets.all(8.0),
+                                            height: get200Size(context),
+                                            child: Image.network(
+                                              "$imgBaseURL${snapshot?.data?.results[index]?.posterPath ?? ""}",
+                                              fit: BoxFit.fill,
+                                              width: get120Size(context),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: SizedBox(
+                                              width: get120Size(context),
+                                              child: AutoSizeText(
+                                                "${snapshot?.data?.results[index]?.title ?? ""}",
+                                                maxLines: 2,
                                               ),
                                             ),
                                           ),
-                                          Flexible(
-                                            flex: 1,
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: SizedBox(
-                                                width: get120Size(context),
-                                                child: Text(
-                                                  "${snapshot?.data?.results[index]?.title ?? ""}",
-                                                  maxLines: 3,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Flexible(
-                                            flex: 0,
-                                            child: Container(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              // width: get120Size(context),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                      "${snapshot?.data?.results[index]?.voteAverage ?? ""}"),
-                                                  Container(
-                                                    child: RatingBar.builder(
-                                                      initialRating: snapshot
-                                                              ?.data
-                                                              ?.results[index]
-                                                              ?.voteAverage ??
-                                                          0 / 2,
-                                                      itemSize: 15,
-                                                      minRating: 0,
-                                                      maxRating: 5,
-                                                      ignoreGestures: true,
-                                                      direction:
-                                                          Axis.horizontal,
-                                                      allowHalfRating: true,
-                                                      itemCount: 5,
-                                                      itemPadding:
-                                                          EdgeInsets.symmetric(
-                                                              horizontal: 0.0),
-                                                      itemBuilder:
-                                                          (context, _) => Icon(
-                                                        Icons.star,
-                                                        color: Colors.amber,
-                                                      ),
-                                                      onRatingUpdate: (rating) {
-                                                        print(rating);
-                                                      },
+                                          Spacer(),
+                                          Container(
+                                            padding:
+                                                const EdgeInsets.all(8.0),
+                                            // width: get120Size(context),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                    "${snapshot?.data?.results[index]?.voteAverage ?? ""}"),
+                                                Container(
+                                                  child: RatingBar.builder(
+                                                    initialRating: snapshot
+                                                            ?.data
+                                                            ?.results[index]
+                                                            ?.voteAverage ??
+                                                        0 / 2,
+                                                    itemSize: 15,
+                                                    minRating: 0,
+                                                    maxRating: 5,
+                                                    ignoreGestures: true,
+                                                    direction:
+                                                        Axis.horizontal,
+                                                    allowHalfRating: true,
+                                                    itemCount: 5,
+                                                    itemPadding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 0.0),
+                                                    itemBuilder:
+                                                        (context, _) => Icon(
+                                                      Icons.star,
+                                                      color: Colors.amber,
                                                     ),
+                                                    onRatingUpdate: (rating) {
+                                                      print(rating);
+                                                    },
                                                   ),
-                                                ],
-                                              ),
+                                                ),
+                                              ],
                                             ),
                                           ),
                                         ],
