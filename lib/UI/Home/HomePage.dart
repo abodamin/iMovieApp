@@ -125,48 +125,6 @@ class HomePage extends StatelessWidget {
   }
 }
 
-class TrendingActors extends StatelessWidget {
-  final tp.Result data;
-
-  const TrendingActors({
-    Key key,
-    @required this.data,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Container(
-          decoration: containerColorRadiusBorder(
-            Colors.transparent,
-            300,
-            Colors.transparent,
-          ),
-          width: get80Size(context),
-          height: get80Size(context),
-          clipBehavior: Clip.antiAlias,
-          child: AvatarPhoto(
-            photoPath: R.getNetworkImagePath(data.profilePath),
-            height: get50Size(context),
-          ),
-        ),
-        Text(
-          "${data.name}",
-          style: getTextTheme(context).button,
-        ),
-        AutoSizeText(
-          "Trending for ${data.knownForDepartment ?? ""}",
-          style: getTextTheme(context).caption,
-          textAlign: TextAlign.center,
-        ),
-      ],
-    );
-  }
-}
-
 class MoviePosterImage extends StatelessWidget {
   final item;
 
@@ -271,7 +229,7 @@ class _TabsAndMoviesState extends State<TabsAndMovies>
           indicatorColor: secondaryColor,
           tabs: List.generate(
             widget?.data?.genres?.length,
-            (index) {
+                (index) {
               return Tab(
                 child: Text("${widget?.data?.genres[index]?.name ?? ""}"),
               );
@@ -287,7 +245,7 @@ class _TabsAndMoviesState extends State<TabsAndMovies>
           child: TabBarView(
             children: List.generate(
               widget.data.genres.length,
-              (index) {
+                  (index) {
                 return FutureBuilder<GenreMoviesModel>(
                     future: ApiClient.apiClient
                         .getGenreMovies(widget.data.genres[index].id),
@@ -310,7 +268,8 @@ class _TabsAndMoviesState extends State<TabsAndMovies>
                                       navigateTo(
                                         context,
                                         DetailsPage(
-                                          id: "${snapshot?.data?.results[index]?.id ?? 0}",
+                                          id: "${snapshot?.data?.results[index]
+                                              ?.id ?? 0}",
                                         ),
                                       );
                                     },
@@ -318,17 +277,19 @@ class _TabsAndMoviesState extends State<TabsAndMovies>
                                       height: get100Size(context),
                                       child: Column(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.start,
+                                        MainAxisAlignment.start,
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           Container(
                                             padding:
-                                                const EdgeInsets.all(8.0),
+                                            const EdgeInsets.all(8.0),
                                             height: get200Size(context),
                                             child: Image.network(
-                                              "$imgBaseURL${snapshot?.data?.results[index]?.posterPath ?? ""}",
+                                              "$imgBaseURL${snapshot?.data
+                                                  ?.results[index]
+                                                  ?.posterPath ?? ""}",
                                               fit: BoxFit.fill,
                                               width: get120Size(context),
                                             ),
@@ -338,7 +299,9 @@ class _TabsAndMoviesState extends State<TabsAndMovies>
                                             child: SizedBox(
                                               width: get120Size(context),
                                               child: AutoSizeText(
-                                                "${snapshot?.data?.results[index]?.title ?? ""}",
+                                                "${snapshot?.data
+                                                    ?.results[index]?.title ??
+                                                    ""}",
                                                 maxLines: 2,
                                               ),
                                             ),
@@ -346,37 +309,40 @@ class _TabsAndMoviesState extends State<TabsAndMovies>
                                           Spacer(),
                                           Container(
                                             padding:
-                                                const EdgeInsets.all(8.0),
+                                            const EdgeInsets.all(8.0),
                                             // width: get120Size(context),
                                             child: Row(
                                               mainAxisAlignment:
-                                                  MainAxisAlignment.spaceBetween,
+                                              MainAxisAlignment.spaceBetween,
                                               children: [
                                                 Text(
-                                                    "${snapshot?.data?.results[index]?.voteAverage ?? ""}"),
+                                                    "${snapshot?.data
+                                                        ?.results[index]
+                                                        ?.voteAverage ?? ""}"),
                                                 Container(
                                                   child: RatingBar.builder(
                                                     initialRating: snapshot
-                                                            ?.data
-                                                            ?.results[index]
-                                                            ?.voteAverage ??
+                                                        ?.data
+                                                        ?.results[index]
+                                                        ?.voteAverage ??
                                                         0 / 2,
                                                     itemSize: 15,
                                                     minRating: 0,
                                                     maxRating: 5,
                                                     ignoreGestures: true,
                                                     direction:
-                                                        Axis.horizontal,
+                                                    Axis.horizontal,
                                                     allowHalfRating: true,
                                                     itemCount: 5,
                                                     itemPadding:
-                                                        EdgeInsets.symmetric(
-                                                            horizontal: 0.0),
+                                                    EdgeInsets.symmetric(
+                                                        horizontal: 0.0),
                                                     itemBuilder:
-                                                        (context, _) => Icon(
-                                                      Icons.star,
-                                                      color: Colors.amber,
-                                                    ),
+                                                        (context, _) =>
+                                                        Icon(
+                                                          Icons.star,
+                                                          color: Colors.amber,
+                                                        ),
                                                     onRatingUpdate: (rating) {
                                                       print(rating);
                                                     },
@@ -404,6 +370,42 @@ class _TabsAndMoviesState extends State<TabsAndMovies>
           ),
         ),
       ],
+    );
+  }
+}
+
+
+class Dump extends StatelessWidget {
+  const Dump();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverAppBar(
+            pinned: true,
+            expandedHeight: 160.0,
+            flexibleSpace: const FlexibleSpaceBar(
+              title: Text('SliverAppBar'),
+              background: FlutterLogo(),
+            ),
+          ),
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+                  (BuildContext context, int index) {
+                return Container(
+                  color: index.isOdd ? Colors.white : Colors.black12,
+                  height: 100.0,
+                  child: Center(
+                    child: Text('$index', textScaleFactor: 5),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
