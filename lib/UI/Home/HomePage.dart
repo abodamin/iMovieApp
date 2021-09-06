@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -10,11 +11,16 @@ import 'package:i_movie_app/Model/GenresModel.dart';
 import 'package:i_movie_app/Model/TopRatedMoviesModel.dart';
 import 'package:i_movie_app/Model/TrendingMoviesModel.dart';
 import 'package:i_movie_app/Model/TrendingPeople.dart' as tp;
+import 'package:i_movie_app/Model/assets_names.dart';
 import 'package:i_movie_app/UI/Home/DetailsPage.dart';
 import 'package:i_movie_app/UI/Widgets/MyLoadingWidget.dart';
 import 'package:i_movie_app/UI/Widgets/Responsive.dart';
 import 'package:i_movie_app/UI/Widgets/Utils.dart';
 import 'package:i_movie_app/UI/Home/DetailsPage.dart' as details;
+import 'package:i_movie_app/UI/Widgets/avatar_photo.dart';
+import 'package:i_movie_app/UI/Widgets/cast_card.dart';
+import 'package:i_movie_app/UI/Widgets/top_rated_movies.dart';
+import 'package:i_movie_app/UI/Widgets/trending_movies.dart';
 import 'package:shimmer/shimmer.dart';
 
 class HomePage extends StatelessWidget {
@@ -32,11 +38,12 @@ class HomePage extends StatelessWidget {
             },
           ),
         ],
-        leading: IconButton(
-          icon: Icon(Icons.menu),
-          onPressed: () {
-            //
-          },
+        leading: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: FlutterLogo(
+            size: 10,
+            textColor: Colors.white,
+          ),
         ),
       ),
       body: SingleChildScrollView(
@@ -45,8 +52,8 @@ class HomePage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              //Trending Movies Image.
-              TrendingMovies(),
+              //Top Rated Movies Image.
+              TopRatedMovies(),
               //TabBars
               mHeight(get30Size(context)),
               FutureBuilder<GenresModel>(
@@ -65,9 +72,12 @@ class HomePage extends StatelessWidget {
                 },
               ),
               // --- GetTrendinPersons --- //
+              mHeight(get20Size(context)),
               Padding(
                 padding: const EdgeInsets.all(8),
-                child: Text("Trending Persons This Week"),
+                child: Text("Trending Actors This Week",
+                  style: getTextTheme(context).caption,
+                ),
               ),
               Container(
                 height: get160Size(context) + 10,
@@ -79,8 +89,15 @@ class HomePage extends StatelessWidget {
                         itemCount: snapshot.data.results.length,
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (context, index) {
-                          return TrendingPeople(
-                            data: snapshot.data.results[index],
+                          var _data = snapshot.data?.results[index];
+                          return AspectRatio(
+                            aspectRatio: 0.8,
+                            child: CastCard(
+                              imagePath: R.getNetworkImagePath(
+                                  _data?.profilePath ?? ""),
+                              actorName: _data?.name ?? "",
+                              bio: "",
+                            ),
                           );
                         },
                       );
@@ -90,54 +107,16 @@ class HomePage extends StatelessWidget {
                   },
                 ),
               ),
-              mHeight(get30Size(context)),
+              // mHeight(get10Size(context)),
               // ---- Top Rated Movies ---- //
               Padding(
                 padding: const EdgeInsets.all(8),
-                child: Text("Trending Movies This Week"),
+                child: Text(
+                  "Trending Movies This Week",
+                  style: getTextTheme(context).caption,
+                ),
               ),
-              details.TrendingMovies(),
-              // Container(
-              //   // height: get160Size(context),
-              //   child: FutureBuilder<TrendingMoviesModel>(
-              //     future: ApiClient.apiClient.getTrendingMovies(),
-              //     builder: (context, snapshot) {
-              //       if (snapshot.hasData) {
-              //         return GridView.builder(
-              //           shrinkWrap: true,
-              //           physics: NeverScrollableScrollPhysics(),
-              //           gridDelegate:
-              //               const SliverGridDelegateWithFixedCrossAxisCount(
-              //             crossAxisCount: 3,
-              //             childAspectRatio: 0.6,
-              //           ),
-              //           itemCount: snapshot.data.results.length,
-              //           itemBuilder: (context, index) {
-              //             return Container(
-              //               margin: const EdgeInsets.all(4),
-              //               child: Container(
-              //                 height: get200Size(context) + get50Size(context),
-              //                 width: getMediaWidth(context),
-              //                 decoration: BoxDecoration(
-              //                   color: Colors.transparent,
-              //                   image: DecorationImage(
-              //                     fit: BoxFit.cover,
-              //                     image: NetworkImage(
-              //                       imgBaseURL +
-              //                           snapshot.data.results[index].posterPath,
-              //                     ),
-              //                   ),
-              //                 ),
-              //               ),
-              //             );
-              //           },
-              //         );
-              //       } else {
-              //         return MyLoadingWidget();
-              //       }
-              //     },
-              //   ),
-              // ),
+              TrendingMovies(),
             ],
           ),
         ),
@@ -146,49 +125,44 @@ class HomePage extends StatelessWidget {
   }
 }
 
-class TrendingPeople extends StatelessWidget {
+class TrendingActors extends StatelessWidget {
   final tp.Result data;
 
-  const TrendingPeople({
+  const TrendingActors({
     Key key,
     @required this.data,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          Container(
-            decoration: containerColorRadiusBorder(
-              Colors.transparent,
-              300,
-              Colors.transparent,
-            ),
-            width: get80Size(context),
-            height: get80Size(context),
-            clipBehavior: Clip.antiAlias,
-            child: Image.network(
-              "$imgBaseURL${data.profilePath}",
-              fit: BoxFit.cover,
-            ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Container(
+          decoration: containerColorRadiusBorder(
+            Colors.transparent,
+            300,
+            Colors.transparent,
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              "${data.name}",
-              style: getTextTheme(context).button,
-            ),
+          width: get80Size(context),
+          height: get80Size(context),
+          clipBehavior: Clip.antiAlias,
+          child: AvatarPhoto(
+            photoPath: R.getNetworkImagePath(data.profilePath),
+            height: get50Size(context),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              "Trending for ${data.knownForDepartment ?? ""}",
-              style: getTextTheme(context).caption,
-            ),
-          ),
-        ],
-      ),
+        ),
+        Text(
+          "${data.name}",
+          style: getTextTheme(context).button,
+        ),
+        AutoSizeText(
+          "Trending for ${data.knownForDepartment ?? ""}",
+          style: getTextTheme(context).caption,
+          textAlign: TextAlign.center,
+        ),
+      ],
     );
   }
 }
@@ -212,10 +186,10 @@ class MoviePosterImage extends StatelessWidget {
           GredientImage(
             imageName: item.toString(),
           ),
-          Image.asset(
-            getImageAsset("ic_play2.png"),
-            height: 50,
-          ),
+          // Image.asset(
+          //   getImageAsset(R.ic_play),
+          //   height: 50,
+          // ),
         ],
       ),
     );
@@ -235,14 +209,10 @@ class GredientImage extends StatelessWidget {
     return Stack(
       children: <Widget>[
         Container(
-          decoration: BoxDecoration(
-            color: Colors.transparent,
-            image: DecorationImage(
-              fit: BoxFit.cover,
-              image: NetworkImage(
-                "$imageName",
-              ),
-            ),
+          width: getMediaWidth(context),
+          child: Image.network(
+            imageName,
+            fit: BoxFit.cover,
           ),
         ),
         Container(
@@ -265,61 +235,6 @@ class GredientImage extends StatelessWidget {
   }
 }
 
-class TrendingMovies extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: get200Size(context) + get50Size(context),
-      width: getMediaWidth(context),
-      child: FutureBuilder<TopRatedMviesModel>(
-        future: ApiClient.apiClient.getTopRatedMovies(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return Carousel(
-              dotSize: 6.0,
-              boxFit: BoxFit.fill,
-              autoplay: false,
-              dotIncreasedColor: Colors.yellow,
-              dotBgColor: Colors.purple.withOpacity(0.0),
-              images: List.generate(
-                10,
-                (index) {
-                  return GestureDetector(
-                    onTap: () async {
-                      navigateTo(
-                        context,
-                        DetailsPage(
-                          id: snapshot.data.results[index].id.toString(),
-                        ),
-                      );
-                    },
-                    child: MoviePosterImage(
-                      item:
-                          imgBaseURL + snapshot.data.results[index].posterPath,
-                    ),
-                  );
-                },
-              ).toList(),
-            );
-          } else {
-            return Shimmer.fromColors(
-              baseColor: Colors.grey[400].withOpacity(0.3),
-              highlightColor: Colors.grey[200].withOpacity(0.3),
-              loop: 4,
-              child: Container(
-                height: get200Size(context) + get50Size(context),
-                width: getMediaWidth(context),
-                color: Colors.red,
-                margin: const EdgeInsets.all(4),
-              ),
-            );
-          }
-        },
-      ),
-    );
-  }
-}
-
 class TabsAndMovies extends StatefulWidget {
   final GenresModel data;
 
@@ -327,6 +242,7 @@ class TabsAndMovies extends StatefulWidget {
     Key key,
     @required this.data,
   }) : super(key: key);
+
   @override
   _TabsAndMoviesState createState() => _TabsAndMoviesState();
 }
@@ -378,6 +294,7 @@ class _TabsAndMoviesState extends State<TabsAndMovies>
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         return Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -386,23 +303,19 @@ class _TabsAndMoviesState extends State<TabsAndMovies>
                               height: get200Size(context) + get100Size(context),
                               child: ListView.builder(
                                 scrollDirection: Axis.horizontal,
-                                itemCount: snapshot.data.results.length,
+                                itemCount: snapshot?.data?.results?.length ?? 0,
                                 itemBuilder: (context, index) {
                                   return InkWell(
                                     onTap: () {
                                       navigateTo(
                                         context,
                                         DetailsPage(
-                                          id: snapshot.data.results[index].id
-                                              .toString(),
+                                          id: "${snapshot?.data?.results[index]?.id ?? 0}",
                                         ),
                                       );
                                     },
                                     child: Container(
-                                      // margin: const EdgeInsets.all(8),
                                       height: get100Size(context),
-                                      // width: get140Size(context),
-                                      // color: Colors.red,
                                       child: Column(
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
@@ -410,76 +323,66 @@ class _TabsAndMoviesState extends State<TabsAndMovies>
                                             CrossAxisAlignment.start,
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          Flexible(
-                                            flex: 2,
-                                            child: Container(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              height: get200Size(context),
-                                              // width: ,
-                                              child: Image.network(
-                                                "$imgBaseURL${snapshot.data.results[index].posterPath}",
-                                                fit: BoxFit.fill,
-                                                width: get120Size(context),
+                                          Container(
+                                            padding:
+                                                const EdgeInsets.all(8.0),
+                                            height: get200Size(context),
+                                            child: Image.network(
+                                              "$imgBaseURL${snapshot?.data?.results[index]?.posterPath ?? ""}",
+                                              fit: BoxFit.fill,
+                                              width: get120Size(context),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: SizedBox(
+                                              width: get120Size(context),
+                                              child: AutoSizeText(
+                                                "${snapshot?.data?.results[index]?.title ?? ""}",
+                                                maxLines: 2,
                                               ),
                                             ),
                                           ),
-                                          Flexible(
-                                            flex: 1,
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: SizedBox(
-                                                width: get120Size(context),
-                                                child: Text(
-                                                  "${snapshot.data.results[index].title}",
-                                                  maxLines: 3,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Flexible(
-                                            flex: 0,
-                                            child: Container(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              // width: get120Size(context),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                      "${snapshot.data.results[index].voteAverage}"),
-                                                  Container(
-                                                    child: RatingBar.builder(
-                                                      initialRating: snapshot
-                                                              .data
-                                                              .results[index]
-                                                              .voteAverage /
-                                                          2,
-                                                      itemSize: 15,
-                                                      minRating: 0,
-                                                      maxRating: 5,
-                                                      ignoreGestures: true,
-                                                      direction:
-                                                          Axis.horizontal,
-                                                      allowHalfRating: true,
-                                                      itemCount: 5,
-                                                      itemPadding:
-                                                          EdgeInsets.symmetric(
-                                                              horizontal: 0.0),
-                                                      itemBuilder:
-                                                          (context, _) => Icon(
-                                                        Icons.star,
-                                                        color: Colors.amber,
-                                                      ),
-                                                      onRatingUpdate: (rating) {
-                                                        print(rating);
-                                                      },
+                                          Spacer(),
+                                          Container(
+                                            padding:
+                                                const EdgeInsets.all(8.0),
+                                            // width: get120Size(context),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Text(
+                                                    "${snapshot?.data?.results[index]?.voteAverage ?? ""}"),
+                                                Container(
+                                                  child: RatingBar.builder(
+                                                    initialRating: snapshot
+                                                            ?.data
+                                                            ?.results[index]
+                                                            ?.voteAverage ??
+                                                        0 / 2,
+                                                    itemSize: 15,
+                                                    minRating: 0,
+                                                    maxRating: 5,
+                                                    ignoreGestures: true,
+                                                    direction:
+                                                        Axis.horizontal,
+                                                    allowHalfRating: true,
+                                                    itemCount: 5,
+                                                    itemPadding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 0.0),
+                                                    itemBuilder:
+                                                        (context, _) => Icon(
+                                                      Icons.star,
+                                                      color: Colors.amber,
                                                     ),
+                                                    onRatingUpdate: (rating) {
+                                                      print(rating);
+                                                    },
                                                   ),
-                                                ],
-                                              ),
+                                                ),
+                                              ],
                                             ),
                                           ),
                                         ],
