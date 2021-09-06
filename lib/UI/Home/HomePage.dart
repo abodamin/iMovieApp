@@ -18,6 +18,7 @@ import 'package:i_movie_app/UI/Widgets/Responsive.dart';
 import 'package:i_movie_app/UI/Widgets/Utils.dart';
 import 'package:i_movie_app/UI/Home/DetailsPage.dart' as details;
 import 'package:i_movie_app/UI/Widgets/avatar_photo.dart';
+import 'package:i_movie_app/UI/Widgets/cast_card.dart';
 import 'package:i_movie_app/UI/Widgets/top_rated_movies.dart';
 import 'package:i_movie_app/UI/Widgets/trending_movies.dart';
 import 'package:shimmer/shimmer.dart';
@@ -349,7 +350,7 @@ class _TabsAndMoviesState extends State<TabsAndMovies>
                                             // width: get120Size(context),
                                             child: Row(
                                               mainAxisAlignment:
-                                                  MainAxisAlignment.start,
+                                                  MainAxisAlignment.spaceBetween,
                                               children: [
                                                 Text(
                                                     "${snapshot?.data?.results[index]?.voteAverage ?? ""}"),

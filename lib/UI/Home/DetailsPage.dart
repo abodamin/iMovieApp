@@ -14,6 +14,7 @@ import 'package:i_movie_app/UI/Widgets/MyLoadingWidget.dart';
 import 'package:i_movie_app/UI/Widgets/Responsive.dart';
 import 'package:i_movie_app/UI/Widgets/Utils.dart';
 import 'package:i_movie_app/UI/Widgets/avatar_photo.dart';
+import 'package:i_movie_app/UI/Widgets/cast_card.dart';
 import 'package:i_movie_app/UI/Widgets/global_icons.dart';
 import 'package:i_movie_app/UI/Widgets/trending_movies.dart';
 import 'package:intl/intl.dart';
@@ -350,50 +351,6 @@ class _Genre extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         child: Text(title ?? "--"),
       ),
-    );
-  }
-}
-
-class CastCard extends StatelessWidget {
-  final String imagePath, actorName, bio;
-
-  const CastCard({
-    Key key,
-    @required this.imagePath,
-    @required this.actorName,
-    @required this.bio,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Container(
-          decoration: containerColorRadiusBorder(
-            Colors.transparent,
-            300,
-            Colors.transparent,
-          ),
-          width: get80Size(context),
-          height: get80Size(context),
-          clipBehavior: Clip.antiAlias,
-          child: AvatarPhoto(
-            photoPath: "$imagePath",
-            height: get20Size(context),
-          ),
-        ),
-        Text(
-          "${actorName ?? "NA"}",
-          style: getTextTheme(context).button,
-        ),
-        AutoSizeText(
-          "${bio ?? ". . ."}",
-          style: getTextTheme(context).caption,
-          textAlign: TextAlign.center,
-        ),
-      ],
     );
   }
 }
