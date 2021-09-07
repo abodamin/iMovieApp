@@ -5,10 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:i_movie_app/App/Globals.dart';
 import 'package:i_movie_app/App/api.dart';
+import 'package:i_movie_app/App/colors.dart';
 import 'package:i_movie_app/Model/MovieCastModel.dart';
 import 'package:i_movie_app/Model/MovieDetailsModel.dart';
 import 'package:i_movie_app/Model/SimilarMoviesModel.dart';
 import 'package:i_movie_app/Model/TrendingMoviesModel.dart';
+import 'package:i_movie_app/Model/assets_names.dart';
 import 'package:i_movie_app/UI/Home/HomePage.dart';
 import 'package:i_movie_app/UI/Widgets/MyLoadingWidget.dart';
 import 'package:i_movie_app/UI/Widgets/Responsive.dart';
@@ -17,6 +19,7 @@ import 'package:i_movie_app/UI/Widgets/avatar_photo.dart';
 import 'package:i_movie_app/UI/Widgets/cast_card.dart';
 import 'package:i_movie_app/UI/Widgets/global_icons.dart';
 import 'package:i_movie_app/UI/Widgets/trending_movies.dart';
+import 'package:i_movie_app/UI/show_trailer.dart';
 import 'package:intl/intl.dart';
 
 class DetailsPage extends StatelessWidget {
@@ -72,15 +75,32 @@ class DetailsPage extends StatelessWidget {
                                     ),
                                   ),
                                   Align(
-                                    alignment: Alignment.bottomRight,
-                                    child: Container(
-                                      margin: const EdgeInsets.all(8.0),
-                                      child: Image.asset(
-                                        getImageAsset("ic_play2.png"),
-                                        height: 50,
-                                      ),
-                                    ),
-                                  )
+                                      alignment: Alignment.bottomRight,
+                                      child: Padding(
+                                        padding: mHor16Vert8,
+                                        child: ClipOval(
+                                          child: Material(
+                                            color: getTheme(context)
+                                                .accentColor, // Button color
+                                            child: InkWell(
+                                              onTap: () {
+                                                navigateTo(
+                                                  context,
+                                                  ShowTrailerPage(
+                                                    movieId: snapshot?.data?.id?.toString(),
+                                                  ),
+                                                );
+                                              },
+                                              child: SizedBox(
+                                                child: Icon(
+                                                  Icons.play_arrow,
+                                                  size: 40,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      )),
                                 ],
                               ),
                               // --- Rating --- //
@@ -309,6 +329,7 @@ class _TitleAndValue extends StatelessWidget {
     @required this.title,
     @required this.value,
   }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -339,6 +360,7 @@ class _Genre extends StatelessWidget {
     Key key,
     @required this.title,
   }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -397,4 +419,3 @@ class SimilarMovies extends StatelessWidget {
     );
   }
 }
-

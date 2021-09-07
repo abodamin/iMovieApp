@@ -91,10 +91,6 @@ double get4Size(BuildContext context) {
   return getMediaHeight(context) / 240;
 }
 
-String getImageAsset(String imageName) {
-  return "assets/images/$imageName";
-}
-
 TextTheme getTextTheme(context) {
   return Theme.of(context).textTheme;
 }
