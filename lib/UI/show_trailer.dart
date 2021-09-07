@@ -21,20 +21,10 @@ class ShowTrailerPage extends StatefulWidget {
 }
 
 class _ShowTrailerPageState extends State<ShowTrailerPage> {
-  ChewieController _chewieController;
-  YoutubePlayerController _controller;
 
   @override
   void initState() {
     _setOrientation(Orientations.Horizontal);
-
-    _controller = YoutubePlayerController(
-      params: YoutubePlayerParams(
-        showControls: true,
-        showFullscreenButton: true,
-        autoPlay: true,
-      ),
-    );
     mLogger.i("movieID: ${widget.movieId}");
     super.initState();
   }
@@ -48,7 +38,6 @@ class _ShowTrailerPageState extends State<ShowTrailerPage> {
       },
       child: SafeArea(
         child: Scaffold(
-          backgroundColor: Colors.grey,
           body: Container(
             height: getMediaHeight(context),
             width: getMediaWidth(context),
@@ -61,21 +50,23 @@ class _ShowTrailerPageState extends State<ShowTrailerPage> {
                       ?.first
                       ?.key;
 
-                  return FutureBuilder(
-                    future: _prepareVideoPlayer(officialMovieKey),
-                    builder: (context, snapshot) {
-                      return YoutubePlayerIFrame(
-                        controller: _controller = YoutubePlayerController(
-                          initialVideoId: officialMovieKey,
-                          params: YoutubePlayerParams(
-                            showControls: true,
-                            showFullscreenButton: false,
-                            autoPlay: true,
-                            privacyEnhanced: true,
-                          ),
-                        ),
-                      );
-                    },
+                  return YoutubePlayerIFrame(
+                    controller: YoutubePlayerController(
+                      initialVideoId: officialMovieKey,
+                      params: YoutubePlayerParams(
+                        showControls: true,
+                        showFullscreenButton: false,
+                        autoPlay: true,
+                        privacyEnhanced: true,
+                      ),
+                    ),
+                  );
+                } else if (mvsnapshpt.hasError) {
+                  return Center(
+                    child: Text(
+                      "Ops something went wrong, maybe this movie has no trailer :/ ",
+                      style: getTextTheme(context).headline6,
+                    ),
                   );
                 } else {
                   return MyLoadingWidget();
@@ -88,21 +79,6 @@ class _ShowTrailerPageState extends State<ShowTrailerPage> {
     );
   }
 
-  @override
-  void dispose() {
-    _controller.close();
-    super.dispose();
-  }
-
-  Future<void> _prepareVideoPlayer(String key) async {
-    final _videoPlayerController =
-        VideoPlayerController.network('https://www.youtube.com/watch?v=$key');
-    await _videoPlayerController.initialize();
-    _chewieController = ChewieController(
-      videoPlayerController: _videoPlayerController,
-      autoPlay: true,
-    );
-  }
 
   Future<void> _setOrientation(Orientations orientation) async {
     switch (orientation) {
@@ -115,9 +91,10 @@ class _ShowTrailerPageState extends State<ShowTrailerPage> {
         return await SystemChrome.setPreferredOrientations([
           DeviceOrientation.portraitUp,
         ]);
-      default: await SystemChrome.setPreferredOrientations([
-        DeviceOrientation.portraitUp,
-      ]);
+      default:
+        await SystemChrome.setPreferredOrientations([
+          DeviceOrientation.portraitUp,
+        ]);
     }
   }
 }

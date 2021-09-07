@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:flutter/services.dart';
 import 'package:i_movie_app/App/colors.dart';
 import 'package:flutter/material.dart';
 
@@ -62,6 +63,11 @@ InputDecoration txtField(String label) {
     contentPadding: EdgeInsets.only(left: 15, right: 15),
   );
 }
+
+Future<void> setUIOverlays() async {
+  await SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.top]);
+}
+
 
 InputDecoration txtFieldLabel(String label) {
   return new InputDecoration(

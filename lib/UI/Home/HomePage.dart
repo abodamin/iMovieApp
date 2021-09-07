@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:i_movie_app/App/Globals.dart';
 import 'package:i_movie_app/App/api.dart';
@@ -8,20 +9,15 @@ import 'package:i_movie_app/App/api.dart';
 import 'package:i_movie_app/App/colors.dart';
 import 'package:i_movie_app/Model/GenreMoviesModel.dart';
 import 'package:i_movie_app/Model/GenresModel.dart';
-import 'package:i_movie_app/Model/TopRatedMoviesModel.dart';
-import 'package:i_movie_app/Model/TrendingMoviesModel.dart';
 import 'package:i_movie_app/Model/TrendingPeople.dart' as tp;
 import 'package:i_movie_app/Model/assets_names.dart';
 import 'package:i_movie_app/UI/Home/DetailsPage.dart';
 import 'package:i_movie_app/UI/Widgets/MyLoadingWidget.dart';
 import 'package:i_movie_app/UI/Widgets/Responsive.dart';
 import 'package:i_movie_app/UI/Widgets/Utils.dart';
-import 'package:i_movie_app/UI/Home/DetailsPage.dart' as details;
-import 'package:i_movie_app/UI/Widgets/avatar_photo.dart';
 import 'package:i_movie_app/UI/Widgets/cast_card.dart';
 import 'package:i_movie_app/UI/Widgets/top_rated_movies.dart';
 import 'package:i_movie_app/UI/Widgets/trending_movies.dart';
-import 'package:shimmer/shimmer.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -75,7 +71,8 @@ class HomePage extends StatelessWidget {
               mHeight(get20Size(context)),
               Padding(
                 padding: const EdgeInsets.all(8),
-                child: Text("Trending Actors This Week",
+                child: Text(
+                  "Trending Actors This Week",
                   style: getTextTheme(context).caption,
                 ),
               ),
@@ -229,7 +226,7 @@ class _TabsAndMoviesState extends State<TabsAndMovies>
           indicatorColor: secondaryColor,
           tabs: List.generate(
             widget?.data?.genres?.length,
-                (index) {
+            (index) {
               return Tab(
                 child: Text("${widget?.data?.genres[index]?.name ?? ""}"),
               );
@@ -245,7 +242,7 @@ class _TabsAndMoviesState extends State<TabsAndMovies>
           child: TabBarView(
             children: List.generate(
               widget.data.genres.length,
-                  (index) {
+              (index) {
                 return FutureBuilder<GenreMoviesModel>(
                     future: ApiClient.apiClient
                         .getGenreMovies(widget.data.genres[index].id),
@@ -268,8 +265,7 @@ class _TabsAndMoviesState extends State<TabsAndMovies>
                                       navigateTo(
                                         context,
                                         DetailsPage(
-                                          id: "${snapshot?.data?.results[index]
-                                              ?.id ?? 0}",
+                                          id: "${snapshot?.data?.results[index]?.id ?? 0}",
                                         ),
                                       );
                                     },
@@ -277,19 +273,16 @@ class _TabsAndMoviesState extends State<TabsAndMovies>
                                       height: get100Size(context),
                                       child: Column(
                                         mainAxisAlignment:
-                                        MainAxisAlignment.start,
+                                            MainAxisAlignment.start,
                                         crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                            CrossAxisAlignment.start,
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           Container(
-                                            padding:
-                                            const EdgeInsets.all(8.0),
+                                            padding: const EdgeInsets.all(8.0),
                                             height: get200Size(context),
                                             child: Image.network(
-                                              "$imgBaseURL${snapshot?.data
-                                                  ?.results[index]
-                                                  ?.posterPath ?? ""}",
+                                              "$imgBaseURL${snapshot?.data?.results[index]?.posterPath ?? ""}",
                                               fit: BoxFit.fill,
                                               width: get120Size(context),
                                             ),
@@ -299,50 +292,44 @@ class _TabsAndMoviesState extends State<TabsAndMovies>
                                             child: SizedBox(
                                               width: get120Size(context),
                                               child: AutoSizeText(
-                                                "${snapshot?.data
-                                                    ?.results[index]?.title ??
-                                                    ""}",
+                                                "${snapshot?.data?.results[index]?.title ?? ""}",
                                                 maxLines: 2,
                                               ),
                                             ),
                                           ),
                                           Spacer(),
                                           Container(
-                                            padding:
-                                            const EdgeInsets.all(8.0),
+                                            padding: const EdgeInsets.all(8.0),
                                             // width: get120Size(context),
                                             child: Row(
                                               mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
                                                 Text(
-                                                    "${snapshot?.data
-                                                        ?.results[index]
-                                                        ?.voteAverage ?? ""}"),
+                                                    "${snapshot?.data?.results[index]?.voteAverage ?? ""}"),
                                                 Container(
                                                   child: RatingBar.builder(
                                                     initialRating: snapshot
-                                                        ?.data
-                                                        ?.results[index]
-                                                        ?.voteAverage ??
+                                                            ?.data
+                                                            ?.results[index]
+                                                            ?.voteAverage ??
                                                         0 / 2,
                                                     itemSize: 15,
                                                     minRating: 0,
                                                     maxRating: 5,
                                                     ignoreGestures: true,
-                                                    direction:
-                                                    Axis.horizontal,
+                                                    direction: Axis.horizontal,
                                                     allowHalfRating: true,
                                                     itemCount: 5,
                                                     itemPadding:
-                                                    EdgeInsets.symmetric(
-                                                        horizontal: 0.0),
-                                                    itemBuilder:
-                                                        (context, _) =>
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 0.0),
+                                                    itemBuilder: (context, _) =>
                                                         Icon(
-                                                          Icons.star,
-                                                          color: Colors.amber,
-                                                        ),
+                                                      Icons.star,
+                                                      color: Colors.amber,
+                                                    ),
                                                     onRatingUpdate: (rating) {
                                                       print(rating);
                                                     },
@@ -374,7 +361,6 @@ class _TabsAndMoviesState extends State<TabsAndMovies>
   }
 }
 
-
 class Dump extends StatelessWidget {
   const Dump();
 
@@ -393,7 +379,7 @@ class Dump extends StatelessWidget {
           ),
           SliverList(
             delegate: SliverChildBuilderDelegate(
-                  (BuildContext context, int index) {
+              (BuildContext context, int index) {
                 return Container(
                   color: index.isOdd ? Colors.white : Colors.black12,
                   height: 100.0,

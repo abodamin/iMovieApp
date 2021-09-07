@@ -51,6 +51,7 @@ class DetailsPage extends StatelessWidget {
                             children: [
                               // --- GredientImg --- //
                               Stack(
+                                clipBehavior: Clip.none,
                                 alignment: Alignment.bottomRight,
                                 children: [
                                   Container(
@@ -74,33 +75,36 @@ class DetailsPage extends StatelessWidget {
                                       ],
                                     ),
                                   ),
-                                  Align(
-                                      alignment: Alignment.bottomRight,
-                                      child: Padding(
-                                        padding: mHor16Vert8,
-                                        child: ClipOval(
-                                          child: Material(
-                                            color: getTheme(context)
-                                                .accentColor, // Button color
-                                            child: InkWell(
-                                              onTap: () {
-                                                navigateTo(
-                                                  context,
-                                                  ShowTrailerPage(
-                                                    movieId: snapshot?.data?.id?.toString(),
-                                                  ),
-                                                );
-                                              },
-                                              child: SizedBox(
-                                                child: Icon(
-                                                  Icons.play_arrow,
-                                                  size: 40,
+                                  Positioned(
+                                    bottom: -30,
+                                    right: 16,
+                                    child: Padding(
+                                      padding: mHor16Vert8,
+                                      child: ClipOval(
+                                        child: Material(
+                                          color: getTheme(context)
+                                              .accentColor, // Button color
+                                          child: InkWell(
+                                            onTap: () {
+                                              navigateTo(
+                                                context,
+                                                ShowTrailerPage(
+                                                  movieId: snapshot?.data?.id
+                                                      ?.toString(),
                                                 ),
+                                              );
+                                            },
+                                            child: SizedBox(
+                                              child: Icon(
+                                                Icons.play_arrow,
+                                                size: 40,
                                               ),
                                             ),
                                           ),
                                         ),
-                                      )),
+                                      ),
+                                    ),
+                                  ),
                                 ],
                               ),
                               // --- Rating --- //
@@ -398,17 +402,27 @@ class SimilarMovies extends StatelessWidget {
         ),
         itemCount: data.results.length,
         itemBuilder: (context, index) {
-          return Container(
-            margin: const EdgeInsets.all(4),
+          return GestureDetector(
+            onTap: () {
+              navigateTo(
+                context,
+                DetailsPage(
+                  id: data.results[index].id.toString(),
+                ),
+              );
+            },
             child: Container(
-              height: get200Size(context) + get50Size(context),
-              width: getMediaWidth(context),
-              decoration: BoxDecoration(
-                color: Colors.transparent,
-                image: DecorationImage(
-                  fit: BoxFit.cover,
-                  image: NetworkImage(
-                    "${imgBaseURL + data.results[index].posterPath}",
+              margin: const EdgeInsets.all(4),
+              child: Container(
+                height: get200Size(context) + get50Size(context),
+                width: getMediaWidth(context),
+                decoration: BoxDecoration(
+                  color: Colors.transparent,
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: NetworkImage(
+                      "${imgBaseURL + data.results[index].posterPath}",
+                    ),
                   ),
                 ),
               ),

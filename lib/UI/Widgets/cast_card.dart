@@ -36,6 +36,7 @@ class CastCard extends StatelessWidget {
         Text(
           "${actorName ?? "NA"}",
           style: getTextTheme(context).button,
+          textAlign: TextAlign.center,
         ),
         AutoSizeText(
           "${bio ?? ". . ."}",
