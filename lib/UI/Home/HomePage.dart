@@ -1,7 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:i_movie_app/App/Globals.dart';
 import 'package:i_movie_app/App/api.dart';
@@ -12,6 +10,8 @@ import 'package:i_movie_app/Model/GenresModel.dart';
 import 'package:i_movie_app/Model/TrendingPeople.dart' as tp;
 import 'package:i_movie_app/Model/assets_names.dart';
 import 'package:i_movie_app/UI/Home/DetailsPage.dart';
+import 'package:i_movie_app/UI/Home/tabs_and_movies_shimmer.dart';
+import 'package:i_movie_app/UI/Home/trending_actors_shimmer.dart';
 import 'package:i_movie_app/UI/Widgets/MyLoadingWidget.dart';
 import 'package:i_movie_app/UI/Widgets/Responsive.dart';
 import 'package:i_movie_app/UI/Widgets/Utils.dart';
@@ -62,12 +62,11 @@ class HomePage extends StatelessWidget {
                       data: snapshot.data,
                     );
                   } else {
-                    //TODO: Shimmer
-                    return MyLoadingWidget();
+                    return TabsAndMoviesShimmer();
                   }
                 },
               ),
-              // --- GetTrendinPersons --- //
+              // --- GetTrendingPersons --- //
               mHeight(get20Size(context)),
               Padding(
                 padding: const EdgeInsets.all(8),
@@ -99,7 +98,7 @@ class HomePage extends StatelessWidget {
                         },
                       );
                     } else {
-                      return MyLoadingWidget();
+                      return TrendingActorsShimmer();
                     }
                   },
                 ),
@@ -348,7 +347,7 @@ class _TabsAndMoviesState extends State<TabsAndMovies>
                           ],
                         );
                       } else {
-                        return MyLoadingWidget();
+                        return SizedBox.shrink();
                       }
                     });
               },

@@ -12,6 +12,8 @@ import 'package:i_movie_app/Model/SimilarMoviesModel.dart';
 import 'package:i_movie_app/Model/TrendingMoviesModel.dart';
 import 'package:i_movie_app/Model/assets_names.dart';
 import 'package:i_movie_app/UI/Home/HomePage.dart';
+import 'package:i_movie_app/UI/Home/trending_actors_shimmer.dart';
+import 'package:i_movie_app/UI/Home/trending_movies_shimmer.dart';
 import 'package:i_movie_app/UI/Widgets/MyLoadingWidget.dart';
 import 'package:i_movie_app/UI/Widgets/Responsive.dart';
 import 'package:i_movie_app/UI/Widgets/Utils.dart';
@@ -24,7 +26,7 @@ import 'package:intl/intl.dart';
 
 class DetailsPage extends StatelessWidget {
   final String id;
-  var _currency = new NumberFormat("#,##0.00", "en_US");
+  final _currency = new NumberFormat("#,##0", "en_US");
 
   DetailsPage({
     Key key,
@@ -252,7 +254,7 @@ class DetailsPage extends StatelessWidget {
                                           },
                                         );
                                       } else {
-                                        return MyLoadingWidget();
+                                        return TrendingActorsShimmer();
                                       }
                                     }),
                               ),
@@ -296,7 +298,7 @@ class DetailsPage extends StatelessWidget {
                                           );
                                         }
                                       } else {
-                                        return MyLoadingWidget();
+                                        return TrendingMoviesShimmer();
                                       }
                                     }),
                               ),
@@ -304,7 +306,9 @@ class DetailsPage extends StatelessWidget {
                             ],
                           );
                         } else {
-                          return MyLoadingWidget();
+                          return Container(
+                              height: getMediaHeight(context),
+                              child: Center(child: MyLoadingWidget()));
                         }
                       }),
                 ),

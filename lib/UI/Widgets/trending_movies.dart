@@ -5,6 +5,7 @@ import 'package:i_movie_app/App/imports.dart';
 import 'package:i_movie_app/Model/TrendingMoviesModel.dart';
 import 'package:i_movie_app/Model/assets_names.dart';
 import 'package:i_movie_app/UI/Home/DetailsPage.dart';
+import 'package:i_movie_app/UI/Home/trending_movies_shimmer.dart';
 import 'package:i_movie_app/UI/Widgets/MyLoadingWidget.dart';
 import 'package:i_movie_app/UI/Widgets/Responsive.dart';
 
@@ -49,7 +50,7 @@ class TrendingMovies extends StatelessWidget {
               ),
             );
           } else {
-            return MyLoadingWidget();
+            return TrendingMoviesShimmer();
           }
         });
   }

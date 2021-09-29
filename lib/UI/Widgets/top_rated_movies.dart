@@ -1,18 +1,11 @@
-
-
-
-
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:i_movie_app/App/Globals.dart';
 import 'package:i_movie_app/App/api.dart';
 import 'package:i_movie_app/App/imports.dart';
-import 'package:i_movie_app/Model/TopRatedMoviesModel.dart';
 import 'package:i_movie_app/Model/TrendingMoviesModel.dart';
 import 'package:i_movie_app/UI/Home/DetailsPage.dart';
 import 'package:i_movie_app/UI/Home/HomePage.dart';
-import 'package:i_movie_app/UI/Widgets/trending_movies.dart';
-import 'package:shimmer/shimmer.dart';
-
+import 'package:i_movie_app/UI/Widgets/global_shimmer.dart';
 
 //TODO change name to Trending movies
 class TopRatedMovies extends StatelessWidget {
@@ -52,16 +45,9 @@ class TopRatedMovies extends StatelessWidget {
               ).toList(),
             );
           } else {
-            return Shimmer.fromColors(
-              baseColor: Colors.grey[400].withOpacity(0.3),
-              highlightColor: Colors.grey[200].withOpacity(0.3),
-              loop: 4,
-              child: Container(
-                height: get200Size(context) + get50Size(context),
-                width: getMediaWidth(context),
-                color: Colors.red,
-                margin: const EdgeInsets.all(4),
-              ),
+            return GlobalShimmer(
+              height: get200Size(context) + get50Size(context),
+              width: getMediaWidth(context),
             );
           }
         },
