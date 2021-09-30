@@ -1,25 +1,19 @@
-import 'dart:io';
 
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:i_movie_app/App/Globals.dart';
 import 'package:i_movie_app/App/api.dart';
-import 'package:i_movie_app/App/colors.dart';
 import 'package:i_movie_app/Model/MovieCastModel.dart';
 import 'package:i_movie_app/Model/MovieDetailsModel.dart';
 import 'package:i_movie_app/Model/SimilarMoviesModel.dart';
-import 'package:i_movie_app/Model/TrendingMoviesModel.dart';
-import 'package:i_movie_app/Model/assets_names.dart';
-import 'package:i_movie_app/UI/Home/HomePage.dart';
 import 'package:i_movie_app/UI/Home/trending_actors_shimmer.dart';
 import 'package:i_movie_app/UI/Home/trending_movies_shimmer.dart';
 import 'package:i_movie_app/UI/Widgets/MyLoadingWidget.dart';
 import 'package:i_movie_app/UI/Widgets/Responsive.dart';
 import 'package:i_movie_app/UI/Widgets/Utils.dart';
-import 'package:i_movie_app/UI/Widgets/avatar_photo.dart';
 import 'package:i_movie_app/UI/Widgets/cast_card.dart';
 import 'package:i_movie_app/UI/Widgets/global_icons.dart';
+import 'package:i_movie_app/UI/Widgets/top_rated_movies.dart';
 import 'package:i_movie_app/UI/Widgets/trending_movies.dart';
 import 'package:i_movie_app/UI/show_trailer.dart';
 import 'package:intl/intl.dart';

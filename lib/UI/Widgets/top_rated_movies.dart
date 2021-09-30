@@ -1,10 +1,12 @@
 import 'package:carousel_pro/carousel_pro.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:i_movie_app/App/Globals.dart';
 import 'package:i_movie_app/App/api.dart';
+import 'package:i_movie_app/App/colors.dart';
 import 'package:i_movie_app/App/imports.dart';
 import 'package:i_movie_app/Model/TrendingMoviesModel.dart';
 import 'package:i_movie_app/UI/Home/DetailsPage.dart';
-import 'package:i_movie_app/UI/Home/HomePage.dart';
+import 'package:i_movie_app/UI/Home/carousel_shimmer.dart';
 import 'package:i_movie_app/UI/Widgets/global_shimmer.dart';
 
 //TODO change name to Trending movies
@@ -12,39 +14,42 @@ class TopRatedMovies extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: getMediaHeight(context)*0.6,
+      height: getMediaHeight(context) * 0.5,
       width: getMediaWidth(context),
       child: FutureBuilder<TrendingMoviesModel>(
         future: ApiClient.apiClient.getTrendingMovies(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return Carousel(
-              dotSize: 6.0,
-              boxFit: BoxFit.fill,
-              autoplay: false,
-              dotIncreasedColor: Colors.yellow,
-              dotBgColor: Colors.purple.withOpacity(0.0),
-              images: List.generate(
+            return CarouselSlider(
+              options: CarouselOptions(
+                autoPlay: true,
+                aspectRatio: 0.8,
+                enlargeCenterPage: true,
+              ),
+              items: List.generate(
                 10,
-                    (index) {
+                (index) {
+                  var _path = snapshot.data.results[index];
                   return GestureDetector(
                     onTap: () async {
                       navigateTo(
                         context,
                         DetailsPage(
-                          id: snapshot.data.results[index].id.toString(),
+                          id: _path?.id?.toString() ??
+                              "",
                         ),
                       );
                     },
-                    child: MoviePosterImage(
-                      item:
-                      imgBaseURL + snapshot.data.results[index].posterPath,
+                    child: RoundedPosterImage(
+                      image: imgBaseURL + _path?.posterPath ?? "",
                     ),
                   );
                 },
               ).toList(),
             );
           } else {
+            //TODO make CarouselShimmer
+            return CarouselShimmer();
             return GlobalShimmer(
               height: get200Size(context) + get50Size(context),
               width: getMediaWidth(context),
@@ -52,6 +57,92 @@ class TopRatedMovies extends StatelessWidget {
           }
         },
       ),
+    );
+  }
+}
+
+class RoundedPosterImage extends StatelessWidget {
+  final String image;
+
+  const RoundedPosterImage({
+    Key key,
+    @required this.image,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      // color: Colors.transparent,
+      // shape: cardRadius(20),
+      decoration: containerColorRadiusBorder(
+        Colors.transparent,
+        20,
+        Colors.transparent,
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Image.network(
+        image,
+        fit: BoxFit.fitHeight,
+      ),
+    );
+  }
+}
+
+class MoviePosterImage extends StatelessWidget {
+  final String item;
+
+  const MoviePosterImage({
+    Key key,
+    @required this.item,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: get200Size(context) + get50Size(context),
+      width: getMediaWidth(context),
+      child: GredientImage(
+        imageName: item?.toString() ?? "",
+      ),
+    );
+  }
+}
+
+class GredientImage extends StatelessWidget {
+  final String imageName;
+
+  const GredientImage({
+    Key key,
+    @required this.imageName,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      alignment: Alignment.center,
+      children: <Widget>[
+        Container(
+          width: getMediaWidth(context),
+          child: Image.network(
+            imageName,
+            fit: BoxFit.cover,
+          ),
+        ),
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            gradient: LinearGradient(
+              begin: FractionalOffset.topCenter,
+              end: FractionalOffset.bottomCenter,
+              colors: [
+                Colors.transparent,
+                primaryColor,
+              ],
+              stops: [0.0, 1.0],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

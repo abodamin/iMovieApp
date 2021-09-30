@@ -12,7 +12,6 @@ import 'package:i_movie_app/Model/assets_names.dart';
 import 'package:i_movie_app/UI/Home/DetailsPage.dart';
 import 'package:i_movie_app/UI/Home/tabs_and_movies_shimmer.dart';
 import 'package:i_movie_app/UI/Home/trending_actors_shimmer.dart';
-import 'package:i_movie_app/UI/Widgets/MyLoadingWidget.dart';
 import 'package:i_movie_app/UI/Widgets/Responsive.dart';
 import 'package:i_movie_app/UI/Widgets/Utils.dart';
 import 'package:i_movie_app/UI/Widgets/cast_card.dart';
@@ -48,10 +47,10 @@ class HomePage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              //Top Rated Movies Image.
+              //Top Rated Movies Posters.
               TopRatedMovies(),
               //TabBars
-              mHeight(get30Size(context)),
+              mHeight(get20Size(context)),
               FutureBuilder<GenresModel>(
                 future: ApiClient.apiClient.getGenres(),
                 builder: (context, snapshot) {
@@ -81,11 +80,12 @@ class HomePage extends StatelessWidget {
                   future: ApiClient.apiClient.getTrendinPersons(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
+                      var _path = snapshot.data.results;
                       return ListView.builder(
-                        itemCount: snapshot.data.results.length,
+                        itemCount: _path.length,
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (context, index) {
-                          var _data = snapshot.data?.results[index];
+                          var _data = _path[index];
                           return AspectRatio(
                             aspectRatio: 0.8,
                             child: CastCard(
@@ -117,74 +117,6 @@ class HomePage extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class MoviePosterImage extends StatelessWidget {
-  final item;
-
-  const MoviePosterImage({
-    Key key,
-    @required this.item,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: get200Size(context) + get50Size(context),
-      width: getMediaWidth(context),
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          GredientImage(
-            imageName: item.toString(),
-          ),
-          // Image.asset(
-          //   getImageAsset(R.ic_play),
-          //   height: 50,
-          // ),
-        ],
-      ),
-    );
-  }
-}
-
-class GredientImage extends StatelessWidget {
-  final String imageName;
-
-  const GredientImage({
-    Key key,
-    @required this.imageName,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        Container(
-          width: getMediaWidth(context),
-          child: Image.network(
-            imageName,
-            fit: BoxFit.cover,
-          ),
-        ),
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            gradient: LinearGradient(
-              begin: FractionalOffset.topCenter,
-              end: FractionalOffset.bottomCenter,
-              colors: [
-                Colors.transparent,
-                // Color(0xFF2A1C40),
-                primaryColor,
-              ],
-              stops: [0.0, 1.0],
-            ),
-          ),
-        )
-      ],
     );
   }
 }
