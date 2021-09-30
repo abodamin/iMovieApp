@@ -13,6 +13,7 @@ import 'package:i_movie_app/Model/TopRatedMoviesModel.dart';
 import 'package:i_movie_app/Model/TrendingMoviesModel.dart';
 import 'package:i_movie_app/Model/TrendingPeople.dart';
 import 'package:i_movie_app/Model/movie_videos.dart';
+import 'package:i_movie_app/Model/search_movies_result.dart';
 
 class TempClass {
   static Future<TempClass> fromJson(parsed) {}
@@ -238,6 +239,33 @@ class ApiClient {
       print("getMovieVideos " + response.body);
       final parsed = json.decode(response.body);
       return MovieVideos.fromJson(parsed);
+    } on SocketException {
+      return Future.error("check your internet connection");
+    } on http.ClientException {
+      return Future.error("check your internet connection");
+    } catch (e) {
+      return Future.error("Server Error");
+    }
+  }
+
+  Future<SearchMovieResult> searchforMovie(String keyWord) async {
+    Map<String, String> header = {
+      'Content-type': 'application/json',
+    };
+
+    String searchURI = Uri.dataFromString(keyWord).data.contentText;
+    mLogger.i(searchURI);
+
+    try {
+      final response = await _httpClient.get(
+        "$BASE_URL/3/search/movie?api_key=$mApiKey&language=en-US&query=${searchURI}&page=1&include_adult=true",
+        headers: header,
+      );
+
+      print("___searchforMovie API " + "$BASE_URL/3/search/movie?api_key=$mApiKey&language=en-US&query=$searchURI&page=1&include_adult=true");
+      print("searchforMovie " + response.body);
+      final parsed = json.decode(response.body);
+      return SearchMovieResult.fromJson(parsed);
     } on SocketException {
       return Future.error("check your internet connection");
     } on http.ClientException {

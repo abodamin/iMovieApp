@@ -390,7 +390,6 @@ class SimilarMovies extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // height: get200Size(context),
       child: GridView.builder(
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),

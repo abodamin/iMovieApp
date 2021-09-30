@@ -10,6 +10,7 @@ import 'package:i_movie_app/Model/GenresModel.dart';
 import 'package:i_movie_app/Model/TrendingPeople.dart' as tp;
 import 'package:i_movie_app/Model/assets_names.dart';
 import 'package:i_movie_app/UI/Home/DetailsPage.dart';
+import 'package:i_movie_app/UI/Home/search_result_page.dart';
 import 'package:i_movie_app/UI/Home/tabs_and_movies_shimmer.dart';
 import 'package:i_movie_app/UI/Home/trending_actors_shimmer.dart';
 import 'package:i_movie_app/UI/Widgets/Responsive.dart';
@@ -28,8 +29,10 @@ class HomePage extends StatelessWidget {
         actions: [
           IconButton(
             icon: Icon(Icons.search),
-            onPressed: () {
-              //
+            onPressed: () async {
+              // await ApiClient.apiClient.searchforMovie("home alone");
+              navigateTo(context, SearchPage());
+              //TODO navigateTo search page.
             },
           ),
         ],
