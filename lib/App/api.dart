@@ -44,7 +44,6 @@ class ApiClient {
       );
 
       print("getTrendingMovies " + response.body);
-      //return parseOtp(response.body);
       final parsed = json.decode(response.body);
       return TrendingMoviesModel.fromJson(parsed);
     } on SocketException {
@@ -94,7 +93,6 @@ class ApiClient {
       );
 
       print("getGenreMovies " + response.body);
-      //return parseOtp(response.body);
       final parsed = json.decode(response.body);
       return GenreMoviesModel.fromJson(parsed);
     } on SocketException {

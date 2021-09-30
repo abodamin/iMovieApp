@@ -15,7 +15,7 @@ import 'package:i_movie_app/UI/Home/trending_actors_shimmer.dart';
 import 'package:i_movie_app/UI/Widgets/Responsive.dart';
 import 'package:i_movie_app/UI/Widgets/Utils.dart';
 import 'package:i_movie_app/UI/Widgets/cast_card.dart';
-import 'package:i_movie_app/UI/Widgets/top_rated_movies.dart';
+import 'package:i_movie_app/UI/Widgets/trending_movies_this_week.dart';
 import 'package:i_movie_app/UI/Widgets/trending_movies.dart';
 
 class HomePage extends StatelessWidget {
@@ -48,7 +48,7 @@ class HomePage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               //Top Rated Movies Posters.
-              TopRatedMovies(),
+              TrendingMoviesThisWeek(),
               //TabBars
               mHeight(get20Size(context)),
               FutureBuilder<GenresModel>(
@@ -213,7 +213,7 @@ class _TabsAndMoviesState extends State<TabsAndMovies>
                                             padding: const EdgeInsets.all(8.0),
                                             height: get200Size(context),
                                             child: Image.network(
-                                              "$imgBaseURL${snapshot?.data?.results[index]?.posterPath ?? ""}",
+                                              "$imgBaseURLLQ${snapshot?.data?.results[index]?.posterPath ?? ""}",
                                               fit: BoxFit.fill,
                                               width: get120Size(context),
                                             ),

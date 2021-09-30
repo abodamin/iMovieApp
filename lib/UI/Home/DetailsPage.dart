@@ -13,7 +13,7 @@ import 'package:i_movie_app/UI/Widgets/Responsive.dart';
 import 'package:i_movie_app/UI/Widgets/Utils.dart';
 import 'package:i_movie_app/UI/Widgets/cast_card.dart';
 import 'package:i_movie_app/UI/Widgets/global_icons.dart';
-import 'package:i_movie_app/UI/Widgets/top_rated_movies.dart';
+import 'package:i_movie_app/UI/Widgets/trending_movies_this_week.dart';
 import 'package:i_movie_app/UI/Widgets/trending_movies.dart';
 import 'package:i_movie_app/UI/show_trailer.dart';
 import 'package:intl/intl.dart';
@@ -57,7 +57,7 @@ class DetailsPage extends StatelessWidget {
                                       children: [
                                         GredientImage(
                                           imageName:
-                                              "$imgBaseURL${snapshot.data.posterPath}",
+                                              "$imgBaseURLLQ${snapshot.data.posterPath}",
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.all(8.0),
@@ -238,7 +238,7 @@ class DetailsPage extends StatelessWidget {
                                               aspectRatio: 0.8,
                                               child: CastCard(
                                                 imagePath:
-                                                    "$imgBaseURL${snapshot.data.cast[index].profilePath}",
+                                                    "$imgBaseURLLQ${snapshot.data.cast[index].profilePath}",
                                                 actorName:
                                                     "${snapshot.data.cast[index].name}",
                                                 bio:
@@ -419,7 +419,7 @@ class SimilarMovies extends StatelessWidget {
                   image: DecorationImage(
                     fit: BoxFit.cover,
                     image: NetworkImage(
-                      "${imgBaseURL + data.results[index].posterPath}",
+                      "${imgBaseURLLQ + data.results[index].posterPath}",
                     ),
                   ),
                 ),

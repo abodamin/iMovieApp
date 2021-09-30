@@ -1,4 +1,4 @@
-import 'package:carousel_pro/carousel_pro.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:i_movie_app/App/Globals.dart';
 import 'package:i_movie_app/App/api.dart';
@@ -7,10 +7,8 @@ import 'package:i_movie_app/App/imports.dart';
 import 'package:i_movie_app/Model/TrendingMoviesModel.dart';
 import 'package:i_movie_app/UI/Home/DetailsPage.dart';
 import 'package:i_movie_app/UI/Home/carousel_shimmer.dart';
-import 'package:i_movie_app/UI/Widgets/global_shimmer.dart';
 
-//TODO change name to Trending movies
-class TopRatedMovies extends StatelessWidget {
+class TrendingMoviesThisWeek extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -35,25 +33,19 @@ class TopRatedMovies extends StatelessWidget {
                       navigateTo(
                         context,
                         DetailsPage(
-                          id: _path?.id?.toString() ??
-                              "",
+                          id: _path?.id?.toString() ?? "",
                         ),
                       );
                     },
                     child: RoundedPosterImage(
-                      image: imgBaseURL + _path?.posterPath ?? "",
+                      image: _path?.posterPath ?? "",
                     ),
                   );
                 },
               ).toList(),
             );
           } else {
-            //TODO make CarouselShimmer
             return CarouselShimmer();
-            return GlobalShimmer(
-              height: get200Size(context) + get50Size(context),
-              width: getMediaWidth(context),
-            );
           }
         },
       ),
@@ -72,16 +64,17 @@ class RoundedPosterImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // color: Colors.transparent,
-      // shape: cardRadius(20),
       decoration: containerColorRadiusBorder(
         Colors.transparent,
         20,
         Colors.transparent,
       ),
       clipBehavior: Clip.antiAlias,
-      child: Image.network(
-        image,
+      child: CachedNetworkImage(
+        placeholder: (context, url) => Container(
+          child: CarouselShimmer(),
+        ),
+        imageUrl: imgBaseURLHQ+image,
         fit: BoxFit.fitHeight,
       ),
     );
