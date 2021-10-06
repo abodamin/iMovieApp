@@ -9,12 +9,15 @@ class R {
 
   static String ic_person = _ASSETS_IMAGES + "ic_person.png";
   static String ic_play = _ASSETS_IMAGES + "ic_play2.png";
-  static String image_base_url = "https://image.tmdb.org/t/p/w185";
+  static String _image_base_url_highQ = "https://image.tmdb.org/t/p/original";
+  static String _image_base_url_lowQ = "https://image.tmdb.org/t/p/w185";
 
-  static String tag_movei_poster = "tag_movei_poster";
 
+  static String getNetworkImagePath(String subPath, {bool highQuality = false}){
+    return highQuality ? "${_image_base_url_highQ + subPath}": "${_image_base_url_lowQ + subPath}";
+  }
 
-  static String getNetworkImagePath(String subPath){
-    return "${image_base_url + subPath}";
+  static String getAssetImagePath(String assetName){
+    return "$_ASSETS_IMAGES$assetName";
   }
 }

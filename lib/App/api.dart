@@ -13,11 +13,8 @@ import 'package:i_movie_app/Model/TopRatedMoviesModel.dart';
 import 'package:i_movie_app/Model/TrendingMoviesModel.dart';
 import 'package:i_movie_app/Model/TrendingPeople.dart';
 import 'package:i_movie_app/Model/movie_videos.dart';
+import 'package:i_movie_app/Model/search_by_genre_result.dart';
 import 'package:i_movie_app/Model/search_movies_result.dart';
-
-class TempClass {
-  static Future<TempClass> fromJson(parsed) {}
-}
 
 class ApiClient {
   ApiClient._();
@@ -254,7 +251,7 @@ class ApiClient {
     };
 
     String searchURI = Uri.dataFromString(keyWord).data.contentText;
-    mLogger.i(searchURI);
+    // mLogger.i(searchURI);
 
     try {
       final response = await _httpClient.get(
@@ -266,6 +263,29 @@ class ApiClient {
       print("searchforMovie " + response.body);
       final parsed = json.decode(response.body);
       return SearchMovieResult.fromJson(parsed);
+    } on SocketException {
+      return Future.error("check your internet connection");
+    } on http.ClientException {
+      return Future.error("check your internet connection");
+    } catch (e) {
+      return Future.error("Server Error");
+    }
+  }
+
+
+  Future<SearchByGenreResult> searchByGenre(String genreIDs) async {
+    Map<String, String> header = {
+      'Content-type': 'application/json',
+    };
+    try {
+      final response = await _httpClient.get(
+        "$BASE_URL/3/discover/movie?api_key=$mApiKey&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&primary_release_date.gte=1990-01-01&primary_release_date.lte=1999-12-31&vote_average.gte=6&with_genres=$genreIDs",
+        headers: header,
+      );
+      // print("___searchforMovie API " + "$BASE_URL/3/search/movie?api_key=$mApiKey&language=en-US&query=$searchURI&page=1&include_adult=true");
+      print("searchByGenre " + response.body);
+      final parsed = json.decode(response.body);
+      return SearchByGenreResult.fromJson(parsed);
     } on SocketException {
       return Future.error("check your internet connection");
     } on http.ClientException {

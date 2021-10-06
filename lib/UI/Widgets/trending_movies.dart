@@ -20,11 +20,13 @@ class TrendingMovies extends StatelessWidget {
               child: GridView.builder(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
+                gridDelegate:  SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: getMediaWidth(context) > 600? 4 : 3,
                   childAspectRatio: 0.6,
+                  crossAxisSpacing: 4.0,
+                  mainAxisSpacing: 4.0,
                 ),
-                itemCount: snapshot.data?.results?.length??0,
+                itemCount: snapshot.data?.results?.length ?? 0,
                 itemBuilder: (context, index) {
                   return GestureDetector(
                     onTap: () {
@@ -40,7 +42,10 @@ class TrendingMovies extends StatelessWidget {
                         height: get200Size(context) + get50Size(context),
                         width: getMediaWidth(context),
                         child: Image.network(
-                            R.getNetworkImagePath(snapshot.data?.results[index]?.posterPath??""),
+                          R.getNetworkImagePath(
+                            snapshot.data?.results[index]?.posterPath ?? "",
+                            highQuality: getMediaWidth(context) > 600,
+                          ),
                           fit: BoxFit.cover,
                         ),
                       ),

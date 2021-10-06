@@ -1,9 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:i_movie_app/App/api.dart';
+import 'package:i_movie_app/App/colors.dart';
 import 'package:i_movie_app/App/imports.dart';
+import 'package:i_movie_app/Model/assets_names.dart';
+import 'package:i_movie_app/Model/search_by_genre_result.dart';
 import 'package:i_movie_app/Model/search_movies_result.dart';
 import 'package:i_movie_app/UI/Widgets/MyLoadingWidget.dart';
+import 'package:i_movie_app/UI/Widgets/adaptve_button.dart';
 import 'package:i_movie_app/UI/Widgets/global_movies_grid.dart';
+
+Map<String, int> moviesGenreIDs = {
+  "Action": 28,
+  "Adventure": 12,
+  "Animation": 16,
+  "Comedy": 35,
+  "Crime": 80,
+  "Documentary": 99,
+  "Drama": 18,
+  "Family": 10751,
+  "Fantasy": 14,
+  "History": 36,
+};
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key key}) : super(key: key);
@@ -13,77 +30,74 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  String searchKeyWord;
+  String _searchKeyWord;
+  TextEditingController _controller;
 
-  TextEditingController _controller = TextEditingController();
-
+  @override
+  void initState() {
+    _searchKeyWord = null;
+    _controller = TextEditingController();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(),
       body: SafeArea(
         child: Container(
           child: Column(
             children: [
-              mHeight(get20Size(context)),
+              mHeight(get10Size(context)),
               //search textField
               Container(
                 decoration: containerColorRadiusBorder(
                   Colors.black38,
-                  0,
+                  10,
                   Colors.transparent,
                 ),
-                child: TextField(
-                  controller: _controller,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    focusedBorder: InputBorder.none,
-                    enabledBorder: InputBorder.none,
-                    errorBorder: InputBorder.none,
-                    hintStyle: TextStyle(color: Colors.grey),
-                    hintText: "search.. .",
-                    disabledBorder: InputBorder.none,
-                    contentPadding: EdgeInsets.only(left: 15, right: 15),
-                    suffixIcon: IconButton(
+                margin: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 0.0),
+                        child: TextField(
+                          controller: _controller,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            focusedBorder: InputBorder.none,
+                            enabledBorder: InputBorder.none,
+                            errorBorder: InputBorder.none,
+                            hintStyle: TextStyle(color: Colors.grey),
+                            hintText: "search.. .",
+                            disabledBorder: InputBorder.none,
+                            contentPadding:
+                                EdgeInsets.only(left: 15, right: 15),
+                          ),
+                          onChanged: (text) {
+                            _refreshPage(text);
+                          },
+                        ),
+                      ),
+                    ),
+                    IconButton(
                       icon: Icon(Icons.search),
-                      onPressed: (){
+                      onPressed: () {
                         _refreshPage(_controller.text);
                       },
                     ),
-                  ),
-                  onChanged: (text){
-                    _refreshPage(text);
-                  },
+                  ],
                 ),
               ),
+              mHeight(get10Size(context)),
               //result ListView
-              searchKeyWord == null
-                  ? SizedBox.shrink()
-                  : Expanded(child: _performSearch()),
+              (_searchKeyWord == null || _searchKeyWord.isEmpty)
+                  ? SearchByGenreFragment()
+                  : SearchWithKeyword(searchKeyWord: _searchKeyWord),
             ],
           ),
         ),
       ),
-    );
-  }
-
-  void _refreshPage(String text){
-    setState(() {
-      _performSearch();
-    });
-  }
-
-  Widget _performSearch() {
-    return FutureBuilder<SearchMovieResult>(
-      future: ApiClient.apiClient.searchforMovie(searchKeyWord??""),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return GlobalMoviesGridView(listOfMovies: snapshot?.data?.results);
-        } else {
-          return MyLoadingWidget();
-        }
-      },
     );
   }
 
@@ -92,5 +106,215 @@ class _SearchPageState extends State<SearchPage> {
     _controller.dispose();
     super.dispose();
   }
+
+  void _refreshPage(String text) {
+    setState(() {
+      _searchKeyWord = text;
+      SearchWithKeyword(searchKeyWord: text);
+    });
+  }
 }
 
+class SearchWithKeyword extends StatelessWidget {
+  final searchKeyWord;
+
+  const SearchWithKeyword({Key key, @required this.searchKeyWord})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: FutureBuilder<SearchMovieResult>(
+        future: ApiClient.apiClient.searchforMovie(searchKeyWord ?? " "),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return GlobalMoviesGridView(listOfMovies: snapshot?.data?.results);
+          } else if (snapshot.hasError) {
+            return Text("${snapshot.error.toString()}");
+          } else {
+            return MyLoadingWidget();
+          }
+        },
+      ),
+    );
+  }
+}
+
+class SearchByGenreFragment extends StatefulWidget {
+  const SearchByGenreFragment({Key key}) : super(key: key);
+
+  @override
+  _SearchByGenreFragmentState createState() => _SearchByGenreFragmentState();
+}
+
+class _SearchByGenreFragmentState extends State<SearchByGenreFragment> {
+  bool _didStartSearching = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: AnimatedCrossFade(
+        crossFadeState: _didStartSearching
+            ? CrossFadeState.showSecond
+            : CrossFadeState.showFirst,
+        duration: Duration(milliseconds: 400),
+        firstChild: _beforeSearch(),
+        secondChild: PerformSearch(),
+      ),
+    );
+  }
+
+  Widget _beforeSearch() {
+    return Column(
+      children: [
+        Container(
+          height: 300,
+          width: getMediaWidth(context),
+          child: Image.asset(
+            R.getAssetImagePath("search_illustration.png"),
+            color: Colors.transparent.withOpacity(0.7),
+          ),
+        ),
+        GestureDetector(
+          onTap: () {
+            setState(() {
+              _didStartSearching = true;
+            });
+          },
+          child: RichText(
+            text: TextSpan(
+              text: 'Or search by category, ',
+              style: getTextTheme(context).headline6,
+              children: <TextSpan>[
+                TextSpan(
+                  text: ' let\'s go!',
+                  style: getTextTheme(context).headline6.copyWith(
+                        color: getTheme(context).accentColor,
+                      ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class PerformSearch extends StatefulWidget {
+  const PerformSearch({Key key}) : super(key: key);
+
+  @override
+  _PerformSearchState createState() => _PerformSearchState();
+}
+
+class _PerformSearchState extends State<PerformSearch> {
+  bool _showResults = false;
+  List<int> genreIDs = [];
+  List<bool> _selectedGenres = [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return _showResults
+        ? Container(
+            height: 1000,
+            child: _searchByGenre(genreIDs),
+          )
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                child: Text("Select category(s)",
+                    style: getTextTheme(context)
+                        .bodyText2
+                        .copyWith(color: Colors.grey)),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Wrap(
+                  direction: Axis.horizontal,
+                  spacing: 4,
+                  runSpacing: 4,
+                  children: List.generate(
+                    moviesGenreIDs.length,
+                    (index) {
+                      return FilterChip(
+                        selected: _selectedGenres[index],
+                        selectedColor: getTheme(context).accentColor,
+                        backgroundColor: primaryColor,
+                        shape: cardColorRadiusBorder(
+                          getTheme(context).accentColor,
+                          10,
+                          1,
+                        ),
+                        label: Text(
+                            "${moviesGenreIDs.entries.elementAt(index).key}"),
+                        onSelected: (bool value) {
+                          _selectedGenres[index] = !_selectedGenres[index];
+                          setState(() {});
+                        },
+                      );
+                    },
+                  ).toList(),
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.all(8.0),
+                width: getMediaWidth(context),
+                child: AdaptiveButton(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("Find Movies"),
+                      mWidth(get10Size(context)),
+                      Icon(Icons.search),
+                    ],
+                  ),
+                  onPressed: () {
+                    for (int i = 0; i < _selectedGenres.length; i++) {
+                      if (_selectedGenres[i]) {
+                        //don't even try to get it.
+                        genreIDs.add(
+                            moviesGenreIDs.entries.toList().elementAt(i).value);
+                      }
+                      setState(() {
+                        _showResults = true;
+                      });
+                    }
+                  },
+                ),
+              ),
+            ],
+          );
+  }
+
+  Widget _searchByGenre(List genreIDs) {
+    String _sortedGenreIDs =
+        genreIDs.toString().replaceAll("[", "").replaceAll("]", "");
+
+    return FutureBuilder<SearchByGenreResult>(
+      future: ApiClient.apiClient.searchByGenre(_sortedGenreIDs),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return GlobalMoviesGridView(listOfMovies: snapshot?.data?.results);
+        } else if (snapshot.hasError) {
+          return Text("Ops, try another word");
+        } else {
+          return MyLoadingWidget();
+        }
+      },
+    );
+  }
+}

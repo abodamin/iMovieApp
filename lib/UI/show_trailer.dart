@@ -43,9 +43,9 @@ class _ShowTrailerPageState extends State<ShowTrailerPage> {
             width: getMediaWidth(context),
             child: FutureBuilder<MovieVideos>(
               future: ApiClient.apiClient.getMovieVideos(widget.movieId),
-              builder: (context, mvsnapshpt) {
-                if (mvsnapshpt.hasData) {
-                  String officialMovieKey = mvsnapshpt?.data?.results
+              builder: (context, mvSnapshot) {
+                if (mvSnapshot.hasData) {
+                  String officialMovieKey = mvSnapshot?.data?.results
                       ?.where((element) => element.official == true)
                       ?.first
                       ?.key;
@@ -61,7 +61,7 @@ class _ShowTrailerPageState extends State<ShowTrailerPage> {
                       ),
                     ),
                   );
-                } else if (mvsnapshpt.hasError) {
+                } else if (mvSnapshot.hasError) {
                   return Center(
                     child: Text(
                       "Ops something went wrong, maybe this movie has no trailer :/ ",

@@ -42,11 +42,11 @@ dependencies:
   intl: any
   carousel_slider: ^3.0.0
   flutter_rating_bar: ^4.0.0
-  shimmer: ^1.1.2
+  shimmer: ^2.0.0
   chewie: any
   video_player: any
   youtube_player_iframe: ^2.2.2
-
+  progressive_image: ^2.0.0
 
 
   # The following adds the Cupertino Icons font to your application.

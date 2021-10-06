@@ -30,9 +30,7 @@ class HomePage extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.search),
             onPressed: () async {
-              // await ApiClient.apiClient.searchforMovie("home alone");
               navigateTo(context, SearchPage());
-              //TODO navigateTo search page.
             },
           ),
         ],
@@ -116,6 +114,7 @@ class HomePage extends StatelessWidget {
                 ),
               ),
               TrendingMovies(),
+
             ],
           ),
         ),
@@ -216,7 +215,13 @@ class _TabsAndMoviesState extends State<TabsAndMovies>
                                             padding: const EdgeInsets.all(8.0),
                                             height: get200Size(context),
                                             child: Image.network(
-                                              "$imgBaseURLLQ${snapshot?.data?.results[index]?.posterPath ?? ""}",
+                                              R.getNetworkImagePath(
+                                                  snapshot?.data?.results[index]
+                                                          ?.posterPath ??
+                                                      "",
+                                                  highQuality:
+                                                      getMediaWidth(context) >
+                                                          600),
                                               fit: BoxFit.fill,
                                               width: get120Size(context),
                                             ),

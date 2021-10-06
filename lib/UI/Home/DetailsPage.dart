@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:i_movie_app/App/Globals.dart';
@@ -6,6 +5,7 @@ import 'package:i_movie_app/App/api.dart';
 import 'package:i_movie_app/Model/MovieCastModel.dart';
 import 'package:i_movie_app/Model/MovieDetailsModel.dart';
 import 'package:i_movie_app/Model/SimilarMoviesModel.dart';
+import 'package:i_movie_app/Model/assets_names.dart';
 import 'package:i_movie_app/UI/Home/trending_actors_shimmer.dart';
 import 'package:i_movie_app/UI/Home/trending_movies_shimmer.dart';
 import 'package:i_movie_app/UI/Widgets/MyLoadingWidget.dart';
@@ -45,7 +45,7 @@ class DetailsPage extends StatelessWidget {
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // --- GredientImg --- //
+                              // --- GradientImg --- //
                               Stack(
                                 clipBehavior: Clip.none,
                                 alignment: Alignment.bottomRight,
@@ -56,9 +56,11 @@ class DetailsPage extends StatelessWidget {
                                       alignment: Alignment.bottomLeft,
                                       children: [
                                         GredientImage(
-                                          imageName:
-                                              "$imgBaseURLLQ${snapshot.data.posterPath}",
-                                        ),
+                                            imageName: R.getNetworkImagePath(
+                                          snapshot.data.posterPath,
+                                          highQuality:
+                                              getMediaWidth(context) > 600,
+                                        )),
                                         Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: Text(
@@ -200,7 +202,7 @@ class DetailsPage extends StatelessWidget {
                                   children: List.generate(
                                     snapshot.data.genres.length,
                                     (index) {
-                                      return _Genre(
+                                      return Genre(
                                         title:
                                             "${snapshot.data.genres[index].name}",
                                       );
@@ -355,10 +357,10 @@ class _TitleAndValue extends StatelessWidget {
   }
 }
 
-class _Genre extends StatelessWidget {
+class Genre extends StatelessWidget {
   final String title;
 
-  const _Genre({
+  const Genre({
     Key key,
     @required this.title,
   }) : super(key: key);
@@ -393,9 +395,11 @@ class SimilarMovies extends StatelessWidget {
       child: GridView.builder(
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: getMediaWidth(context) > 600? 4: 3,
           childAspectRatio: 0.6,
+          mainAxisSpacing: 4,
+          crossAxisSpacing: 4,
         ),
         itemCount: data.results.length,
         itemBuilder: (context, index) {
@@ -418,7 +422,10 @@ class SimilarMovies extends StatelessWidget {
                   image: DecorationImage(
                     fit: BoxFit.cover,
                     image: NetworkImage(
-                      "${imgBaseURLLQ + data.results[index].posterPath}",
+                      R.getNetworkImagePath(
+                        data?.results[index]?.posterPath ?? "",
+                        highQuality: getMediaWidth(context) > 600,
+                      ),
                     ),
                   ),
                 ),

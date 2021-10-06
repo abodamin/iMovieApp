@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:i_movie_app/App/Globals.dart';
@@ -5,8 +7,12 @@ import 'package:i_movie_app/App/api.dart';
 import 'package:i_movie_app/App/colors.dart';
 import 'package:i_movie_app/App/imports.dart';
 import 'package:i_movie_app/Model/TrendingMoviesModel.dart';
+import 'package:i_movie_app/Model/assets_names.dart';
 import 'package:i_movie_app/UI/Home/DetailsPage.dart';
 import 'package:i_movie_app/UI/Home/carousel_shimmer.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:i_movie_app/UI/Home/trending_movies_shimmer.dart';
+import 'package:progressive_image/progressive_image.dart';
 
 class TrendingMoviesThisWeek extends StatelessWidget {
   @override
@@ -23,6 +29,7 @@ class TrendingMoviesThisWeek extends StatelessWidget {
                 autoPlay: true,
                 aspectRatio: 0.8,
                 enlargeCenterPage: true,
+                viewportFraction: getMediaWidth(context) > 600 ? 0.5 : 0.7,
               ),
               items: List.generate(
                 10,
@@ -38,7 +45,10 @@ class TrendingMoviesThisWeek extends StatelessWidget {
                       );
                     },
                     child: RoundedPosterImage(
-                      image: _path?.posterPath ?? "",
+                      image: R.getNetworkImagePath(
+                        _path?.posterPath ?? "",
+                        highQuality: true,
+                      ),
                     ),
                   );
                 },
@@ -70,13 +80,20 @@ class RoundedPosterImage extends StatelessWidget {
         Colors.transparent,
       ),
       clipBehavior: Clip.antiAlias,
-      child: CachedNetworkImage(
-        placeholder: (context, url) => Container(
-          child: CarouselShimmer(),
-        ),
-        imageUrl: imgBaseURLHQ+image,
-        fit: BoxFit.fitHeight,
-      ),
+      child: kIsWeb
+          ? Image.network(
+              R.getNetworkImagePath(image, highQuality: true),
+            )
+          : CachedNetworkImage(
+              placeholder: (context, url) => Container(
+                child: CarouselShimmer(),
+              ),
+              imageUrl: R.getNetworkImagePath(
+                image,
+                highQuality: true,
+              ),
+              fit: BoxFit.fitHeight,
+            ),
     );
   }
 }
