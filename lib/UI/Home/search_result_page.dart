@@ -71,8 +71,10 @@ class _SearchPageState extends State<SearchPage> {
                             hintStyle: TextStyle(color: Colors.grey),
                             hintText: "search.. .",
                             disabledBorder: InputBorder.none,
-                            contentPadding:
-                                EdgeInsets.only(left: 15, right: 15),
+                            contentPadding: const EdgeInsets.only(
+                              left: 15,
+                              right: 15,
+                            ),
                           ),
                           onChanged: (text) {
                             _refreshPage(text);
@@ -287,7 +289,8 @@ class _PerformSearchState extends State<PerformSearch> {
                       if (_selectedGenres[i]) {
                         //don't even try to get it.
                         genreIDs.add(
-                            moviesGenreIDs.entries.toList().elementAt(i).value);
+                          moviesGenreIDs.entries.toList().elementAt(i).value,
+                        );
                       }
                       setState(() {
                         _showResults = true;
@@ -305,7 +308,7 @@ class _PerformSearchState extends State<PerformSearch> {
         genreIDs.toString().replaceAll("[", "").replaceAll("]", "");
 
     return FutureBuilder<SearchByGenreResult>(
-      future: ApiClient.apiClient.searchByGenre(_sortedGenreIDs),
+      future: ApiClient.apiClient.searchByGenre(_sortedGenreIDs, DateTime.now().year.toString()),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return GlobalMoviesGridView(listOfMovies: snapshot?.data?.results);

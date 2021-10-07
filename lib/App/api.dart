@@ -273,13 +273,13 @@ class ApiClient {
   }
 
 
-  Future<SearchByGenreResult> searchByGenre(String genreIDs) async {
+  Future<SearchByGenreResult> searchByGenre(String genreIDs, String year) async {
     Map<String, String> header = {
       'Content-type': 'application/json',
     };
     try {
       final response = await _httpClient.get(
-        "$BASE_URL/3/discover/movie?api_key=$mApiKey&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&primary_release_date.gte=1990-01-01&primary_release_date.lte=1999-12-31&vote_average.gte=6&with_genres=$genreIDs",
+        "$BASE_URL/3/discover/movie?api_key=$mApiKey&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&primary_release_date.gte=1990-01-01&primary_release_date.lte=$year-12-31&vote_average.gte=6&with_genres=$genreIDs",
         headers: header,
       );
       // print("___searchforMovie API " + "$BASE_URL/3/search/movie?api_key=$mApiKey&language=en-US&query=$searchURI&page=1&include_adult=true");
