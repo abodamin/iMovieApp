@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:i_movie_app/App/Globals.dart';
 import 'package:i_movie_app/App/api.dart';
 
 import 'package:i_movie_app/App/colors.dart';
@@ -23,7 +24,8 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("iMovieApp"),
+        title: Image.asset(R.getAssetImagePath(R.ic_app_icon_only_transparent_bg),height: 60,),
+        // title: Text(appName),
         elevation: 0,
         actions: [
           IconButton(
@@ -33,7 +35,7 @@ class HomePage extends StatelessWidget {
             },
           ),
         ],
-        leading: Image.asset(R.getAssetImagePath(R.ic_app_icon_only_transparent_bg)),
+        // leading: Image.asset(R.getAssetImagePath(R.ic_app_icon_only_transparent_bg)),
       ),
       body: SingleChildScrollView(
         child: Container(

@@ -12,7 +12,7 @@ class MadeByAbdullah extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Text(
-        "Made with joy by ABDULLAH ♥,\n powered by TMDB.com",
+        "Made with joy by ABDULLAH ♥ \n powered by TMDB.com",
         style:
         getTextTheme(context).caption.copyWith(color: Colors.white70),
         textAlign: TextAlign.center,

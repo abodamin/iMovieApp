@@ -1,7 +1,7 @@
 import 'package:logger/logger.dart';
 
 bool isLoggedIn = false;
-String appName = "iMovieApp";
+String appName = "Movie X";
 String mUserID = "";
 String mUserName = "";
 String mUserToken = "";

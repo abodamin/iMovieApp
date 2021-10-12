@@ -91,7 +91,6 @@ class _SearchPageState extends State<SearchPage> {
                   ],
                 ),
               ),
-              mHeight(get10Size(context)),
               //result ListView
               (_searchKeyWord == null || _searchKeyWord.isEmpty)
                   ? SearchByGenreFragment()
@@ -132,7 +131,7 @@ class SearchWithKeyword extends StatelessWidget {
           if (snapshot.hasData) {
             return GlobalMoviesGridView(listOfMovies: snapshot?.data?.results);
           } else if (snapshot.hasError) {
-            return Text("${snapshot.error.toString()}");
+            return Text("Ops, something went wrong");
           } else {
             return MyLoadingWidget();
           }
@@ -160,13 +159,13 @@ class _SearchByGenreFragmentState extends State<SearchByGenreFragment> {
             ? CrossFadeState.showSecond
             : CrossFadeState.showFirst,
         duration: Duration(milliseconds: 400),
-        firstChild: _beforeSearch(),
-        secondChild: PerformSearch(),
+        firstChild: _searchByGenreIntro(),
+        secondChild: SearchByGenre(),
       ),
     );
   }
 
-  Widget _beforeSearch() {
+  Widget _searchByGenreIntro() {
     return Column(
       children: [
         Container(
@@ -203,14 +202,14 @@ class _SearchByGenreFragmentState extends State<SearchByGenreFragment> {
   }
 }
 
-class PerformSearch extends StatefulWidget {
-  const PerformSearch({Key key}) : super(key: key);
+class SearchByGenre extends StatefulWidget {
+  const SearchByGenre({Key key}) : super(key: key);
 
   @override
-  _PerformSearchState createState() => _PerformSearchState();
+  _SearchByGenreState createState() => _SearchByGenreState();
 }
 
-class _PerformSearchState extends State<PerformSearch> {
+class _SearchByGenreState extends State<SearchByGenre> {
   bool _showResults = false;
   List<int> genreIDs = [];
   List<bool> _selectedGenres = [
@@ -230,8 +229,8 @@ class _PerformSearchState extends State<PerformSearch> {
   Widget build(BuildContext context) {
     return _showResults
         ? Container(
-            height: 1000,
-            child: _searchByGenre(genreIDs),
+            height: getMediaHeight(context),
+            child: _performSearchByGenre(genreIDs),
           )
         : Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -303,9 +302,11 @@ class _PerformSearchState extends State<PerformSearch> {
           );
   }
 
-  Widget _searchByGenre(List genreIDs) {
+  Widget _performSearchByGenre(List genreIDs) {
     String _sortedGenreIDs =
-        genreIDs.toString().replaceAll("[", "").replaceAll("]", "");
+        genreIDs.toString()
+            .replaceAll("[", "")
+            .replaceAll("]", "");
 
     return FutureBuilder<SearchByGenreResult>(
       future: ApiClient.apiClient.searchByGenre(_sortedGenreIDs, DateTime.now().year.toString()),
@@ -313,7 +314,7 @@ class _PerformSearchState extends State<PerformSearch> {
         if (snapshot.hasData) {
           return GlobalMoviesGridView(listOfMovies: snapshot?.data?.results);
         } else if (snapshot.hasError) {
-          return Text("Ops, try another word");
+          return Text("Ops, something went wrong");
         } else {
           return MyLoadingWidget();
         }

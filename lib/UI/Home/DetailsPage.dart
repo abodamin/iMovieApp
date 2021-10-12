@@ -12,6 +12,7 @@ import 'package:i_movie_app/UI/Widgets/MyLoadingWidget.dart';
 import 'package:i_movie_app/UI/Widgets/Responsive.dart';
 import 'package:i_movie_app/UI/Widgets/Utils.dart';
 import 'package:i_movie_app/UI/Widgets/cast_card.dart';
+import 'package:i_movie_app/UI/Widgets/credits_footer.dart';
 import 'package:i_movie_app/UI/Widgets/global_icons.dart';
 import 'package:i_movie_app/UI/Widgets/trending_movies_this_week.dart';
 import 'package:i_movie_app/UI/Widgets/trending_movies.dart';
@@ -392,47 +393,61 @@ class SimilarMovies extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: GridView.builder(
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: getMediaWidth(context) > 600? 4: 3,
-          childAspectRatio: 0.6,
-          mainAxisSpacing: 4,
-          crossAxisSpacing: 4,
-        ),
-        itemCount: data.results.length,
-        itemBuilder: (context, index) {
-          return GestureDetector(
-            onTap: () {
-              navigateTo(
-                context,
-                DetailsPage(
-                  id: data.results[index].id.toString(),
-                ),
-              );
-            },
-            child: Container(
-              margin: const EdgeInsets.all(4),
-              child: Container(
-                height: get200Size(context) + get50Size(context),
-                width: getMediaWidth(context),
-                decoration: BoxDecoration(
-                  color: Colors.transparent,
-                  image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: NetworkImage(
-                      R.getNetworkImagePath(
-                        data?.results[index]?.posterPath ?? "",
-                        highQuality: getMediaWidth(context) > 600,
+      height: getMediaHeight(context),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Flexible(
+            flex: 9,
+            fit: FlexFit.tight,
+            child: GridView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: getMediaWidth(context) > 600? 4: 3,
+                childAspectRatio: 0.6,
+                mainAxisSpacing: 4,
+                crossAxisSpacing: 4,
+              ),
+              itemCount: data.results.length,
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                  onTap: () {
+                    navigateTo(
+                      context,
+                      DetailsPage(
+                        id: data.results[index].id.toString(),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.all(4),
+                    child: Container(
+                      height: get200Size(context) + get50Size(context),
+                      width: getMediaWidth(context),
+                      decoration: BoxDecoration(
+                        color: Colors.transparent,
+                        image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image: NetworkImage(
+                            R.getNetworkImagePath(
+                              data?.results[index]?.posterPath ?? "",
+                              highQuality: getMediaWidth(context) > 600,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ),
+                );
+              },
             ),
-          );
-        },
+          ),
+          Flexible(
+            flex: 1,
+            child: MadeByAbdullah(),
+          )
+        ],
       ),
     );
   }
