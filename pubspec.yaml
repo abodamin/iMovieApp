@@ -58,6 +58,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_native_splash: any
+  flutter_launcher_icons: any
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -79,6 +81,10 @@ flutter_native_splash:
   android: true
   android12: true
 
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/ic_app_icon_512.png"
 
 
   # To add assets to your application, add an assets section, like this:
