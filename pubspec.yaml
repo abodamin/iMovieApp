@@ -72,6 +72,11 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
+  # To add assets to your application, add an assets section, like this:
+  assets:
+    - assets/images/
+    - assets/icons/
+
 flutter_native_splash:
   color: "#2A1C40"
   image: assets/images/splash_screen.png
@@ -87,10 +92,6 @@ flutter_icons:
   image_path: "assets/images/ic_app_icon_512.png"
 
 
-  # To add assets to your application, add an assets section, like this:
-  assets:
-    - assets/images/
-    - assets/icons/
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

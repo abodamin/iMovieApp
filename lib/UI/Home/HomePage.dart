@@ -1,7 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:i_movie_app/App/Globals.dart';
 import 'package:i_movie_app/App/api.dart';
 
 import 'package:i_movie_app/App/colors.dart';
@@ -34,13 +33,7 @@ class HomePage extends StatelessWidget {
             },
           ),
         ],
-        leading: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: FlutterLogo(
-            size: 10,
-            textColor: Colors.white,
-          ),
-        ),
+        leading: Image.asset(R.getAssetImagePath(R.ic_app_icon_only_transparent_bg)),
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -114,7 +107,6 @@ class HomePage extends StatelessWidget {
                 ),
               ),
               TrendingMovies(),
-
             ],
           ),
         ),
