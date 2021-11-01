@@ -245,6 +245,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.3"
+  loading_indicator:
+    dependency: "direct main"
+    description:
+      name: loading_indicator
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.1"
   logger:
     dependency: "direct main"
     description:
@@ -432,6 +439,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
+  smooth_shadow:
+    dependency: "direct main"
+    description:
+      name: smooth_shadow
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   source_span:
     dependency: transitive
     description:

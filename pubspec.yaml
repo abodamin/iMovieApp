@@ -47,6 +47,8 @@ dependencies:
   video_player: any
   youtube_player_iframe: ^2.2.2
   progressive_image: ^2.0.0
+  smooth_shadow: any
+  loading_indicator: any
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -76,7 +78,7 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
-
+#  flutter pub run flutter_native_splash:create
 flutter_native_splash:
   color: "#2A1C40"
   image: assets/images/splash_screen.png

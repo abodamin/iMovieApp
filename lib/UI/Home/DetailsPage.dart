@@ -60,7 +60,7 @@ class DetailsPage extends StatelessWidget {
                                             imageName: R.getNetworkImagePath(
                                           snapshot.data.posterPath,
                                           highQuality:
-                                              getMediaWidth(context) > 600,
+                                             true,
                                         )),
                                         Padding(
                                           padding: const EdgeInsets.all(8.0),
@@ -392,62 +392,64 @@ class SimilarMovies extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: getMediaHeight(context),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Flexible(
-            flex: 9,
-            fit: FlexFit.tight,
-            child: GridView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: getMediaWidth(context) > 600? 4: 3,
-                childAspectRatio: 0.6,
-                mainAxisSpacing: 4,
-                crossAxisSpacing: 4,
-              ),
-              itemCount: data.results.length,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    navigateTo(
-                      context,
-                      DetailsPage(
-                        id: data.results[index].id.toString(),
-                      ),
-                    );
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.all(4),
+    return SingleChildScrollView(
+      child: Container(
+        height: getMediaHeight(context)*1.7,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Flexible(
+              flex: 9,
+              fit: FlexFit.tight,
+              child: GridView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: getMediaWidth(context) > 600? 4: 3,
+                  childAspectRatio: 0.6,
+                  mainAxisSpacing: 4,
+                  crossAxisSpacing: 4,
+                ),
+                itemCount: data.results.length > 18? 18: data.results.length,
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () {
+                      navigateTo(
+                        context,
+                        DetailsPage(
+                          id: data.results[index].id.toString(),
+                        ),
+                      );
+                    },
                     child: Container(
-                      height: get200Size(context) + get50Size(context),
-                      width: getMediaWidth(context),
-                      decoration: BoxDecoration(
-                        color: Colors.transparent,
-                        image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: NetworkImage(
-                            R.getNetworkImagePath(
-                              data?.results[index]?.posterPath ?? "",
-                              highQuality: getMediaWidth(context) > 600,
+                      margin: const EdgeInsets.all(4),
+                      child: Container(
+                        height: get200Size(context) + get50Size(context),
+                        width: getMediaWidth(context),
+                        decoration: BoxDecoration(
+                          color: Colors.transparent,
+                          image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: NetworkImage(
+                              R.getNetworkImagePath(
+                                data?.results[index]?.posterPath ?? "",
+                                highQuality: getMediaWidth(context) > 600,
+                              ),
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
-          ),
-          Flexible(
-            flex: 1,
-            child: MadeByAbdullah(),
-          )
-        ],
+            Flexible(
+              flex: 0,
+              child: MadeByAbdullah(),
+            )
+          ],
+        ),
       ),
     );
   }

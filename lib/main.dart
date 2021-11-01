@@ -2,18 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:i_movie_app/App/Globals.dart';
 import 'package:i_movie_app/UI/Home/HomePage.dart';
+import 'package:i_movie_app/UI/Widgets/Utils.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
-  await SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.top]);
+  setUIOverlays();
   runApp(
     MyApp(),
   );
 }
 
 class MyApp extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

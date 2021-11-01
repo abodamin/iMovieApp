@@ -65,6 +65,7 @@ InputDecoration txtField(String label) {
 }
 
 Future<void> setUIOverlays() async {
+  await SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
   await SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.top]);
 }
 

@@ -8,16 +8,27 @@ import 'package:i_movie_app/UI/Widgets/trending_movies.dart';
 
 class GlobalMoviesGridView extends StatelessWidget {
   final List listOfMovies;
-  const GlobalMoviesGridView({Key key, @required this.listOfMovies}) : super(key: key);
+  final  Function onReset;
+
+  const GlobalMoviesGridView({Key key, @required this.listOfMovies, this.onReset})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Container(
-        height: getMediaHeight(context),
+        height: getMediaHeight(context) * 1.7,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            GestureDetector(
+              onTap: this.onReset,
+              child: Container(
+                padding: mHor16Vert8,
+                alignment: Alignment.topLeft,
+                child: Text("RESET", style: getTextTheme(context).caption.copyWith(color: getTheme(context).accentColor),),
+              ),
+            ),
             Flexible(
               flex: 9,
               fit: FlexFit.tight,
@@ -28,9 +39,9 @@ class GlobalMoviesGridView extends StatelessWidget {
                   crossAxisCount: 3,
                   childAspectRatio: 0.6,
                 ),
-                itemCount: listOfMovies?.length??0,
+                itemCount: listOfMovies.length > 18 ? 18 : listOfMovies.length,
                 itemBuilder: (context, index) {
-                  if(listOfMovies.isEmpty || listOfMovies == null ){
+                  if (listOfMovies.isEmpty || listOfMovies == null) {
                     return TrendingMovies();
                   } else {
                     return GestureDetector(
@@ -48,7 +59,8 @@ class GlobalMoviesGridView extends StatelessWidget {
                           height: get200Size(context) + get50Size(context),
                           width: getMediaWidth(context),
                           child: Image.network(
-                            R.getNetworkImagePath(listOfMovies[index]?.posterPath??""),
+                            R.getNetworkImagePath(
+                                listOfMovies[index]?.posterPath ?? ""),
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -59,7 +71,7 @@ class GlobalMoviesGridView extends StatelessWidget {
               ),
             ),
             Flexible(
-              flex: 1,
+              flex: 0,
               child: MadeByAbdullah(),
             ),
           ],

@@ -13,6 +13,7 @@ import 'package:i_movie_app/UI/Home/carousel_shimmer.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:i_movie_app/UI/Home/trending_movies_shimmer.dart';
 import 'package:progressive_image/progressive_image.dart';
+import 'package:smooth_shadow/smooth_card.dart';
 
 class TrendingMoviesThisWeek extends StatelessWidget {
   @override
@@ -26,7 +27,7 @@ class TrendingMoviesThisWeek extends StatelessWidget {
           if (snapshot.hasData) {
             return CarouselSlider(
               options: CarouselOptions(
-                autoPlay: true,
+                autoPlay: false,
                 aspectRatio: 0.8,
                 enlargeCenterPage: true,
                 viewportFraction: getMediaWidth(context) > 600 ? 0.5 : 0.7,

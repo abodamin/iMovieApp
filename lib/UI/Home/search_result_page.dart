@@ -69,7 +69,7 @@ class _SearchPageState extends State<SearchPage> {
                             enabledBorder: InputBorder.none,
                             errorBorder: InputBorder.none,
                             hintStyle: TextStyle(color: Colors.grey),
-                            hintText: "search.. .",
+                            hintText: "Search by name.. .",
                             disabledBorder: InputBorder.none,
                             contentPadding: const EdgeInsets.only(
                               left: 15,
@@ -129,7 +129,8 @@ class SearchWithKeyword extends StatelessWidget {
         future: ApiClient.apiClient.searchforMovie(searchKeyWord ?? " "),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return GlobalMoviesGridView(listOfMovies: snapshot?.data?.results);
+            return GlobalMoviesGridView(
+                listOfMovies: snapshot?.data?.results ?? []);
           } else if (snapshot.hasError) {
             return Text("Ops, something went wrong");
           } else {
@@ -261,7 +262,8 @@ class _SearchByGenreState extends State<SearchByGenre> {
                           1,
                         ),
                         label: Text(
-                            "${moviesGenreIDs.entries.elementAt(index).key}"),
+                          "${moviesGenreIDs.entries.elementAt(index).key}",
+                        ),
                         onSelected: (bool value) {
                           _selectedGenres[index] = !_selectedGenres[index];
                           setState(() {});
@@ -302,17 +304,25 @@ class _SearchByGenreState extends State<SearchByGenre> {
           );
   }
 
+
+  _resetSearchResults(){
+    setState(() {
+      _showResults = false;
+    });
+  }
+
   Widget _performSearchByGenre(List genreIDs) {
     String _sortedGenreIDs =
-        genreIDs.toString()
-            .replaceAll("[", "")
-            .replaceAll("]", "");
+        genreIDs.toString().replaceAll("[", "").replaceAll("]", "");
 
     return FutureBuilder<SearchByGenreResult>(
-      future: ApiClient.apiClient.searchByGenre(_sortedGenreIDs, DateTime.now().year.toString()),
+      future: ApiClient.apiClient
+          .searchByGenre(_sortedGenreIDs, DateTime.now().year.toString()),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return GlobalMoviesGridView(listOfMovies: snapshot?.data?.results);
+          return GlobalMoviesGridView(listOfMovies: snapshot?.data?.results, onReset: (){
+            _resetSearchResults();
+          },);
         } else if (snapshot.hasError) {
           return Text("Ops, something went wrong");
         } else {

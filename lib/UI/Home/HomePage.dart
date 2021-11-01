@@ -24,7 +24,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Image.asset(R.getAssetImagePath(R.ic_app_icon_only_transparent_bg),height: 60,),
+        leading: Image.asset(R.getAssetImagePath(R.ic_app_icon_only_transparent_bg),height: 60,),
         // title: Text(appName),
         elevation: 0,
         actions: [
