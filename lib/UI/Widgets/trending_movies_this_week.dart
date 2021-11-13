@@ -35,7 +35,7 @@ class TrendingMoviesThisWeek extends StatelessWidget {
               items: List.generate(
                 10,
                 (index) {
-                  var _path = snapshot.data.results[index];
+                  var _path = snapshot?.data?.results[index];
                   return GestureDetector(
                     onTap: () async {
                       navigateTo(
@@ -47,7 +47,7 @@ class TrendingMoviesThisWeek extends StatelessWidget {
                     },
                     child: RoundedPosterImage(
                       image: R.getNetworkImagePath(
-                        _path?.posterPath ?? "",
+                        _path?.posterPath ?? "١١١",
                         highQuality: true,
                       ),
                     ),
@@ -89,6 +89,13 @@ class RoundedPosterImage extends StatelessWidget {
               placeholder: (context, url) => Container(
                 child: CarouselShimmer(),
               ),
+              errorWidget: (context, url, _){
+                return Container(
+                  height: 100,
+                  width: 100,
+                  color: Colors.red,
+                );
+              },
               imageUrl: R.getNetworkImagePath(
                 image,
                 highQuality: true,

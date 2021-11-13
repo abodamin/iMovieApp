@@ -8,7 +8,7 @@ class R {
   static const String _ASSETS_ICONS = _ASSETS + _ICONS;
 
   //assets
-  static const String ic_person = _ASSETS_IMAGES + "ic_person.png";
+  static const String ic_person = _ASSETS_IMAGES + "ic_unknown_avatar.png";
   static const String ic_play = _ASSETS_IMAGES + "ic_play2.png";
   static const String ic_app_icon = "ic_app_icon.png";
   static const String ic_app_icon_only_transparent_bg = "ic_app_icon_only_transparent_bg.png";
