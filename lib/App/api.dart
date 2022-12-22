@@ -37,11 +37,11 @@ class ApiClient {
 
     try {
       final response = await _httpClient.get(
-        "$BASE_URL/3/trending/movie/week?api_key=$mApiKey",
+        Uri.parse("$BASE_URL/3/trending/movie/week?api_key=$mApiKey"),
         headers: header,
       );
 
-      print("getTrendingMovies " + response.body);
+       // print("getTrendingMovies " + response.body);
       final parsed = json.decode(response.body);
       return TrendingMoviesModel.fromJson(parsed);
     } on SocketException {
@@ -61,11 +61,11 @@ class ApiClient {
 
     try {
       final response = await _httpClient.get(
-        "$BASE_URL/3/genre/movie/list?api_key=$mApiKey&language=en-US",
+        Uri.parse("$BASE_URL/3/genre/movie/list?api_key=$mApiKey&language=en-US"),
         headers: header,
       );
 
-      print("getGenres " + response.body);
+       // print("getGenres " + response.body);
       //return parseOtp(response.body);
       final parsed = json.decode(response.body);
       return GenresModel.fromJson(parsed);
@@ -86,11 +86,11 @@ class ApiClient {
 
     try {
       final response = await _httpClient.get(
-        "$BASE_URL/3/discover/movie?api_key=$mApiKey&with_genres=$id",
+        Uri.parse("$BASE_URL/3/discover/movie?api_key=$mApiKey&with_genres=$id"),
         headers: header,
       );
 
-      print("getGenreMovies " + response.body);
+       // print("getGenreMovies " + response.body);
       final parsed = json.decode(response.body);
       return GenreMoviesModel.fromJson(parsed);
     } on SocketException {
@@ -110,11 +110,11 @@ class ApiClient {
 
     try {
       final response = await _httpClient.get(
-        "$BASE_URL/3/movie/$id/casts?api_key=$mApiKey",
+        Uri.parse("$BASE_URL/3/movie/$id/casts?api_key=$mApiKey"),
         headers: header,
       );
 
-      print("getMovieCast " + response.body);
+       // print("getMovieCast " + response.body);
       //return parseOtp(response.body);
       final parsed = json.decode(response.body);
       return MovieCastModel.fromJson(parsed);
@@ -135,11 +135,11 @@ class ApiClient {
 
     try {
       final response = await _httpClient.get(
-        "$BASE_URL/3/person/popular?api_key=$mApiKey&language=en-US&page=1",
+        Uri.parse("$BASE_URL/3/person/popular?api_key=$mApiKey&language=en-US&page=1"),
         headers: header,
       );
 
-      print("getTrendinPersons " + response.body);
+       // print("getTrendinPersons " + response.body);
       //return parseOtp(response.body);
       final parsed = json.decode(response.body);
       return TreindingPeopleModel.fromJson(parsed);
@@ -159,10 +159,10 @@ class ApiClient {
     };
     try {
       final response = await _httpClient.get(
-        "$BASE_URL/3/movie/top_rated?api_key=$mApiKey&language=en-US&page=1",
+        Uri.parse("$BASE_URL/3/movie/top_rated?api_key=$mApiKey&language=en-US&page=1"),
         headers: header,
       );
-      print("TopRatedMviesModel " + response.body);
+       // print("TopRatedMviesModel " + response.body);
       //return parseOtp(response.body);
       final parsed = json.decode(response.body);
       return TopRatedMviesModel.fromJson(parsed);
@@ -183,10 +183,10 @@ class ApiClient {
     try {
       final response = await _httpClient.get(
         //https://api.themoviedb.org/3/movie/12/similar?api_key={{ApiKey}}&language=en-US&page=1
-        "$BASE_URL/3/movie/$id/similar?api_key=$mApiKey&language=en-US&page=1",
+        Uri.parse("$BASE_URL/3/movie/$id/similar?api_key=$mApiKey&language=en-US&page=1"),
         headers: header,
       );
-      print("getSimilarMovis " + response.body);
+       // print("getSimilarMovis " + response.body);
       //return parseOtp(response.body);
       final parsed = json.decode(response.body);
       return SimilarMoviesModel.fromJson(parsed);
@@ -207,10 +207,10 @@ class ApiClient {
     try {
       final response = await _httpClient.get(
         //https://api.themoviedb.org/3/movie/18?api_key={{ApiKey}}&language=en-US
-        "$BASE_URL/3/movie/$id?api_key=$mApiKey&language=en-US",
+        Uri.parse("$BASE_URL/3/movie/$id?api_key=$mApiKey&language=en-US"),
         headers: header,
       );
-      print("getMovieDetails " + response.body);
+       // print("getMovieDetails " + response.body);
       //return parseOtp(response.body);
       final parsed = json.decode(response.body);
       return MovieDertailsModel.fromJson(parsed);
@@ -229,11 +229,11 @@ class ApiClient {
     };
     try {
       final response = await _httpClient.get(
-        "$BASE_URL/3/movie/$id/videos?api_key=$mApiKey",
+        Uri.parse("$BASE_URL/3/movie/$id/videos?api_key=$mApiKey"),
         headers: header,
       );
-      print("getMovieVideos ApiCall: $BASE_URL/3/movie/$id/videos?api_key=$mApiKey");
-      print("getMovieVideos " + response.body);
+       // print("getMovieVideos ApiCall: $BASE_URL/3/movie/$id/videos?api_key=$mApiKey");
+       // print("getMovieVideos " + response.body);
       final parsed = json.decode(response.body);
       return MovieVideos.fromJson(parsed);
     } on SocketException {
@@ -255,12 +255,12 @@ class ApiClient {
 
     try {
       final response = await _httpClient.get(
-        "$BASE_URL/3/search/movie?api_key=$mApiKey&language=en-US&query=${searchURI}&page=1&include_adult=true",
+        Uri.parse("$BASE_URL/3/search/movie?api_key=$mApiKey&language=en-US&query=${searchURI}&page=1&include_adult=true"),
         headers: header,
       );
 
-      print("___searchforMovie API " + "$BASE_URL/3/search/movie?api_key=$mApiKey&language=en-US&query=$searchURI&page=1&include_adult=true");
-      print("searchforMovie " + response.body);
+       // print("___searchforMovie API " + "$BASE_URL/3/search/movie?api_key=$mApiKey&language=en-US&query=$searchURI&page=1&include_adult=true");
+       // print("searchforMovie " + response.body);
       final parsed = json.decode(response.body);
       return SearchMovieResult.fromJson(parsed);
     } on SocketException {
@@ -279,11 +279,11 @@ class ApiClient {
     };
     try {
       final response = await _httpClient.get(
-        "$BASE_URL/3/discover/movie?api_key=$mApiKey&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&primary_release_date.gte=1990-01-01&primary_release_date.lte=$year-12-31&vote_average.gte=6&with_genres=$genreIDs",
+        Uri.parse("$BASE_URL/3/discover/movie?api_key=$mApiKey&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&primary_release_date.gte=1990-01-01&primary_release_date.lte=$year-12-31&vote_average.gte=6&with_genres=$genreIDs"),
         headers: header,
       );
-      // print("___searchforMovie API " + "$BASE_URL/3/search/movie?api_key=$mApiKey&language=en-US&query=$searchURI&page=1&include_adult=true");
-      print("searchByGenre " + response.body);
+      //  // print("___searchforMovie API " + "$BASE_URL/3/search/movie?api_key=$mApiKey&language=en-US&query=$searchURI&page=1&include_adult=true");
+       // print("searchByGenre " + response.body);
       final parsed = json.decode(response.body);
       return SearchByGenreResult.fromJson(parsed);
     } on SocketException {

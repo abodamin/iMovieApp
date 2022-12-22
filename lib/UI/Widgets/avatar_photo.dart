@@ -22,7 +22,7 @@ class AvatarPhoto extends StatelessWidget {
                 photoPath,
                 fit: BoxFit.cover,
                 errorBuilder: (context, o, stackTrace) {
-                  mLogger.i("error in avatar photo");
+                  // mLogger.i("error in avatar photo");
                   return Material(
                     child: Image.asset(
                       R.ic_person,

@@ -85,13 +85,14 @@ class DetailsPage extends StatelessWidget {
                                               .accentColor, // Button color
                                           child: InkWell(
                                             onTap: () {
-                                              navigateTo(
-                                                context,
-                                                ShowTrailerPage(
-                                                  movieId: snapshot?.data?.id
-                                                      ?.toString(),
-                                                ),
-                                              );
+                                              //TODO
+                                              // navigateTo(
+                                              //   context,
+                                              //   ShowTrailerPage(
+                                              //     movieId: snapshot?.data?.id
+                                              //         ?.toString(),
+                                              //   ),
+                                              // );
                                             },
                                             child: SizedBox(
                                               child: Icon(

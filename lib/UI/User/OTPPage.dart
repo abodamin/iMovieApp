@@ -124,7 +124,7 @@ class OTPPage extends StatelessWidget {
             Container(
               width: double.infinity,
               margin: const EdgeInsets.all(16),
-              child: FlatButton(
+              child: MaterialButton(
                 shape: cardRadius(8),
                 color: Colors.grey,
                 onPressed: () {

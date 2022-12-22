@@ -64,7 +64,7 @@ class LoginPage extends StatelessWidget {
             mHeight(4),
             Container(
               width: double.infinity,
-              child: FlatButton(
+              child: MaterialButton(
                 shape: cardRadius(8),
                 color: Colors.grey,
                 onPressed: () {

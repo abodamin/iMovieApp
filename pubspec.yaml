@@ -27,28 +27,29 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
-  http: ^0.12.2
-  logger: ^0.9.4
-  shared_preferences: ^0.5.12+4
-  easy_localization: ^2.3.0
-  cached_network_image: ^2.5.1
-  carousel_pro: ^1.0.0
-  fluttertoast: ^4.0.1
-  progress_dialog: ^1.2.2
-  otp_text_field: ^1.0.1
-  auto_size_text: ^2.1.0
-  multi_image_picker: ^4.7.14
+  http: any
+  logger: any
+  shared_preferences: any
+  easy_localization: any
+  cached_network_image: any
+  carousel_pro: any
+  fluttertoast: any
+  progress_dialog: any
+  otp_text_field: any
+  auto_size_text: any
+  multi_image_picker: any
   jiffy: any
   intl: any
-  carousel_slider: ^3.0.0
-  flutter_rating_bar: ^4.0.0
-  shimmer: ^2.0.0
+  carousel_slider: any
+  flutter_rating_bar: any
+  shimmer: any
   chewie: any
   video_player: any
-  youtube_player_iframe: ^2.2.2
-  progressive_image: ^2.0.0
+  youtube_player_iframe: any
+  progressive_image: any
   smooth_shadow: any
   loading_indicator: any
+  animated_icon_button: any
 
 
   # The following adds the Cupertino Icons font to your application.

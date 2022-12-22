@@ -1,7 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:i_movie_app/App/Globals.dart';
 import 'package:i_movie_app/App/api.dart';
 
 import 'package:i_movie_app/App/colors.dart';
@@ -18,6 +17,7 @@ import 'package:i_movie_app/UI/Widgets/Utils.dart';
 import 'package:i_movie_app/UI/Widgets/cast_card.dart';
 import 'package:i_movie_app/UI/Widgets/trending_movies_this_week.dart';
 import 'package:i_movie_app/UI/Widgets/trending_movies.dart';
+import 'package:i_movie_app/UI/slide_list_view.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -37,81 +37,83 @@ class HomePage extends StatelessWidget {
         ],
         // leading: Image.asset(R.getAssetImagePath(R.ic_app_icon_only_transparent_bg)),
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          width: getMediaWidth(context),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              //Top Rated Movies Posters.
-              TrendingMoviesThisWeek(),
-              //TabBars
-              mHeight(get20Size(context)),
-              FutureBuilder<GenresModel>(
-                future: ApiClient.apiClient.getGenres(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    //we call API then give it the required data
-                    //this is better for performance & code cleaning.
-                    return TabsAndMovies(
-                      data: snapshot.data,
-                    );
-                  } else {
-                    return TabsAndMoviesShimmer();
-                  }
-                },
-              ),
-              // --- GetTrendingPersons --- //
-              mHeight(get20Size(context)),
-              Padding(
-                padding: const EdgeInsets.all(8),
-                child: Text(
-                  "Trending Actors This Week",
-                  style: getTextTheme(context).caption,
-                ),
-              ),
-              Container(
-                height: get160Size(context) + 10,
-                child: FutureBuilder<tp.TreindingPeopleModel>(
-                  future: ApiClient.apiClient.getTrendinPersons(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      var _path = snapshot.data.results;
-                      return ListView.builder(
-                        itemCount: _path.length,
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index) {
-                          var _data = _path[index];
-                          return AspectRatio(
-                            aspectRatio: 0.8,
-                            child: CastCard(
-                              imagePath: R.getNetworkImagePath(
-                                  _data?.profilePath ?? ""),
-                              actorName: _data?.name ?? "",
-                              bio: "",
-                            ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+            child: Container(
+              width: getMediaWidth(context),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  //Top Rated Movies Posters.
+                  TrendingMoviesThisWeek(),
+                  //TabBars
+                  mHeight(get20Size(context)),
+                  FutureBuilder<GenresModel>(
+                    future: ApiClient.apiClient.getGenres(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        //we call API then give it the required data
+                        //this is better for performance & code cleaning.
+                        return TabsAndMovies(
+                          data: snapshot.data,
+                        );
+                      } else {
+                        return TabsAndMoviesShimmer();
+                      }
+                    },
+                  ),
+                  // --- GetTrendingPersons --- //
+                  mHeight(get20Size(context)),
+                  Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Text(
+                      "Trending Actors This Week",
+                      style: getTextTheme(context).caption,
+                    ),
+                  ),
+                  Container(
+                    height: get160Size(context) + 10,
+                    child: FutureBuilder<tp.TreindingPeopleModel>(
+                      future: ApiClient.apiClient.getTrendinPersons(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          var _path = snapshot.data.results;
+                          return ListView.builder(
+                            itemCount: _path.length,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) {
+                              var _data = _path[index];
+                              return AspectRatio(
+                                aspectRatio: 0.8,
+                                child: CastCard(
+                                  imagePath: R.getNetworkImagePath(
+                                      _data?.profilePath ?? ""),
+                                  actorName: _data?.name ?? "",
+                                  bio: "",
+                                ),
+                              );
+                            },
                           );
-                        },
-                      );
-                    } else {
-                      return TrendingActorsShimmer();
-                    }
-                  },
-                ),
+                        } else {
+                          return TrendingActorsShimmer();
+                        }
+                      },
+                    ),
+                  ),
+                  // mHeight(get10Size(context)),
+                  // ---- Top Rated Movies ---- //
+                  Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Text(
+                      "Trending Movies This Week",
+                      style: getTextTheme(context).caption,
+                    ),
+                  ),
+                  TrendingMovies(),
+                ],
               ),
-              // mHeight(get10Size(context)),
-              // ---- Top Rated Movies ---- //
-              Padding(
-                padding: const EdgeInsets.all(8),
-                child: Text(
-                  "Trending Movies This Week",
-                  style: getTextTheme(context).caption,
-                ),
-              ),
-              TrendingMovies(),
-            ],
+            ),
           ),
-        ),
       ),
     );
   }

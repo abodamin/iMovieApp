@@ -17,8 +17,7 @@ class MyLoadingWidget extends StatelessWidget {
               height: get60Size(context),
               child: LoadingIndicator(
                 indicatorType: Indicator.ballBeat,
-                color: getTheme(context).accentColor,
-
+                colors: [getTheme(context).accentColor]
               ),
             );
           }
