@@ -25,7 +25,10 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Image.asset(R.getAssetImagePath(R.ic_app_icon_only_transparent_bg),height: 60,),
+        leading: Image.asset(
+          R.getAssetImagePath(R.ic_app_icon_only_transparent_bg),
+          height: 60,
+        ),
         // title: Text(appName),
         elevation: 0,
         actions: [
@@ -46,83 +49,121 @@ class HomePage extends StatelessWidget {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-            child: Container(
-              width: getMediaWidth(context),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  //Top Rated Movies Posters.
-                  TrendingMoviesThisWeek(),
-                  //TabBars
-                  mHeight(get20Size(context)),
-                  FutureBuilder<GenresModel>(
-                    future: ApiClient.apiClient.getGenres(),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        //we call API then give it the required data
-                        //this is better for performance & code cleaning.
-                        return TabsAndMovies(
-                          data: snapshot.data,
-                        );
-                      } else {
-                        return TabsAndMoviesShimmer();
-                      }
-                    },
-                  ),
-                  // --- GetTrendingPersons --- //
-                  mHeight(get20Size(context)),
-                  Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Text(
-                      "Trending Actors This Week",
-                      style: getTextTheme(context).caption,
-                    ),
-                  ),
-                  Container(
-                    height: get160Size(context) + 10,
-                    child: FutureBuilder<tp.TreindingPeopleModel>(
-                      future: ApiClient.apiClient.getTrendinPersons(),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          var _path = snapshot.data.results;
-                          return ListView.builder(
-                            itemCount: _path.length,
-                            scrollDirection: Axis.horizontal,
-                            itemBuilder: (context, index) {
-                              var _data = _path[index];
-                              return AspectRatio(
-                                aspectRatio: 0.8,
-                                child: CastCard(
-                                  imagePath: R.getNetworkImagePath(
-                                      _data?.profilePath ?? ""),
-                                  actorName: _data?.name ?? "",
-                                  bio: "",
-                                ),
-                              );
-                            },
-                          );
-                        } else {
-                          return TrendingActorsShimmer();
-                        }
-                      },
-                    ),
-                  ),
-                  // mHeight(get10Size(context)),
-                  // ---- Top Rated Movies ---- //
-                  Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Text(
-                      "Trending Movies This Week",
-                      style: getTextTheme(context).caption,
-                    ),
-                  ),
-                  TrendingMovies(),
-                ],
-              ),
+          child: Container(
+            width: getMediaWidth(context),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                //Top Rated Movies Posters.
+                Visibility(visible: false, child: TrendingMoviesThisWeek()),
+                //TabBars
+                mHeight(get20Size(context)),
+                Visibility(
+                  visible: false,
+                  child: _TabsAndMoviesSection(),
+                ),
+                // --- GetTrendingPersons --- //
+                mHeight(get20Size(context)),
+                Visibility(
+                  visible: false,
+                  child: _TrendingActorsSection(),
+                ),
+                // mHeight(get10Size(context)),
+                // ---- Top Rated Movies ---- //
+                Visibility(
+                  visible: true,
+                  child: TrendingMovies(),
+                ),
+              ],
             ),
           ),
+        ),
       ),
     );
+  }
+}
+
+class _TabsAndMoviesSection extends StatelessWidget {
+  const _TabsAndMoviesSection({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<GenresModel>(
+      future: ApiClient.apiClient.getGenres(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          //we call API then give it the required data
+          //this is better for performance & code cleaning.
+          return TabsAndMovies(
+            data: snapshot.data,
+          );
+        } else {
+          return TabsAndMoviesShimmer();
+        }
+      },
+    );
+  }
+}
+
+class _TrendingActorsSection extends StatelessWidget {
+  _TrendingActorsSection({Key key}) : super(key: key);
+  final vvv = ValueNotifier<bool>(false);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ValueListenableBuilder(
+            valueListenable: vvv,
+            builder: (context, value1, _) {
+              return Visibility(
+                visible: value1,
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Text(
+                    "Trending Actors This Week",
+                    style: getTextTheme(context).caption,
+                  ),
+                ),
+              );
+            }),
+        Container(
+          height: get160Size(context) + 10,
+          child: FutureBuilder<tp.TreindingPeopleModel>(
+            future: ApiClient.apiClient.getTrendinPersons(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                var _path = snapshot.data.results;
+                _updateView();
+                return ListView.builder(
+                  itemCount: _path.length,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) {
+                    var _data = _path[index];
+                    return AspectRatio(
+                      aspectRatio: 0.8,
+                      child: CastCard(
+                        imagePath:
+                            R.getNetworkImagePath(_data?.profilePath ?? ""),
+                        actorName: _data?.name ?? "",
+                        bio: "",
+                      ),
+                    );
+                  },
+                );
+              } else {
+                return TrendingActorsShimmer();
+              }
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future _updateView() {
+    return Future.delayed(Duration.zero, () => vvv.value = true);
   }
 }
 
@@ -138,8 +179,7 @@ class TabsAndMovies extends StatefulWidget {
   _TabsAndMoviesState createState() => _TabsAndMoviesState();
 }
 
-class _TabsAndMoviesState extends State<TabsAndMovies>
-    with SingleTickerProviderStateMixin {
+class _TabsAndMoviesState extends State<TabsAndMovies> with SingleTickerProviderStateMixin {
   TabController _tabController;
   int movies = 0;
 

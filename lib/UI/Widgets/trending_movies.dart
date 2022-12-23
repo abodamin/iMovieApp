@@ -18,7 +18,24 @@ class TrendingMovies extends StatelessWidget {
         future: ApiClient.apiClient.getTrendingMovies(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return GlobalMoviesGridView(listOfMovies: snapshot.data.results);
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Visibility(
+                  visible: snapshot.hasData,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Text(
+                      "Trending Movies This Week",
+                      style: getTextTheme(context).caption,
+                    ),
+                  ),
+                ),
+                GlobalMoviesGridView(
+                  listOfMovies: snapshot.data.results,
+                ),
+              ],
+            );
             // return Container(
             //   height: getMediaHeight(context) * 2,
             //   child: Column(

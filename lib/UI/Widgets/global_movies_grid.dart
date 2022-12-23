@@ -6,6 +6,8 @@ import 'package:i_movie_app/UI/Widgets/Utils.dart';
 import 'package:i_movie_app/UI/Widgets/credits_footer.dart';
 import 'package:i_movie_app/UI/Widgets/trending_movies.dart';
 
+
+///returns list of movies in gridview only.
 class GlobalMoviesGridView extends StatelessWidget {
   final List listOfMovies;
   final  Function onReset;
@@ -21,12 +23,15 @@ class GlobalMoviesGridView extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            GestureDetector(
-              onTap: this.onReset,
-              child: Container(
-                padding: mHor16Vert8,
-                alignment: Alignment.topLeft,
-                child: Text("RESET", style: getTextTheme(context).caption.copyWith(color: getTheme(context).accentColor),),
+            Visibility(
+              visible: this.onReset??false,
+              child: GestureDetector(
+                onTap: this.onReset,
+                child: Container(
+                  padding: mHor16Vert8,
+                  alignment: Alignment.topLeft,
+                  child: Text("RESET", style: getTextTheme(context).caption.copyWith(color: getTheme(context).accentColor),),
+                ),
               ),
             ),
             Flexible(
