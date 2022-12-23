@@ -55,6 +55,8 @@ class TrendingMoviesThisWeek extends StatelessWidget {
                 },
               ).toList(),
             );
+          } else if(snapshot.hasError){
+            return SizedBox.shrink();
           } else {
             return CarouselShimmer();
           }

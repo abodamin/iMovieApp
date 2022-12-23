@@ -11,6 +11,7 @@ import 'package:i_movie_app/UI/Home/trending_movies_shimmer.dart';
 import 'package:i_movie_app/UI/Widgets/MyLoadingWidget.dart';
 import 'package:i_movie_app/UI/Widgets/Responsive.dart';
 import 'package:i_movie_app/UI/Widgets/Utils.dart';
+import 'package:i_movie_app/UI/Widgets/_FavoriteIcon.dart';
 import 'package:i_movie_app/UI/Widgets/cast_card.dart';
 import 'package:i_movie_app/UI/Widgets/credits_footer.dart';
 import 'package:i_movie_app/UI/Widgets/global_icons.dart';
@@ -52,15 +53,14 @@ class DetailsPage extends StatelessWidget {
                                 alignment: Alignment.bottomRight,
                                 children: [
                                   Container(
-                                    height: get200Size(context),
+                                    height: get200Size(context) + get100Size(context),
                                     child: Stack(
                                       alignment: Alignment.bottomLeft,
                                       children: [
                                         GredientImage(
                                             imageName: R.getNetworkImagePath(
                                           snapshot.data.posterPath,
-                                          highQuality:
-                                             true,
+                                          highQuality: true,
                                         )),
                                         Padding(
                                           padding: const EdgeInsets.all(8.0),
@@ -144,9 +144,17 @@ class DetailsPage extends StatelessWidget {
                               // --- overview --- //
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  "OVERVIEW",
-                                  style: getTextTheme(context).caption,
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      "OVERVIEW",
+                                      style: getTextTheme(context).caption,
+                                    ),
+                                    Spacer(),
+                                    FavoriteIcon(
+                                      movie: snapshot.data,
+                                    ),
+                                  ],
                                 ),
                               ),
                               Padding(
@@ -395,7 +403,7 @@ class SimilarMovies extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Container(
-        height: getMediaHeight(context)*1.7,
+        height: getMediaHeight(context) * 1.7,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -406,12 +414,12 @@ class SimilarMovies extends StatelessWidget {
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: getMediaWidth(context) > 600? 4: 3,
+                  crossAxisCount: getMediaWidth(context) > 600 ? 4 : 3,
                   childAspectRatio: 0.6,
                   mainAxisSpacing: 4,
                   crossAxisSpacing: 4,
                 ),
-                itemCount: data.results.length > 18? 18: data.results.length,
+                itemCount: data.results.length > 18 ? 18 : data.results.length,
                 itemBuilder: (context, index) {
                   return GestureDetector(
                     onTap: () {

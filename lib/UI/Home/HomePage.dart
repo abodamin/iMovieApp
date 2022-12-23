@@ -9,6 +9,7 @@ import 'package:i_movie_app/Model/GenresModel.dart';
 import 'package:i_movie_app/Model/TrendingPeople.dart' as tp;
 import 'package:i_movie_app/Model/assets_names.dart';
 import 'package:i_movie_app/UI/Home/DetailsPage.dart';
+import 'package:i_movie_app/UI/Home/favorite_movies_page.dart';
 import 'package:i_movie_app/UI/Home/search_result_page.dart';
 import 'package:i_movie_app/UI/Home/tabs_and_movies_shimmer.dart';
 import 'package:i_movie_app/UI/Home/trending_actors_shimmer.dart';
@@ -32,6 +33,12 @@ class HomePage extends StatelessWidget {
             icon: Icon(Icons.search),
             onPressed: () async {
               navigateTo(context, SearchPage());
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.favorite_border_outlined),
+            onPressed: () async {
+              navigateTo(context, FavoriteMoviesPage());
             },
           ),
         ],

@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/services.dart';
 import 'package:i_movie_app/App/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:i_movie_app/App/imports.dart';
 
 Decoration appGradient = BoxDecoration(
   gradient: LinearGradient(
@@ -49,6 +50,10 @@ spacer() {
 Future navigateTo(context, page) async {
   return await Navigator.push(
       context, MaterialPageRoute(builder: (context) => page));
+}
+
+TextStyle getMovieTitleStyle(BuildContext context){
+  return getTextTheme(context).bodyMedium;
 }
 
 InputDecoration txtField(String label) {

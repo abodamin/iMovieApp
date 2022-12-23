@@ -186,7 +186,7 @@ class ApiClient {
         Uri.parse("$BASE_URL/3/movie/$id/similar?api_key=$mApiKey&language=en-US&page=1"),
         headers: header,
       );
-       // print("getSimilarMovis " + response.body);
+       print("getSimilarMovis " + response.body);
       //return parseOtp(response.body);
       final parsed = json.decode(response.body);
       return SimilarMoviesModel.fromJson(parsed);
