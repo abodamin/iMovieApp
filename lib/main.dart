@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:i_movie_app/App/Globals.dart';
-import 'package:i_movie_app/App/colors.dart';
-import 'package:i_movie_app/UI/Home/HomePage.dart';
-import 'package:i_movie_app/UI/Widgets/Utils.dart';
+import 'package:i_movie_app/app/Globals.dart';
+import 'package:i_movie_app/app/colors.dart';
+
+import 'package:i_movie_app/views/common/utils.dart';
+import 'package:i_movie_app/views/home/home_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
