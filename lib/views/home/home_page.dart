@@ -78,7 +78,7 @@ class _HomePageState extends ScreenState<HomePage, HomePageViewModel, HomeData> 
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                //Top Rated Movies Posters.
+                // Top Rated Movies Posters.
                 TrendingMoviesThisWeek(),
                 //TabBars
                 mHeight(get20Size(context)),
@@ -86,7 +86,7 @@ class _HomePageState extends ScreenState<HomePage, HomePageViewModel, HomeData> 
                 // --- GetTrendingPersons --- //
                 mHeight(get20Size(context)),
                 _TrendingActorsSection(),
-                // mHeight(get10Size(context)),
+                mHeight(get10Size(context)),
                 // ---- Top Rated Movies ---- //
                 TrendingMovies(),
               ],
