@@ -14,8 +14,8 @@ class MovieVideos {
     this.results,
   });
 
-  final int id;
-  final List<Result> results;
+  final int? id;
+  final List<Result>? results;
 
   factory MovieVideos.fromJson(Map<String, dynamic> json) => MovieVideos(
     id: json["id"] == null ? null : json["id"],
@@ -24,7 +24,7 @@ class MovieVideos {
 
   Map<String, dynamic> toJson() => {
     "id": id == null ? null : id,
-    "results": results == null ? null : List<dynamic>.from(results.map((x) => x.toJson())),
+    "results": results == null ? null : List<dynamic>.from(results!.map((x) => x.toJson())),
   };
 }
 
@@ -40,14 +40,14 @@ class Result {
     this.id,
   });
 
-  final String name;
-  final String key;
-  final DateTime publishedAt;
-  final String site;
-  final int size;
-  final String type;
-  final bool official;
-  final String id;
+  final String? name;
+  final String? key;
+  final DateTime? publishedAt;
+  final String? site;
+  final int? size;
+  final String? type;
+  final bool? official;
+  final String? id;
 
   factory Result.fromJson(Map<String, dynamic> json) => Result(
     name: json["name"] == null ? null : json["name"],
@@ -63,7 +63,7 @@ class Result {
   Map<String, dynamic> toJson() => {
     "name": name == null ? null : name,
     "key": key == null ? null : key,
-    "published_at": publishedAt == null ? null : publishedAt.toIso8601String(),
+    "published_at": publishedAt == null ? null : publishedAt?.toIso8601String(),
     "site": site == null ? null : site,
     "size": size == null ? null : size,
     "type": type == null ? null : type,

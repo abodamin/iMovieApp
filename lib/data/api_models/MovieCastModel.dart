@@ -16,9 +16,9 @@ class MovieCastModel {
     this.crew,
   });
 
-  final int id;
-  final List<Cast> cast;
-  final List<Cast> crew;
+  final int? id;
+  final List<Cast>? cast;
+  final List<Cast>? crew;
 
   factory MovieCastModel.fromJson(Map<String, dynamic> json) => MovieCastModel(
         id: json["id"] == null ? null : json["id"],
@@ -34,10 +34,10 @@ class MovieCastModel {
         "id": id == null ? null : id,
         "cast": cast == null
             ? null
-            : List<dynamic>.from(cast.map((x) => x.toJson())),
+            : List<dynamic>.from(cast!.map((x) => x.toJson())),
         "crew": crew == null
             ? null
-            : List<dynamic>.from(crew.map((x) => x.toJson())),
+            : List<dynamic>.from(crew!.map((x) => x.toJson())),
       };
 }
 
@@ -59,20 +59,20 @@ class Cast {
     this.job,
   });
 
-  final bool adult;
-  final int gender;
-  final int id;
-  final String knownForDepartment;
-  final String name;
-  final String originalName;
-  final double popularity;
-  final String profilePath;
-  final int castId;
-  final String character;
-  final String creditId;
-  final int order;
-  final String department;
-  final String job;
+  final bool? adult;
+  final int? gender;
+  final int? id;
+  final String? knownForDepartment;
+  final String? name;
+  final String? originalName;
+  final double? popularity;
+  final String? profilePath;
+  final int? castId;
+  final String? character;
+  final String? creditId;
+  final int? order;
+  final String? department;
+  final String? job;
 
   factory Cast.fromJson(Map<String, dynamic> json) => Cast(
         adult: json["adult"] == null ? null : json["adult"],

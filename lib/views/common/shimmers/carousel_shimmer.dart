@@ -2,7 +2,7 @@ import 'package:i_movie_app/app/imports.dart';
 import 'package:i_movie_app/views/common/widgets/global_shimmer.dart';
 
 class CarouselShimmer extends StatelessWidget {
-  const CarouselShimmer({Key key}) : super(key: key);
+  const CarouselShimmer({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

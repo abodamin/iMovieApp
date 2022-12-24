@@ -10,9 +10,9 @@ import 'package:i_movie_app/views/common/layout/trending_movies.dart';
 ///returns list of movies in gridview only.
 class GlobalMoviesGridView extends StatelessWidget {
   final List listOfMovies;
-  final  Function onReset;
+  final  Function? onReset;
 
-  const GlobalMoviesGridView({Key key, @required this.listOfMovies, this.onReset})
+  const GlobalMoviesGridView({Key? key, required this.listOfMovies, this.onReset})
       : super(key: key);
 
   @override
@@ -24,13 +24,13 @@ class GlobalMoviesGridView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Visibility(
-              visible: this.onReset??false,
+              visible: onReset != null,
               child: GestureDetector(
-                onTap: this.onReset,
+                onTap: onReset!.call(),
                 child: Container(
                   padding: mHor16Vert8,
                   alignment: Alignment.topLeft,
-                  child: Text("RESET", style: getTextTheme(context).caption.copyWith(color: getTheme(context).accentColor),),
+                  child: Text("RESET", style: getTextTheme(context).caption!.copyWith(color: getTheme(context).accentColor),),
                 ),
               ),
             ),

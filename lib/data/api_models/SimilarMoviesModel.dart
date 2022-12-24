@@ -18,10 +18,10 @@ class SimilarMoviesModel {
     this.totalResults,
   });
 
-  final int page;
-  final List<Result> results;
-  final int totalPages;
-  final int totalResults;
+  final int? page;
+  final List<Result>? results;
+  final int? totalPages;
+  final int? totalResults;
 
   factory SimilarMoviesModel.fromJson(Map<String, dynamic> json) =>
       SimilarMoviesModel(
@@ -38,7 +38,7 @@ class SimilarMoviesModel {
         "page": page == null ? null : page,
         "results": results == null
             ? null
-            : List<dynamic>.from(results.map((x) => x.toJson())),
+            : List<dynamic>.from(results!.map((x) => x.toJson())),
         "total_pages": totalPages == null ? null : totalPages,
         "total_results": totalResults == null ? null : totalResults,
       };
@@ -62,20 +62,20 @@ class Result {
     this.popularity,
   });
 
-  final bool adult;
-  final String backdropPath;
-  final List<int> genreIds;
-  final int id;
-  final String originalLanguage;
-  final String originalTitle;
-  final String overview;
-  final String posterPath;
-  final DateTime releaseDate;
-  final String title;
-  final bool video;
-  final double voteAverage;
-  final int voteCount;
-  final double popularity;
+  final bool? adult;
+  final String? backdropPath;
+  final List<int>? genreIds;
+  final int? id;
+  final String? originalLanguage;
+  final String? originalTitle;
+  final String? overview;
+  final String? posterPath;
+  final DateTime? releaseDate;
+  final String? title;
+  final bool? video;
+  final double? voteAverage;
+  final int? voteCount;
+  final double? popularity;
 
   factory Result.fromJson(Map<String, dynamic> json) => Result(
         adult: json["adult"] == null ? null : json["adult"],
@@ -110,7 +110,7 @@ class Result {
         "backdrop_path": backdropPath == null ? null : backdropPath,
         "genre_ids": genreIds == null
             ? null
-            : List<dynamic>.from(genreIds.map((x) => x)),
+            : List<dynamic>.from(genreIds!.map((x) => x)),
         "id": id == null ? null : id,
         "original_language": originalLanguage == null ? null : originalLanguage,
         "original_title": originalTitle == null ? null : originalTitle,
@@ -118,7 +118,7 @@ class Result {
         "poster_path": posterPath == null ? null : posterPath,
         "release_date": releaseDate == null
             ? null
-            : "${releaseDate.year.toString().padLeft(4, '0')}-${releaseDate.month.toString().padLeft(2, '0')}-${releaseDate.day.toString().padLeft(2, '0')}",
+            : "${releaseDate!.year.toString().padLeft(4, '0')}-${releaseDate!.month.toString().padLeft(2, '0')}-${releaseDate!.day.toString().padLeft(2, '0')}",
         "title": title == null ? null : title,
         "video": video == null ? null : video,
         "vote_average": voteAverage == null ? null : voteAverage,

@@ -13,7 +13,7 @@
 //   final movieId;
 //
 //   const ShowTrailerPage({
-//     @required this.movieId,
+//     required this.movieId,
 //   });
 //
 //   @override

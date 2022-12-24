@@ -3,7 +3,7 @@ import 'package:i_movie_app/views/common/responsive.dart';
 import 'package:i_movie_app/views/common/widgets/global_shimmer.dart';
 
 class TrendingMoviesShimmer extends StatelessWidget {
-  const TrendingMoviesShimmer({Key key}) : super(key: key);
+  const TrendingMoviesShimmer({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

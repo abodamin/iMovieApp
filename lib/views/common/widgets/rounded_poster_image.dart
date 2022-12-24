@@ -9,8 +9,8 @@ class RoundedPosterImage extends StatelessWidget {
   final String image;
 
   const RoundedPosterImage({
-    Key key,
-    @required this.image,
+    Key? key,
+    required this.image,
   }) : super(key: key);
 
   @override

@@ -10,7 +10,7 @@ import 'package:i_movie_app/views/common/widgets/my_loading_widget.dart';
 
 
 class FavoriteMoviesPage extends StatelessWidget {
-  const FavoriteMoviesPage({Key key}) : super(key: key);
+  const FavoriteMoviesPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,14 +30,14 @@ class FavoriteMoviesPage extends StatelessWidget {
                         SizedBox(
                           height: getMediaHeight(context) * 0.88,
                           child: ListView.builder(
-                              itemCount: snapshot.data.results.length,
+                              itemCount: snapshot.data?.results?.length??0,
                               itemBuilder: (context, index) {
                                 return GestureDetector(
                                   onTap: () {
                                     navigateTo(
                                       context,
                                       DetailsPage(
-                                        id: snapshot.data.results[index].id.toString(),
+                                        id: snapshot.data!.results![index].id.toString(),
                                       ),
                                     );
                                   },
@@ -56,7 +56,7 @@ class FavoriteMoviesPage extends StatelessWidget {
                                                 fit: BoxFit.cover,
                                                 image: NetworkImage(
                                                   R.getNetworkImagePath(
-                                                    snapshot.data.results[index]
+                                                    snapshot.data?.results![index]
                                                             .posterPath ??
                                                         "",
                                                     highQuality:
@@ -78,9 +78,9 @@ class FavoriteMoviesPage extends StatelessWidget {
                                               children: [
                                                 // --- Title ---
                                                 AutoSizeText(
-                                                  "${snapshot?.data?.results[index]?.title ?? ""}",
+                                                  "${snapshot.data?.results![index].title ?? ""}",
                                                   maxLines: 2,
-                                                  style: getTextTheme(context).titleMedium.copyWith(fontWeight: FontWeight.bold),
+                                                  style: getTextTheme(context).titleMedium!.copyWith(fontWeight: FontWeight.bold),
                                                 ),
                                                 // --- rating --- //
 
@@ -91,12 +91,12 @@ class FavoriteMoviesPage extends StatelessWidget {
                                                     MainAxisAlignment.start,
                                                     children: [
                                                       Text(
-                                                          "${snapshot?.data?.results[index]?.voteAverage.toStringAsFixed(1) ?? ""}"),
+                                                          "${snapshot.data?.results![index].voteAverage?.toStringAsFixed(1) ?? ""}"),
                                                       mWidth(10),
                                                       Container(
                                                         child: RatingBar.builder(
                                                           initialRating:
-                                                          snapshot.data.results[index].voteAverage / 2,
+                                                          snapshot.data!.results![index].voteAverage! / 2,
                                                           itemSize: 15,
                                                           minRating: 0,
                                                           maxRating: 5,
@@ -121,7 +121,7 @@ class FavoriteMoviesPage extends StatelessWidget {
                                                 // --- overview --- //
                                                 Expanded(
                                                   child: AutoSizeText(
-                                                    "${snapshot?.data?.results[index]?.overview ?? ""}",
+                                                    "${snapshot.data?.results![index].overview ?? ""}",
                                                     textAlign:
                                                         TextAlign.justify,
                                                     overflow: TextOverflow.fade,
@@ -133,7 +133,7 @@ class FavoriteMoviesPage extends StatelessWidget {
                                           ),
                                         ),
                                         // --- Favorite icon --- //
-                                        // FavoriteIcon(movie: snapshot.data.results[index]),
+                                        // FavoriteIcon(movie: snapshot.data.results![index]),
                                       ],
                                     ),
                                   ),

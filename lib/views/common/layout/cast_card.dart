@@ -6,10 +6,10 @@ class CastCard extends StatelessWidget {
   final String imagePath, actorName, bio;
 
   const CastCard({
-    Key key,
-    @required this.imagePath,
-    @required this.actorName,
-    @required this.bio,
+    Key? key,
+    required this.imagePath,
+    required this.actorName,
+    required this.bio,
   }) : super(key: key);
 
   @override

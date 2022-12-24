@@ -10,8 +10,8 @@ class TrendingActors extends StatelessWidget {
   final trendingPeople.Result data;
 
   const TrendingActors({
-    Key key,
-    @required this.data,
+    Key? key,
+    required this.data,
   }) : super(key: key);
 
   @override
@@ -30,7 +30,7 @@ class TrendingActors extends StatelessWidget {
           height: get80Size(context),
           clipBehavior: Clip.antiAlias,
           child: AvatarPhoto(
-            photoPath: R.getNetworkImagePath(data.profilePath),
+            photoPath: R.getNetworkImagePath(data.profilePath??""),
             height: get50Size(context),
           ),
         ),

@@ -16,10 +16,10 @@ class SearchMovieResult {
     this.totalResults,
   });
 
-  final int page;
-  final List<Result> results;
-  final int totalPages;
-  final int totalResults;
+  final int? page;
+  final List<Result>? results;
+  final int? totalPages;
+  final int? totalResults;
 
   factory SearchMovieResult.fromJson(Map<String, dynamic> json) => SearchMovieResult(
     page: json["page"] == null ? null : json["page"],
@@ -30,7 +30,7 @@ class SearchMovieResult {
 
   Map<String, dynamic> toJson() => {
     "page": page == null ? null : page,
-    "results": results == null ? null : List<dynamic>.from(results.map((x) => x.toJson())),
+    "results": results == null ? null : List<dynamic>.from(results!.map((x) => x.toJson())),
     "total_pages": totalPages == null ? null : totalPages,
     "total_results": totalResults == null ? null : totalResults,
   };
@@ -54,20 +54,20 @@ class Result {
     this.voteCount,
   });
 
-  final bool adult;
-  final String backdropPath;
-  final List<int> genreIds;
-  final int id;
-  final OriginalLanguage originalLanguage;
-  final String originalTitle;
-  final String overview;
-  final double popularity;
-  final String posterPath;
-  final DateTime releaseDate;
-  final String title;
-  final bool video;
-  final double voteAverage;
-  final int voteCount;
+  final bool? adult;
+  final String? backdropPath;
+  final List<int>? genreIds;
+  final int? id;
+  final OriginalLanguage? originalLanguage;
+  final String? originalTitle;
+  final String? overview;
+  final double? popularity;
+  final String? posterPath;
+  final DateTime? releaseDate;
+  final String? title;
+  final bool? video;
+  final double? voteAverage;
+  final int? voteCount;
 
   factory Result.fromJson(Map<String, dynamic> json) => Result(
     adult: json["adult"] == null ? null : json["adult"],
@@ -89,14 +89,14 @@ class Result {
   Map<String, dynamic> toJson() => {
     "adult": adult == null ? null : adult,
     "backdrop_path": backdropPath == null ? null : backdropPath,
-    "genre_ids": genreIds == null ? null : List<dynamic>.from(genreIds.map((x) => x)),
+    "genre_ids": genreIds == null ? null : List<dynamic>.from(genreIds!.map((x) => x)),
     "id": id == null ? null : id,
-    "original_language": originalLanguage == null ? null : originalLanguageValues.reverse[originalLanguage],
+    "original_language": originalLanguage == null ? null : originalLanguageValues.reverse![originalLanguage],
     "original_title": originalTitle == null ? null : originalTitle,
     "overview": overview == null ? null : overview,
     "popularity": popularity == null ? null : popularity,
     "poster_path": posterPath == null ? null : posterPath,
-    "release_date": releaseDate == null ? null : "${releaseDate.year.toString().padLeft(4, '0')}-${releaseDate.month.toString().padLeft(2, '0')}-${releaseDate.day.toString().padLeft(2, '0')}",
+    "release_date": releaseDate == null ? null : "${releaseDate!.year.toString().padLeft(4, '0')}-${releaseDate!.month.toString().padLeft(2, '0')}-${releaseDate!.day.toString().padLeft(2, '0')}",
     "title": title == null ? null : title,
     "video": video == null ? null : video,
     "vote_average": voteAverage == null ? null : voteAverage,
@@ -113,11 +113,11 @@ final originalLanguageValues = EnumValues({
 
 class EnumValues<T> {
   Map<String, T> map;
-  Map<T, String> reverseMap;
+  Map<T, String>? reverseMap;
 
   EnumValues(this.map);
 
-  Map<T, String> get reverse {
+  Map<T, String>? get reverse {
     if (reverseMap == null) {
       reverseMap = map.map((k, v) => new MapEntry(v, k));
     }

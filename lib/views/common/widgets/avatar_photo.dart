@@ -10,8 +10,8 @@ class AvatarPhoto extends StatelessWidget {
   final double height;
 
   const AvatarPhoto({
-    @required this.photoPath,
-    @required this.height,
+    required this.photoPath,
+    required this.height,
   });
 
   @override

@@ -7,13 +7,13 @@ import 'package:i_movie_app/views/common/utils.dart';
 class AdaptiveButton extends StatelessWidget {
   final Widget child;
   final VoidCallback onPressed;
-  final double radius;
-  final Color color;
+  final double? radius;
+  final Color? color;
 
   const AdaptiveButton({
-    Key key,
-    @required this.onPressed,
-    @required this.child,
+    Key? key,
+    required this.onPressed,
+    required this.child,
     this.color,
     this.radius,
   }) : super(key: key);

@@ -2,7 +2,7 @@ import 'package:i_movie_app/app/imports.dart';
 
 
 class FavoriteIcon extends StatefulWidget {
-  const FavoriteIcon({Key key, @required this.movie}) : super(key: key);
+  const FavoriteIcon({Key? key, required this.movie}) : super(key: key);
 
   final  movie;
 

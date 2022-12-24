@@ -4,7 +4,7 @@ import 'package:i_movie_app/views/common/utils.dart';
 import 'package:i_movie_app/views/common/widgets/global_shimmer.dart';
 
 class TrendingActorsShimmer extends StatelessWidget {
-  const TrendingActorsShimmer({Key key}) : super(key: key);
+  const TrendingActorsShimmer({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class TrendingActorsShimmer extends StatelessWidget {
 }
 
 class CastCardShimmer extends StatelessWidget {
-  const CastCardShimmer({Key key}) : super(key: key);
+  const CastCardShimmer({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

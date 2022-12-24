@@ -1,3 +1,4 @@
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -13,7 +14,10 @@ import 'package:i_movie_app/views/common/layout/trending_movies_this_week.dart';
 import 'package:i_movie_app/views/common/layout/cast_card.dart';
 import 'package:i_movie_app/views/common/responsive.dart';
 import 'package:i_movie_app/views/details/DetailsPage.dart';
+import 'package:i_movie_app/views/factory/screen.dart';
 import 'package:i_movie_app/views/favorite/favorite_movies_page.dart';
+import 'package:i_movie_app/views/home/home_data.dart';
+import 'package:i_movie_app/views/home/home_page_viewmodel.dart';
 import 'package:i_movie_app/views/search/search_result_page.dart';
 import 'package:i_movie_app/views/common/shimmers/tabs_and_movies_shimmer.dart';
 import 'package:i_movie_app/views/common/shimmers/trending_actors_shimmer.dart';
@@ -21,10 +25,27 @@ import 'package:i_movie_app/views/common/shimmers/trending_actors_shimmer.dart';
 import 'package:i_movie_app/views/common/utils.dart';
 
 import 'package:i_movie_app/views/common/slide_list_view.dart';
+import 'package:injectable/injectable.dart';
 
-class HomePage extends StatelessWidget {
+
+@injectable
+class HomePage extends Screen {
+  HomePage();
+
   @override
-  Widget build(BuildContext context) {
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends ScreenState<HomePage, HomePageViewModel, HomeData> {
+
+  @override
+  void initState() {
+
+    super.initState();
+  }
+
+  @override
+  Widget buildScreen(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: Image.asset(
@@ -57,28 +78,16 @@ class HomePage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 //Top Rated Movies Posters.
-                Visibility(
-                  visible: true,
-                  child: TrendingMoviesThisWeek(),
-                ),
+                TrendingMoviesThisWeek(),
                 //TabBars
                 mHeight(get20Size(context)),
-                Visibility(
-                  visible: true,
-                  child: _TabsAndMoviesSection(),
-                ),
+                _TabsAndMoviesSection(),
                 // --- GetTrendingPersons --- //
                 mHeight(get20Size(context)),
-                Visibility(
-                  visible: true,
-                  child: _TrendingActorsSection(),
-                ),
+                _TrendingActorsSection(),
                 // mHeight(get10Size(context)),
                 // ---- Top Rated Movies ---- //
-                Visibility(
-                  visible: true,
-                  child: TrendingMovies(),
-                ),
+                TrendingMovies(),
               ],
             ),
           ),
@@ -89,7 +98,7 @@ class HomePage extends StatelessWidget {
 }
 
 class _TabsAndMoviesSection extends StatelessWidget {
-  const _TabsAndMoviesSection({Key key}) : super(key: key);
+  const _TabsAndMoviesSection({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +109,7 @@ class _TabsAndMoviesSection extends StatelessWidget {
           //we call API then give it the required data
           //this is better for performance & code cleaning.
           return _TabsAndMovies(
-            data: snapshot.data,
+            data: snapshot.data!,
           );
         } else {
           return TabsAndMoviesShimmer();
@@ -111,7 +120,7 @@ class _TabsAndMoviesSection extends StatelessWidget {
 }
 
 class _TrendingActorsSection extends StatelessWidget {
-  _TrendingActorsSection({Key key}) : super(key: key);
+  _TrendingActorsSection({Key? key}) : super(key: key);
   final vvv = ValueNotifier<bool>(false);
 
   @override
@@ -121,7 +130,7 @@ class _TrendingActorsSection extends StatelessWidget {
       children: [
         ValueListenableBuilder(
             valueListenable: vvv,
-            builder: (context, value1, _) {
+            builder: (context, bool value1, _) {
               return Visibility(
                 visible: value1,
                 child: Padding(
@@ -139,19 +148,19 @@ class _TrendingActorsSection extends StatelessWidget {
             future: ApiClient.apiClient.getTrendinPersons(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                var _path = snapshot.data.results;
+                var _path = snapshot.data!.results;
                 _updateView();
                 return ListView.builder(
-                  itemCount: _path.length,
+                  itemCount: _path?.length??0,
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index) {
-                    var _data = _path[index];
+                    var _data = _path![index];
                     return AspectRatio(
                       aspectRatio: 0.8,
                       child: CastCard(
                         imagePath:
-                            R.getNetworkImagePath(_data?.profilePath ?? ""),
-                        actorName: _data?.name ?? "",
+                            R.getNetworkImagePath(_data.profilePath ?? ""),
+                        actorName: _data.name ?? "",
                         bio: "",
                       ),
                     );
@@ -176,8 +185,8 @@ class _TabsAndMovies extends StatefulWidget {
   final GenresModel data;
 
   const _TabsAndMovies({
-    Key key,
-    @required this.data,
+    Key? key,
+    required this.data,
   }) : super(key: key);
 
   @override
@@ -186,13 +195,13 @@ class _TabsAndMovies extends StatefulWidget {
 
 class _TabsAndMoviesState extends State<_TabsAndMovies>
     with SingleTickerProviderStateMixin {
-  TabController _tabController;
+  late TabController _tabController;
   int movies = 0;
 
   @override
   void initState() {
     _tabController = new TabController(
-      length: widget?.data?.genres?.length,
+      length: widget.data.genres?.length??0,
       vsync: this,
     );
     super.initState();
@@ -207,10 +216,10 @@ class _TabsAndMoviesState extends State<_TabsAndMovies>
           labelColor: secondaryColor,
           indicatorColor: secondaryColor,
           tabs: List.generate(
-            widget?.data?.genres?.length,
+            widget.data.genres?.length??0,
             (index) {
               return Tab(
-                child: Text("${widget?.data?.genres[index]?.name ?? ""}"),
+                child: Text("${widget.data.genres![index].name ?? ""}"),
               );
             },
           ).toList(),
@@ -223,11 +232,11 @@ class _TabsAndMoviesState extends State<_TabsAndMovies>
           height: get200Size(context) + get100Size(context),
           child: TabBarView(
             children: List.generate(
-              widget.data.genres.length,
+              widget.data.genres?.length??0,
               (index) {
                 return FutureBuilder<GenreMoviesModel>(
                     future: ApiClient.apiClient
-                        .getGenreMovies(widget.data.genres[index].id),
+                        .getGenreMovies(widget.data.genres![index].id!),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         return Column(
@@ -240,14 +249,14 @@ class _TabsAndMoviesState extends State<_TabsAndMovies>
                               height: get200Size(context) + get100Size(context),
                               child: ListView.builder(
                                 scrollDirection: Axis.horizontal,
-                                itemCount: snapshot?.data?.results?.length ?? 0,
+                                itemCount: snapshot.data?.results?.length ?? 0,
                                 itemBuilder: (context, index) {
                                   return InkWell(
                                     onTap: () {
                                       navigateTo(
                                         context,
                                         DetailsPage(
-                                          id: "${snapshot?.data?.results[index]?.id ?? 0}",
+                                          id: "${snapshot.data?.results![index].id ?? 0}",
                                         ),
                                       );
                                     },
@@ -265,8 +274,8 @@ class _TabsAndMoviesState extends State<_TabsAndMovies>
                                             height: get200Size(context),
                                             child: Image.network(
                                               R.getNetworkImagePath(
-                                                  snapshot?.data?.results[index]
-                                                          ?.posterPath ??
+                                                  snapshot.data?.results![index]
+                                                          .posterPath ??
                                                       "",
                                                   highQuality:
                                                       getMediaWidth(context) >
@@ -280,7 +289,7 @@ class _TabsAndMoviesState extends State<_TabsAndMovies>
                                             child: SizedBox(
                                               width: get120Size(context),
                                               child: AutoSizeText(
-                                                "${snapshot?.data?.results[index]?.title ?? ""}",
+                                                "${snapshot.data?.results![index].title ?? ""}",
                                                 maxLines: 2,
                                               ),
                                             ),
@@ -295,13 +304,13 @@ class _TabsAndMoviesState extends State<_TabsAndMovies>
                                                       .spaceBetween,
                                               children: [
                                                 Text(
-                                                    "${snapshot?.data?.results[index]?.voteAverage ?? ""}"),
+                                                    "${snapshot.data?.results![index].voteAverage ?? ""}"),
                                                 Container(
                                                   child: RatingBar.builder(
                                                     initialRating: snapshot
-                                                            ?.data
-                                                            ?.results[index]
-                                                            ?.voteAverage ??
+                                                            .data
+                                                            ?.results![index]
+                                                            .voteAverage ??
                                                         0 / 2,
                                                     itemSize: 15,
                                                     minRating: 0,

@@ -26,7 +26,7 @@ class TrendingMovies extends StatelessWidget {
                   ),
                 ),
                 GlobalMoviesGridView(
-                  listOfMovies: snapshot.data.results,
+                  listOfMovies: snapshot.data!.results!,
                 ),
               ],
             );

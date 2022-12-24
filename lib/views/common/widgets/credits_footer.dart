@@ -5,7 +5,7 @@ import 'package:i_movie_app/views/common/responsive.dart';
 
 class MadeByAbdullah extends StatelessWidget {
   const MadeByAbdullah({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -15,7 +15,7 @@ class MadeByAbdullah extends StatelessWidget {
       child: Text(
         "Made with joy by ABDULLAH ♥ \n powered by TMDB.com",
         style:
-        getTextTheme(context).caption.copyWith(color: Colors.white70),
+        getTextTheme(context).caption!.copyWith(color: Colors.white70),
         textAlign: TextAlign.center,
       ),
     );

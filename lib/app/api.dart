@@ -252,7 +252,7 @@ class ApiClient {
       'Content-type': 'application/json',
     };
 
-    String searchURI = Uri.dataFromString(keyWord).data.contentText;
+    String searchURI = Uri.dataFromString(keyWord).data!.contentText;
     // mLogger.i(searchURI);
 
     try {

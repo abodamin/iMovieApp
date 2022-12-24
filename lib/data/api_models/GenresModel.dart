@@ -14,7 +14,7 @@ class GenresModel {
     this.genres,
   });
 
-  final List<Genre> genres;
+  final List<Genre>? genres;
 
   factory GenresModel.fromJson(Map<String, dynamic> json) => GenresModel(
         genres: json["genres"] == null
@@ -25,7 +25,7 @@ class GenresModel {
   Map<String, dynamic> toJson() => {
         "genres": genres == null
             ? null
-            : List<dynamic>.from(genres.map((x) => x.toJson())),
+            : List<dynamic>.from(genres!.map((x) => x.toJson())),
       };
 }
 
@@ -35,8 +35,8 @@ class Genre {
     this.name,
   });
 
-  final int id;
-  final String name;
+  final int? id;
+  final String? name;
 
   factory Genre.fromJson(Map<String, dynamic> json) => Genre(
         id: json["id"] == null ? null : json["id"],

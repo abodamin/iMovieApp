@@ -39,31 +39,31 @@ class MovieDertailsModel {
     this.voteCount,
   });
 
-  final bool adult;
-  final String backdropPath;
-  final dynamic belongsToCollection;
-  final int budget;
-  final List<Genre> genres;
-  final String homepage;
-  final int id;
-  final String imdbId;
-  final String originalLanguage;
-  final String originalTitle;
-  final String overview;
-  final double popularity;
-  final String posterPath;
-  final List<ProductionCompany> productionCompanies;
-  final List<ProductionCountry> productionCountries;
-  final DateTime releaseDate;
-  final int revenue;
-  final int runtime;
-  final List<SpokenLanguage> spokenLanguages;
-  final String status;
-  final String tagline;
-  final String title;
-  final bool video;
-  final double voteAverage;
-  final int voteCount;
+  final bool? adult;
+  final String? backdropPath;
+  final dynamic? belongsToCollection;
+  final int? budget;
+  final List<Genre>? genres;
+  final String? homepage;
+  final int? id;
+  final String? imdbId;
+  final String? originalLanguage;
+  final String? originalTitle;
+  final String? overview;
+  final double? popularity;
+  final String? posterPath;
+  final List<ProductionCompany>? productionCompanies;
+  final List<ProductionCountry>? productionCountries;
+  final DateTime? releaseDate;
+  final int? revenue;
+  final int? runtime;
+  final List<SpokenLanguage>? spokenLanguages;
+  final String? status;
+  final String? tagline;
+  final String? title;
+  final bool? video;
+  final double? voteAverage;
+  final int? voteCount;
 
   factory MovieDertailsModel.fromJson(Map<String, dynamic> json) =>
       MovieDertailsModel(
@@ -121,7 +121,7 @@ class MovieDertailsModel {
         "budget": budget == null ? null : budget,
         "genres": genres == null
             ? null
-            : List<dynamic>.from(genres.map((x) => x.toJson())),
+            : List<dynamic>.from(genres!.map((x) => x.toJson())),
         "homepage": homepage == null ? null : homepage,
         "id": id == null ? null : id,
         "imdb_id": imdbId == null ? null : imdbId,
@@ -132,18 +132,18 @@ class MovieDertailsModel {
         "poster_path": posterPath == null ? null : posterPath,
         "production_companies": productionCompanies == null
             ? null
-            : List<dynamic>.from(productionCompanies.map((x) => x.toJson())),
+            : List<dynamic>.from(productionCompanies!.map((x) => x.toJson())),
         "production_countries": productionCountries == null
             ? null
-            : List<dynamic>.from(productionCountries.map((x) => x.toJson())),
+            : List<dynamic>.from(productionCountries!.map((x) => x.toJson())),
         "release_date": releaseDate == null
             ? null
-            : "${releaseDate.year.toString().padLeft(4, '0')}-${releaseDate.month.toString().padLeft(2, '0')}-${releaseDate.day.toString().padLeft(2, '0')}",
+            : "${releaseDate!.year.toString().padLeft(4, '0')}-${releaseDate!.month.toString().padLeft(2, '0')}-${releaseDate!.day.toString().padLeft(2, '0')}",
         "revenue": revenue == null ? null : revenue,
         "runtime": runtime == null ? null : runtime,
         "spoken_languages": spokenLanguages == null
             ? null
-            : List<dynamic>.from(spokenLanguages.map((x) => x.toJson())),
+            : List<dynamic>.from(spokenLanguages!.map((x) => x.toJson())),
         "status": status == null ? null : status,
         "tagline": tagline == null ? null : tagline,
         "title": title == null ? null : title,
@@ -159,8 +159,8 @@ class Genre {
     this.name,
   });
 
-  final int id;
-  final String name;
+  final int? id;
+  final String? name;
 
   factory Genre.fromJson(Map<String, dynamic> json) => Genre(
         id: json["id"] == null ? null : json["id"],
@@ -181,10 +181,10 @@ class ProductionCompany {
     this.originCountry,
   });
 
-  final int id;
-  final String logoPath;
-  final String name;
-  final String originCountry;
+  final int? id;
+  final String? logoPath;
+  final String? name;
+  final String? originCountry;
 
   factory ProductionCompany.fromJson(Map<String, dynamic> json) =>
       ProductionCompany(
@@ -209,8 +209,8 @@ class ProductionCountry {
     this.name,
   });
 
-  final String iso31661;
-  final String name;
+  final String? iso31661;
+  final String? name;
 
   factory ProductionCountry.fromJson(Map<String, dynamic> json) =>
       ProductionCountry(
@@ -231,9 +231,9 @@ class SpokenLanguage {
     this.name,
   });
 
-  final String englishName;
-  final String iso6391;
-  final String name;
+  final String? englishName;
+  final String? iso6391;
+  final String? name;
 
   factory SpokenLanguage.fromJson(Map<String, dynamic> json) => SpokenLanguage(
         englishName: json["english_name"] == null ? null : json["english_name"],

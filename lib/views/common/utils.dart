@@ -50,7 +50,7 @@ Future navigateTo(context, page) async {
 }
 
 TextStyle getMovieTitleStyle(BuildContext context){
-  return getTextTheme(context).bodyMedium;
+  return getTextTheme(context).bodyMedium!;
 }
 
 InputDecoration txtField(String label) {
@@ -67,10 +67,15 @@ InputDecoration txtField(String label) {
 }
 
 Future<void> setUIOverlays() async {
-  await SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
-  await SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.top]);
-}
+  SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.top]);
+  SystemChrome.setSystemUIOverlayStyle(
+    SystemUiOverlayStyle(
+      statusBarColor: primaryColor,
+      systemNavigationBarColor: Colors.transparent,
+    ),
+  );
 
+}
 
 InputDecoration txtFieldLabel(String label) {
   return new InputDecoration(
@@ -389,17 +394,17 @@ ShapeBorder cardColorRadiusBorder(Color color, double radius, double w) {
   );
 }
 
-String properRound(double val, int places) {
-  double mod = pow(10.0, places);
-  double result = ((val * mod).round().toDouble() / mod);
-  return result.toString();
-}
-
-double properRoundDouble(double val, int places) {
-  double mod = pow(10.0, places);
-  double result = ((val * mod).round().toDouble() / mod);
-  return result;
-}
+// String properRound(double val, int places) {
+//   double mod = pow(10.0, places);
+//   double result = ((val * mod).round().toDouble() / mod);
+//   return result.toString();
+// }
+//
+// double properRoundDouble(double val, int places) {
+//   double mod = pow(10.0, places);
+//   double result = ((val * mod).round().toDouble() / mod);
+//   return result;
+// }
 //var cardShape = RoundedRectangleBorder(
 //  side: BorderSide(color: Colors.white70, width: 1),
 //  borderRadius: BorderRadius.circular(10),

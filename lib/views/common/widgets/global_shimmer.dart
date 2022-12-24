@@ -1,16 +1,13 @@
-import 'package:flutter/material.dart';
-import 'package:i_movie_app/app/colors.dart';
 import 'package:i_movie_app/app/imports.dart';
-import 'package:i_movie_app/views/common/responsive.dart';
 import 'package:shimmer/shimmer.dart';
 
 class GlobalShimmer extends StatelessWidget {
   final double height, width;
 
   const GlobalShimmer({
-    Key key,
-    @required this.height,
-    @required this.width,
+    Key? key,
+    required this.height,
+    required this.width,
   }) : super(key: key);
 
   @override

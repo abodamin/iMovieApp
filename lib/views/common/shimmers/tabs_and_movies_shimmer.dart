@@ -3,7 +3,7 @@ import 'package:i_movie_app/app/imports.dart';
 import 'package:i_movie_app/views/common/widgets/global_shimmer.dart';
 
 class TabsAndMoviesShimmer extends StatelessWidget {
-  const TabsAndMoviesShimmer({Key key}) : super(key: key);
+  const TabsAndMoviesShimmer({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class TabsAndMoviesShimmer extends StatelessWidget {
 }
 
 class _SingleTabShimmer extends StatelessWidget {
-  const _SingleTabShimmer({Key key}) : super(key: key);
+  const _SingleTabShimmer({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

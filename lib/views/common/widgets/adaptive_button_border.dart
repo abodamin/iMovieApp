@@ -7,7 +7,7 @@ import 'package:i_movie_app/views/common/utils.dart';
 class AdaptiveButtonBorder extends StatefulWidget {
   final Widget child;
   final VoidCallback onPressed;
-  final double radius;
+  final double? radius;
   final Color color;
 
   final Color bgColor;
@@ -17,14 +17,14 @@ class AdaptiveButtonBorder extends StatefulWidget {
   final double width;
 
   const AdaptiveButtonBorder({
-    Key key,
-    @required this.child,
-    @required this.onPressed,
+    Key? key,
+    required this.child,
+    required this.onPressed,
     this.radius,
-    @required this.color,
-    @required this.bgColor,
-    @required this.borderColor,
-    @required this.width,
+    required this.color,
+    required this.bgColor,
+    required this.borderColor,
+    required this.width,
   }) : super(key: key);
 
   @override

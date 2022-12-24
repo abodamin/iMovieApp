@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:i_movie_app/app/imports.dart';
 
 class BackArrowIcon extends StatelessWidget {
-  const BackArrowIcon({Key key}) : super(key: key);
+  const BackArrowIcon({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

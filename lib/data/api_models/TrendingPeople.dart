@@ -18,10 +18,10 @@ class TreindingPeopleModel {
     this.totalResults,
   });
 
-  final int page;
-  final List<Result> results;
-  final int totalPages;
-  final int totalResults;
+  final int? page;
+  final List<Result>? results;
+  final int? totalPages;
+  final int? totalResults;
 
   factory TreindingPeopleModel.fromJson(Map<String, dynamic> json) =>
       TreindingPeopleModel(
@@ -38,7 +38,7 @@ class TreindingPeopleModel {
         "page": page == null ? null : page,
         "results": results == null
             ? null
-            : List<dynamic>.from(results.map((x) => x.toJson())),
+            : List<dynamic>.from(results!.map((x) => x.toJson())),
         "total_pages": totalPages == null ? null : totalPages,
         "total_results": totalResults == null ? null : totalResults,
       };
@@ -56,14 +56,14 @@ class Result {
     this.profilePath,
   });
 
-  final bool adult;
-  final int gender;
-  final int id;
-  final List<KnownFor> knownFor;
-  final String knownForDepartment;
-  final String name;
-  final double popularity;
-  final String profilePath;
+  final bool? adult;
+  final int? gender;
+  final int? id;
+  final List<KnownFor>? knownFor;
+  final String? knownForDepartment;
+  final String? name;
+  final double? popularity;
+  final String? profilePath;
 
   factory Result.fromJson(Map<String, dynamic> json) => Result(
         adult: json["adult"] == null ? null : json["adult"],
@@ -72,7 +72,7 @@ class Result {
         knownFor: json["known_for"] == null
             ? null
             : List<KnownFor>.from(
-                json["known_for"].map((x) => KnownFor.fromJson(x))),
+                json["known_for"]!.map((x) => KnownFor.fromJson(x))),
         knownForDepartment: json["known_for_department"] == null
             ? null
             : json["known_for_department"],
@@ -88,7 +88,7 @@ class Result {
         "id": id == null ? null : id,
         "known_for": knownFor == null
             ? null
-            : List<dynamic>.from(knownFor.map((x) => x.toJson())),
+            : List<dynamic>.from(knownFor!.map((x) => x.toJson())),
         "known_for_department":
             knownForDepartment == null ? null : knownForDepartment,
         "name": name == null ? null : name,
@@ -119,24 +119,24 @@ class KnownFor {
     this.video,
   });
 
-  final String backdropPath;
-  final DateTime firstAirDate;
-  final List<int> genreIds;
-  final int id;
-  final String mediaType;
-  final String name;
-  final List<String> originCountry;
-  final String originalLanguage;
-  final String originalName;
-  final String overview;
-  final String posterPath;
-  final double voteAverage;
-  final int voteCount;
-  final bool adult;
-  final String originalTitle;
-  final DateTime releaseDate;
-  final String title;
-  final bool video;
+  final String? backdropPath;
+  final DateTime? firstAirDate;
+  final List<int>? genreIds;
+  final int? id;
+  final String? mediaType;
+  final String? name;
+  final List<String>? originCountry;
+  final String? originalLanguage;
+  final String? originalName;
+  final String? overview;
+  final String? posterPath;
+  final double? voteAverage;
+  final int? voteCount;
+  final bool? adult;
+  final String? originalTitle;
+  final DateTime? releaseDate;
+  final String? title;
+  final bool? video;
 
   factory KnownFor.fromJson(Map<String, dynamic> json) => KnownFor(
         backdropPath:
@@ -178,16 +178,16 @@ class KnownFor {
         "backdrop_path": backdropPath == null ? null : backdropPath,
         "first_air_date": firstAirDate == null
             ? null
-            : "${firstAirDate.year.toString().padLeft(4, '0')}-${firstAirDate.month.toString().padLeft(2, '0')}-${firstAirDate.day.toString().padLeft(2, '0')}",
+            : "${firstAirDate!.year.toString().padLeft(4, '0')}-${firstAirDate!.month.toString().padLeft(2, '0')}-${firstAirDate!.day.toString().padLeft(2, '0')}",
         "genre_ids": genreIds == null
             ? null
-            : List<dynamic>.from(genreIds.map((x) => x)),
+            : List<dynamic>.from(genreIds!.map((x) => x)),
         "id": id == null ? null : id,
         "media_type": mediaType == null ? null : mediaType,
         "name": name == null ? null : name,
         "origin_country": originCountry == null
             ? null
-            : List<dynamic>.from(originCountry.map((x) => x)),
+            : List<dynamic>.from(originCountry!.map((x) => x)),
         "original_language": originalLanguage == null ? null : originalLanguage,
         "original_name": originalName == null ? null : originalName,
         "overview": overview == null ? null : overview,
@@ -198,7 +198,7 @@ class KnownFor {
         "original_title": originalTitle == null ? null : originalTitle,
         "release_date": releaseDate == null
             ? null
-            : "${releaseDate.year.toString().padLeft(4, '0')}-${releaseDate.month.toString().padLeft(2, '0')}-${releaseDate.day.toString().padLeft(2, '0')}",
+            : "${releaseDate!.year.toString().padLeft(4, '0')}-${releaseDate!.month.toString().padLeft(2, '0')}-${releaseDate!.day.toString().padLeft(2, '0')}",
         "title": title == null ? null : title,
         "video": video == null ? null : video,
       };

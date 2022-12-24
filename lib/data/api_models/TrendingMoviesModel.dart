@@ -18,10 +18,10 @@ class TrendingMoviesModel {
     this.totalResults,
   });
 
-  final int page;
-  final List<Result> results;
-  final int totalPages;
-  final int totalResults;
+  final int? page;
+  final List<Result>? results;
+  final int? totalPages;
+  final int? totalResults;
 
   factory TrendingMoviesModel.fromJson(Map<String, dynamic> json) =>
       TrendingMoviesModel(
@@ -38,7 +38,7 @@ class TrendingMoviesModel {
         "page": page == null ? null : page,
         "results": results == null
             ? null
-            : List<dynamic>.from(results.map((x) => x.toJson())),
+            : List<dynamic>.from(results!.map((x) => x.toJson())),
         "total_pages": totalPages == null ? null : totalPages,
         "total_results": totalResults == null ? null : totalResults,
       };
@@ -63,21 +63,21 @@ class Result {
     this.mediaType,
   });
 
-  final String originalLanguage;
-  final String originalTitle;
-  final String posterPath;
-  final bool video;
-  final double voteAverage;
-  final String overview;
-  final DateTime releaseDate;
-  final int voteCount;
-  final bool adult;
-  final String backdropPath;
-  final String title;
-  final List<int> genreIds;
-  final int id;
-  final double popularity;
-  final String mediaType;
+  final String? originalLanguage;
+  final String? originalTitle;
+  final String? posterPath;
+  final bool? video;
+  final double? voteAverage;
+  final String? overview;
+  final DateTime? releaseDate;
+  final int? voteCount;
+  final bool? adult;
+  final String? backdropPath;
+  final String? title;
+  final List<int>? genreIds;
+  final int? id;
+  final double? popularity;
+  final String? mediaType;
 
   factory Result.fromJson(Map<String, dynamic> json) => Result(
         originalLanguage: json["original_language"] == null
@@ -117,14 +117,14 @@ class Result {
         "overview": overview == null ? null : overview,
         "release_date": releaseDate == null
             ? null
-            : "${releaseDate.year.toString().padLeft(4, '0')}-${releaseDate.month.toString().padLeft(2, '0')}-${releaseDate.day.toString().padLeft(2, '0')}",
+            : "${releaseDate!.year.toString().padLeft(4, '0')}-${releaseDate!.month.toString().padLeft(2, '0')}-${releaseDate!.day.toString().padLeft(2, '0')}",
         "vote_count": voteCount == null ? null : voteCount,
         "adult": adult == null ? null : adult,
         "backdrop_path": backdropPath == null ? null : backdropPath,
         "title": title == null ? null : title,
         "genre_ids": genreIds == null
             ? null
-            : List<dynamic>.from(genreIds.map((x) => x)),
+            : List<dynamic>.from(genreIds!.map((x) => x)),
         "id": id == null ? null : id,
         "popularity": popularity == null ? null : popularity,
         "media_type": mediaType == null ? null : mediaType,

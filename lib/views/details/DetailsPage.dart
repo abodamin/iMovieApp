@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:i_movie_app/app/Globals.dart';
 import 'package:i_movie_app/app/api.dart';
@@ -18,23 +19,37 @@ import 'package:i_movie_app/views/common/widgets/credits_footer.dart';
 import 'package:i_movie_app/views/common/widgets/global_icons.dart';
 
 import 'package:i_movie_app/views/common/layout/trending_movies.dart';
-import 'package:i_movie_app/views/trailer/show_trailer.dart';
 import 'package:intl/intl.dart';
 
-class DetailsPage extends StatelessWidget {
+class DetailsPage extends StatefulWidget {
   final String id;
-  final _currency = new NumberFormat("#,##0", "en_US");
 
   DetailsPage({
-    Key key,
-    @required this.id,
+    Key? key,
+    required this.id,
   }) : super(key: key);
 
   @override
+  State<DetailsPage> createState() => _DetailsPageState();
+}
+
+class _DetailsPageState extends State<DetailsPage> {
+  final _currency = new NumberFormat("#,##0", "en_US");
+
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Container(
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+      ),
+      child: Scaffold(
+        body: Container(
           height: getMediaHeight(context),
           width: getMediaWidth(context),
           child: Stack(
@@ -42,7 +57,7 @@ class DetailsPage extends StatelessWidget {
               SingleChildScrollView(
                 child: Container(
                   child: FutureBuilder<MovieDertailsModel>(
-                      future: ApiClient.apiClient.getMovieDetails(id),
+                      future: ApiClient.apiClient.getMovieDetails(widget.id),
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           return Column(
@@ -60,13 +75,13 @@ class DetailsPage extends StatelessWidget {
                                       children: [
                                         GredientImage(
                                             imageName: R.getNetworkImagePath(
-                                          snapshot.data.posterPath,
+                                          snapshot.data?.posterPath??"",
                                           highQuality: true,
                                         )),
                                         Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: Text(
-                                            "${snapshot.data.title}",
+                                            "${snapshot.data?.title}",
                                             maxLines: 4,
                                             style:
                                                 getTextTheme(context).headline6,
@@ -115,12 +130,12 @@ class DetailsPage extends StatelessWidget {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    Text("${snapshot.data.voteAverage}"),
+                                    Text("${snapshot.data?.voteAverage}"),
                                     mWidth(10),
                                     Container(
                                       child: RatingBar.builder(
                                         initialRating:
-                                            snapshot.data.voteAverage / 2,
+                                            snapshot.data!.voteAverage! / 2,
                                         itemSize: 15,
                                         minRating: 0,
                                         maxRating: 5,
@@ -161,7 +176,7 @@ class DetailsPage extends StatelessWidget {
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                  "${snapshot.data.overview}",
+                                  "${snapshot.data?.overview}",
                                   textAlign: TextAlign.justify,
                                 ),
                               ),
@@ -178,16 +193,16 @@ class DetailsPage extends StatelessWidget {
                                       _TitleAndValue(
                                         title: "Budget",
                                         value:
-                                            "${_currency.format(snapshot.data.budget)}\$",
+                                            "${_currency.format(snapshot.data?.budget)}\$",
                                       ),
                                       _TitleAndValue(
                                         title: "Duration",
-                                        value: "${snapshot.data.runtime} min",
+                                        value: "${snapshot.data?.runtime} min",
                                       ),
                                       _TitleAndValue(
                                         title: "Release Date",
                                         value:
-                                            "${DateFormat('yyyy-MM-dd').format(snapshot.data.releaseDate)}",
+                                            "${DateFormat('yyyy-MM-dd').format(snapshot.data!.releaseDate!)}",
                                       ),
                                     ],
                                   ),
@@ -200,7 +215,7 @@ class DetailsPage extends StatelessWidget {
                                 child: Text(
                                   "GENRES",
                                   style:
-                                      getTextTheme(context).bodyText2.copyWith(
+                                      getTextTheme(context).bodyText2!.copyWith(
                                             color: Colors.grey,
                                           ),
                                 ),
@@ -211,11 +226,11 @@ class DetailsPage extends StatelessWidget {
                                   direction: Axis.horizontal,
                                   spacing: 15,
                                   children: List.generate(
-                                    snapshot.data.genres.length,
+                                    snapshot.data!.genres?.length??0,
                                     (index) {
                                       return Genre(
                                         title:
-                                            "${snapshot.data.genres[index].name}",
+                                            "${snapshot.data?.genres![index].name}",
                                       );
                                     },
                                   ).toList(),
@@ -228,7 +243,7 @@ class DetailsPage extends StatelessWidget {
                                 child: Text(
                                   "CAST",
                                   style:
-                                      getTextTheme(context).bodyText2.copyWith(
+                                      getTextTheme(context).bodyText2!.copyWith(
                                             color: Colors.grey,
                                           ),
                                 ),
@@ -239,23 +254,23 @@ class DetailsPage extends StatelessWidget {
                                 height: get160Size(context) + 5,
                                 child: FutureBuilder<MovieCastModel>(
                                     future:
-                                        ApiClient.apiClient.getMovieCast(id),
+                                        ApiClient.apiClient.getMovieCast(widget.id),
                                     builder: (context, snapshot) {
                                       if (snapshot.hasData) {
                                         return ListView.builder(
                                           shrinkWrap: true,
                                           scrollDirection: Axis.horizontal,
-                                          itemCount: snapshot.data.cast.length,
+                                          itemCount: snapshot.data?.cast?.length??0,
                                           itemBuilder: (context, index) {
                                             return AspectRatio(
                                               aspectRatio: 0.8,
                                               child: CastCard(
                                                 imagePath:
-                                                    "$imgBaseURLLQ${snapshot.data.cast[index].profilePath}",
+                                                    "$imgBaseURLLQ${snapshot.data?.cast![index].profilePath}",
                                                 actorName:
-                                                    "${snapshot.data.cast[index].name}",
+                                                    "${snapshot.data?.cast![index].name}",
                                                 bio:
-                                                    "${snapshot.data.cast[index].character}",
+                                                    "${snapshot.data?.cast![index].character}",
                                               ),
                                             );
                                           },
@@ -272,7 +287,7 @@ class DetailsPage extends StatelessWidget {
                                 child: Text(
                                   "SIMILAR MOVIES",
                                   style:
-                                      getTextTheme(context).bodyText2.copyWith(
+                                      getTextTheme(context).bodyText2!.copyWith(
                                             color: Colors.grey,
                                           ),
                                 ),
@@ -281,12 +296,12 @@ class DetailsPage extends StatelessWidget {
                                 padding: const EdgeInsets.all(8),
                                 child: FutureBuilder<SimilarMoviesModel>(
                                     future: ApiClient.apiClient.getSimilarMovis(
-                                      snapshot.data.id.toString(),
+                                      snapshot.data!.id.toString(),
                                     ),
                                     builder: (context, snapshot) {
                                       if (snapshot.hasData) {
                                         // if there is similar movies, bring any movies.
-                                        if (snapshot.data.results.length == 0) {
+                                        if (snapshot.data?.results!.length == 0) {
                                           return Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
@@ -301,7 +316,7 @@ class DetailsPage extends StatelessWidget {
                                         } else {
                                           //if there is similar movies show them
                                           return SimilarMovies(
-                                            data: snapshot.data,
+                                            data: snapshot.data!,
                                           );
                                         }
                                       } else {
@@ -322,7 +337,7 @@ class DetailsPage extends StatelessWidget {
               ),
               // --- Back Arrow --- //
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 40),
                 child: Align(
                   alignment: Alignment.topLeft,
                   child: BackArrowIcon(),
@@ -340,9 +355,9 @@ class _TitleAndValue extends StatelessWidget {
   final String title, value;
 
   const _TitleAndValue({
-    Key key,
-    @required this.title,
-    @required this.value,
+    Key? key,
+    required this.title,
+    required this.value,
   }) : super(key: key);
 
   @override
@@ -352,14 +367,14 @@ class _TitleAndValue extends StatelessWidget {
       children: [
         Text(
           "${title.toUpperCase() ?? "--"}",
-          style: getTextTheme(context).bodyText2.copyWith(
+          style: getTextTheme(context).bodyText2!.copyWith(
                 color: Colors.grey,
               ),
         ),
         //
         Text(
           value ?? "--",
-          style: getTextTheme(context).button.copyWith(
+          style: getTextTheme(context).button!.copyWith(
                 color: Colors.yellow,
               ),
         ),
@@ -372,8 +387,8 @@ class Genre extends StatelessWidget {
   final String title;
 
   const Genre({
-    Key key,
-    @required this.title,
+    Key? key,
+    required this.title,
   }) : super(key: key);
 
   @override
@@ -396,8 +411,8 @@ class SimilarMovies extends StatelessWidget {
   final SimilarMoviesModel data;
 
   const SimilarMovies({
-    Key key,
-    @required this.data,
+    Key? key,
+    required this.data,
   }) : super(key: key);
 
   @override
@@ -420,14 +435,14 @@ class SimilarMovies extends StatelessWidget {
                   mainAxisSpacing: 4,
                   crossAxisSpacing: 4,
                 ),
-                itemCount: data.results.length > 18 ? 18 : data.results.length,
+                itemCount: data.results!.length > 18 ? 18 : data.results!.length,
                 itemBuilder: (context, index) {
                   return GestureDetector(
                     onTap: () {
                       navigateTo(
                         context,
                         DetailsPage(
-                          id: data.results[index].id.toString(),
+                          id: data.results![index].id.toString(),
                         ),
                       );
                     },
@@ -442,7 +457,7 @@ class SimilarMovies extends StatelessWidget {
                             fit: BoxFit.cover,
                             image: NetworkImage(
                               R.getNetworkImagePath(
-                                data?.results[index]?.posterPath ?? "",
+                                data.results![index].posterPath ?? "",
                                 highQuality: getMediaWidth(context) > 600,
                               ),
                             ),

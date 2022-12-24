@@ -22,19 +22,19 @@ Map<String, int> moviesGenreIDs = {
 };
 
 class SearchPage extends StatefulWidget {
-  const SearchPage({Key key}) : super(key: key);
+  const SearchPage({Key? key}) : super(key: key);
 
   @override
   _SearchPageState createState() => _SearchPageState();
 }
 
 class _SearchPageState extends State<SearchPage> {
-  String _searchKeyWord;
-  TextEditingController _controller;
+  String _searchKeyWord = "";
+  late TextEditingController _controller;
 
   @override
   void initState() {
-    _searchKeyWord = null;
+    _searchKeyWord = "";
     _controller = TextEditingController();
     super.initState();
   }
@@ -118,7 +118,7 @@ class _SearchPageState extends State<SearchPage> {
 class SearchWithKeyword extends StatelessWidget {
   final searchKeyWord;
 
-  const SearchWithKeyword({Key key, @required this.searchKeyWord})
+  const SearchWithKeyword({Key? key, required this.searchKeyWord})
       : super(key: key);
 
   @override
@@ -142,7 +142,7 @@ class SearchWithKeyword extends StatelessWidget {
 }
 
 class SearchByGenreFragment extends StatefulWidget {
-  const SearchByGenreFragment({Key key}) : super(key: key);
+  const SearchByGenreFragment({Key? key}) : super(key: key);
 
   @override
   _SearchByGenreFragmentState createState() => _SearchByGenreFragmentState();
@@ -189,7 +189,7 @@ class _SearchByGenreFragmentState extends State<SearchByGenreFragment> {
               children: <TextSpan>[
                 TextSpan(
                   text: ' let\'s go!',
-                  style: getTextTheme(context).headline6.copyWith(
+                  style: getTextTheme(context).headline6!.copyWith(
                         color: getTheme(context).accentColor,
                       ),
                 ),
@@ -203,7 +203,7 @@ class _SearchByGenreFragmentState extends State<SearchByGenreFragment> {
 }
 
 class SearchByGenre extends StatefulWidget {
-  const SearchByGenre({Key key}) : super(key: key);
+  const SearchByGenre({Key? key}) : super(key: key);
 
   @override
   _SearchByGenreState createState() => _SearchByGenreState();
@@ -240,7 +240,7 @@ class _SearchByGenreState extends State<SearchByGenre> {
                 child: Text("Select category(s)",
                     style: getTextTheme(context)
                         .bodyText2
-                        .copyWith(color: Colors.grey)),
+                        !.copyWith(color: Colors.grey)),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -255,10 +255,9 @@ class _SearchByGenreState extends State<SearchByGenre> {
                         selected: _selectedGenres[index],
                         selectedColor: getTheme(context).accentColor,
                         backgroundColor: primaryColor,
-                        shape: cardColorRadiusBorder(
-                          getTheme(context).accentColor,
-                          10,
-                          1,
+                        shape: RoundedRectangleBorder(
+                          side: BorderSide(color: getTheme(context).accentColor, width: 1),
+                          borderRadius: BorderRadius.circular(10),
                         ),
                         label: Text(
                           "${moviesGenreIDs.entries.elementAt(index).key}",
@@ -319,7 +318,7 @@ class _SearchByGenreState extends State<SearchByGenre> {
           .searchByGenre(_sortedGenreIDs, DateTime.now().year.toString()),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return GlobalMoviesGridView(listOfMovies: snapshot?.data?.results, onReset: (){
+          return GlobalMoviesGridView(listOfMovies: snapshot.data!.results!, onReset: (){
             _resetSearchResults();
           },);
         } else if (snapshot.hasError) {
