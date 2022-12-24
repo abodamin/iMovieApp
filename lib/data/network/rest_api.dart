@@ -28,13 +28,13 @@ class RestApi {
 
   Future<TrendingMoviesModel> getTrendingMovies() async {
     try {
-      final response = await _dio.get(
+      final Response response = await _dio.get(
         URLS.TRENDING_MOVIES,
       );
 
-      // print("getTrendingMovies " + response.body);
-      final parsed = json.decode(response.data);
-      return TrendingMoviesModel.fromJson(parsed);
+      // print("___getTrendingMovies >> " + response.data);
+      // final parsed = json.decode(response.data.toString());
+      return TrendingMoviesModel.fromJson(response.data);
     } on DioError catch (err) {
       final errorMessage = ResponseException.fromDioError(err).toString();
       throw errorMessage;
@@ -51,8 +51,8 @@ class RestApi {
 
       // print("getGenres " + response.body);
       //return parseOtp(response.body);
-      final parsed = json.decode(response.data);
-      return GenresModel.fromJson(parsed);
+      // // final parsed = json.decode(response.data);
+      return GenresModel.fromJson(response.data);
     } on DioError catch (err) {
       final errorMessage = ResponseException.fromDioError(err).toString();
       throw errorMessage;
@@ -68,8 +68,8 @@ class RestApi {
       );
 
       // print("getGenreMovies " + response.body);
-      final parsed = json.decode(response.data);
-      return GenreMoviesModel.fromJson(parsed);
+      // final parsed = json.decode(response.data);
+      return GenreMoviesModel.fromJson(response.data);
     } on DioError catch (err) {
       final errorMessage = ResponseException.fromDioError(err).toString();
       throw errorMessage;
@@ -86,8 +86,8 @@ class RestApi {
 
       // print("getMovieCast " + response.body);
       //return parseOtp(response.body);
-      final parsed = json.decode(response.data);
-      return MovieCastModel.fromJson(parsed);
+      // final parsed = json.decode(response.data);
+      return MovieCastModel.fromJson(response.data);
     } on DioError catch (err) {
       final errorMessage = ResponseException.fromDioError(err).toString();
       throw errorMessage;
@@ -103,8 +103,8 @@ class RestApi {
 
       // print("getTrendinPersons " + response.body);
       //return parseOtp(response.body);
-      final parsed = json.decode(response.data);
-      return TreindingPeopleModel.fromJson(parsed);
+      // final parsed = json.decode(response.data);
+      return TreindingPeopleModel.fromJson(response.data);
     } on DioError catch (err) {
       final errorMessage = ResponseException.fromDioError(err).toString();
       throw errorMessage;
@@ -120,8 +120,8 @@ class RestApi {
 
       // print("TopRatedMviesModel " + response.body);
       //return parseOtp(response.body);
-      final parsed = json.decode(response.data);
-      return TopRatedMviesModel.fromJson(parsed);
+      // final parsed = json.decode(response.data);
+      return TopRatedMviesModel.fromJson(response.data);
     } on DioError catch (err) {
       final errorMessage = ResponseException.fromDioError(err).toString();
       throw errorMessage;
@@ -135,10 +135,10 @@ class RestApi {
       final response = await _dio.get(
           //https://api.themoviedb.org/3/movie/12/similar?api_key={{ApiKey}}&language=en-US&page=1
           "3/movie/$id/similar?api_key=$mApiKey&language=en-US&page=1");
-      print("getSimilarMovis " + response.data);
+      // print("getSimilarMovis " + response.data);
       //return parseOtp(response.data);
-      final parsed = json.decode(response.data);
-      return SimilarMoviesModel.fromJson(parsed);
+      // final parsed = json.decode(response.data);
+      return SimilarMoviesModel.fromJson(response.data);
     } on DioError catch (err) {
       final errorMessage = ResponseException.fromDioError(err).toString();
       throw errorMessage;
@@ -154,8 +154,8 @@ class RestApi {
           "3/movie/$id?api_key=$mApiKey&language=en-US");
       // print("getMovieDetails " + response.data);
       //return parseOtp(response.data);
-      final parsed = json.decode(response.data);
-      return MovieDertailsModel.fromJson(parsed);
+      // final parsed = json.decode(response.data);
+      return MovieDertailsModel.fromJson(response.data);
     } on DioError catch (err) {
       final errorMessage = ResponseException.fromDioError(err).toString();
       throw errorMessage;
@@ -169,8 +169,8 @@ class RestApi {
       final response = await _dio.get("3/movie/$id/videos?api_key=$mApiKey");
       // print("getMovieVideos ApiCall: 3/movie/$id/videos?api_key=$mApiKey");
       // print("getMovieVideos " + response.data);
-      final parsed = json.decode(response.data);
-      return MovieVideos.fromJson(parsed);
+      // final parsed = json.decode(response.data);
+      return MovieVideos.fromJson(response.data);
     } on DioError catch (err) {
       final errorMessage = ResponseException.fromDioError(err).toString();
       throw errorMessage;
@@ -189,8 +189,8 @@ class RestApi {
 
       // print("___searchforMovie API " + "3/search/movie?api_key=$mApiKey&language=en-US&query=$searchURI&page=1&include_adult=true");
       // print("searchforMovie " + response.data);
-      final parsed = json.decode(response.data);
-      return SearchMovieResult.fromJson(parsed);
+      // final parsed = json.decode(response.data);
+      return SearchMovieResult.fromJson(response.data);
     } on DioError catch (err) {
       final errorMessage = ResponseException.fromDioError(err).toString();
       throw errorMessage;
@@ -208,8 +208,8 @@ class RestApi {
           "3/discover/movie?api_key=$mApiKey&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&primary_release_date.gte=1990-01-01&primary_release_date.lte=$year-12-31&vote_average.gte=6&with_genres=$genreIDs");
       //  // print("___searchforMovie API " + "3/search/movie?api_key=$mApiKey&language=en-US&query=$searchURI&page=1&include_adult=true");
       // print("searchByGenre " + response.data);
-      final parsed = json.decode(response.data);
-      return SearchByGenreResult.fromJson(parsed);
+      // final parsed = json.decode(response.data);
+      return SearchByGenreResult.fromJson(response.data);
     } on DioError catch (err) {
       final errorMessage = ResponseException.fromDioError(err).toString();
       throw errorMessage;

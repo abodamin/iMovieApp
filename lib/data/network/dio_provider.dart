@@ -22,7 +22,7 @@ class DioProvider {
 
   static Dio createInstance() {
     Dio _dio = Dio();
-
+    print("___init Dio >> ");
     _dio.options = BaseOptions(
       baseUrl: URLS.BASE_URL,
       receiveTimeout: 5000,

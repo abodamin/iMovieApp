@@ -6,7 +6,9 @@ import 'package:i_movie_app/data/api_models/MovieCastModel.dart';
 import 'package:i_movie_app/data/api_models/MovieDetailsModel.dart';
 import 'package:i_movie_app/data/api_models/SimilarMoviesModel.dart';
 import 'package:i_movie_app/app/resources.dart';
+import 'package:i_movie_app/data/api_models/TrendingMoviesModel.dart';
 import 'package:i_movie_app/views/common/layout/app_loading_widget.dart';
+import 'package:i_movie_app/views/common/layout/global_movies_grid.dart';
 import 'package:i_movie_app/views/common/layout/movie_rate_bar.dart';
 import 'package:i_movie_app/views/common/layout/trending_movies_this_week.dart';
 import 'package:i_movie_app/views/common/responsive.dart';
@@ -58,7 +60,7 @@ class _DetailsPageState extends ScreenState<DetailsPage, DetailsPageViewModel, D
               SingleChildScrollView(
                 child: Container(
                   child: FutureBuilder<MovieDertailsModel>(
-                      future: ApiClient.apiClient.getMovieDetails(widget.id),
+                      future: viewModel.getMovieDetails(widget.id),
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           return Column(
@@ -81,10 +83,22 @@ class _DetailsPageState extends ScreenState<DetailsPage, DetailsPageViewModel, D
                               _CastSection(movieId: widget.id),
                               mHeight(get20Size(context)),
                               // --- Similar Movies --- //
-                              _SimilarMoviesSection(movieId: widget.id),
+                              _SimilarMoviesSection(
+                                movieId: widget.id,
+                                viewModel: viewModel,
+                              ),
                               mHeight(get80Size(context)),
                               //
                             ],
+                          );
+                        } else if(snapshot.hasError){
+                          return SizedBox(
+                            height: getMediaHeight(context),
+                            child: Center(
+                              child: Text("Something went wrong check your connection.", style: getTextTheme(context).titleLarge,
+                                  textAlign: TextAlign.center,
+                              ),
+                            ),
                           );
                         } else {
                           return AppLoadingWidget();
@@ -386,14 +400,47 @@ class _GenresSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            "GENRES",
+            style:
+            getTextTheme(context).bodyText2!.copyWith(
+              color: Colors.grey,
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Wrap(
+            direction: Axis.horizontal,
+            spacing: 15,
+            children: List.generate(
+              data!.genres?.length??0,
+                  (index) {
+                return Genre(
+                  title:
+                  "${data?.genres![index].name}",
+                );
+              },
+            ).toList(),
+          ),
+        ),
+      ],
+    );
   }
 }
 
 
 class _CastSection extends StatelessWidget {
   final String movieId;
-  const _CastSection({Key? key, required this.movieId}) : super(key: key);
+  final DetailsPageViewModel viewModel;
+
+  const _CastSection({Key? key, required this.movieId, required this.viewModel})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -415,8 +462,7 @@ class _CastSection extends StatelessWidget {
           width: getMediaWidth(context),
           height: get160Size(context) + 5,
           child: FutureBuilder<MovieCastModel>(
-              future:
-              ApiClient.apiClient.getMovieCast(movieId),
+              future: viewModel.getMovieCast(movieId),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return ListView.builder(
@@ -449,7 +495,8 @@ class _CastSection extends StatelessWidget {
 
 class _SimilarMoviesSection extends StatelessWidget {
   final String movieId;
-  const _SimilarMoviesSection({Key? key, required this.movieId}) : super(key: key);
+  final DetailsPageViewModel viewModel;
+  const _SimilarMoviesSection({Key? key, required this.movieId, required this.viewModel}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -469,7 +516,7 @@ class _SimilarMoviesSection extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(8),
           child: FutureBuilder<SimilarMoviesModel>(
-              future: ApiClient.apiClient.getSimilarMovis(movieId),
+              future: viewModel.getSimilarMovies(movieId),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   // if there is similar movies, bring any movies.
@@ -482,7 +529,7 @@ class _SimilarMoviesSection extends StatelessWidget {
                           "Couldn't find similar movies",
                         ),
                         mHeight(5),
-                        TrendingMovies(),
+                        TrendingMovies(viewModel: viewModel,),
                       ],
                     );
                   } else {
@@ -491,6 +538,8 @@ class _SimilarMoviesSection extends StatelessWidget {
                       data: snapshot.data!,
                     );
                   }
+                } else if(snapshot.hasError){
+                  return SizedBox.shrink();
                 } else {
                   return TrendingMoviesShimmer();
                 }
@@ -500,3 +549,4 @@ class _SimilarMoviesSection extends StatelessWidget {
     );
   }
 }
+

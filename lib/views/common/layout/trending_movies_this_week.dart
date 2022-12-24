@@ -9,6 +9,10 @@ import 'package:i_movie_app/views/common/shimmers/carousel_shimmer.dart';
 import 'package:i_movie_app/views/details/details_page.dart';
 
 class TrendingMoviesThisWeek extends StatelessWidget {
+  final TrendingMoviesModel? data;
+
+  const TrendingMoviesThisWeek({Key? key, this.data}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Container(

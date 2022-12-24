@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
@@ -20,6 +22,7 @@ class LoggingInterceptor extends Interceptor {
     _logger.d("""
 
     onRequest -------->>
+    options: ${options}
     path: ${options.path} ,
     data: ${options.data} ,
     headers: ${options.headers} ,
@@ -31,7 +34,7 @@ class LoggingInterceptor extends Interceptor {
 
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
-    _logger.d("""
+    log("""
     <<-------- onResponse
     statusCode: ${response.statusCode} ,
     realUri: ${response.realUri} ,

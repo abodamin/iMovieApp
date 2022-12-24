@@ -3,13 +3,13 @@
 //////BACKLOG//
 ### BACKLOG //
 //////////////
-- use sample clean app folder
 - add store favorite movies to local storage
 - add titles to Shimmers
+- error handling
 
 
 //////////////////
 ### Current Step/
 //////////////////
-- use sample clean app folder
-- 
+- use dio everywhere
+- error handling

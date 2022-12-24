@@ -6,6 +6,7 @@ import 'package:i_movie_app/app/resources.dart';
 import 'package:i_movie_app/views/common/widgets/credits_footer.dart';
 import 'package:i_movie_app/views/common/layout/trending_movies.dart';
 import 'package:i_movie_app/views/details/details_page.dart';
+import 'package:i_movie_app/views/home/home_page_viewmodel.dart';
 
 
 ///returns list of movies in gridview only.
@@ -48,7 +49,7 @@ class GlobalMoviesGridView extends StatelessWidget {
                 itemCount: listOfMovies.length > 18 ? 18 : listOfMovies.length,
                 itemBuilder: (context, index) {
                   if (listOfMovies.isEmpty || listOfMovies == null) {
-                    return TrendingMovies();
+                    return Text("Nothing to show .. :( ");
                   } else {
                     return GestureDetector(
                       onTap: () {

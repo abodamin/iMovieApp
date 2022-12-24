@@ -1,5 +1,3 @@
-
-
 import 'package:i_movie_app/data/api_models/GenreMoviesModel.dart';
 import 'package:i_movie_app/data/api_models/GenresModel.dart';
 import 'package:i_movie_app/data/api_models/MovieCastModel.dart';
@@ -11,63 +9,57 @@ import 'package:i_movie_app/data/api_models/TrendingPeople.dart';
 import 'package:i_movie_app/data/api_models/movie_videos.dart';
 import 'package:i_movie_app/data/api_models/search_by_genre_result.dart';
 import 'package:i_movie_app/data/api_models/search_movies_result.dart';
-import 'package:i_movie_app/domain/repository/movies_repository.dart';
-import 'package:i_movie_app/views/factory/view_model.dart';
-import 'package:i_movie_app/views/home/home_data.dart';
+import 'package:i_movie_app/data/network/rest_api.dart';
 import 'package:injectable/injectable.dart';
 
-@injectable
-class HomePageViewModel extends ViewModel<HomeData>{
+@singleton
+class MoviesRepository {
+  final RestApi _restApi;
 
-  final MoviesRepository _repository;
-
-  HomePageViewModel(this._repository) : super(HomeData());
-
+  MoviesRepository(this._restApi);
 
   Future<TrendingMoviesModel> getTrendingMovies() async {
-    return await _repository.getTrendingMovies();
+    return await _restApi.getTrendingMovies();
   }
 
   Future<GenresModel> getGenres() async {
-    return await _repository.getGenres();
+    return await _restApi.getGenres();
   }
 
-
   Future<GenreMoviesModel> getGenreMovies(int id) async {
-    return await _repository.getGenreMovies(id);
+    return await _restApi.getGenreMovies(id);
   }
 
   Future<MovieCastModel> getMovieCast(String id) async {
-    return await _repository.getMovieCast(id);
+    return await _restApi.getMovieCast(id);
   }
 
   Future<TreindingPeopleModel> getTrendinPersons() async {
-    return await _repository.getTrendinPersons();
+    return await _restApi.getTrendinPersons();
   }
 
   Future<TopRatedMviesModel> getTopRatedMovies() async {
-    return await _repository.getTopRatedMovies();
+    return await _restApi.getTopRatedMovies();
   }
 
-  Future<SimilarMoviesModel> getSimilarMovis(String id) async {
-    return await _repository.getSimilarMovies(id);
+  Future<SimilarMoviesModel> getSimilarMovies(String id) async {
+    return await _restApi.getSimilarMovis(id);
   }
 
   Future<MovieDertailsModel> getMovieDetails(String id) async {
-    return await _repository.getMovieDetails(id);
+    return await _restApi.getMovieDetails(id);
   }
 
   Future<MovieVideos> getMovieVideos(String id) async {
-    return await _repository.getMovieVideos(id);
+    return await _restApi.getMovieVideos(id);
   }
 
   Future<SearchMovieResult> searchForMovie(String keyWord) async {
-    return await _repository.searchForMovie(keyWord);
+    return await _restApi.searchForMovie(keyWord);
   }
 
   Future<SearchByGenreResult> searchByGenre(
       String genreIDs, String year) async {
-    return await _repository.searchByGenre(genreIDs, year);
+    return await _restApi.searchByGenre(genreIDs, year);
   }
-
 }

@@ -1,5 +1,5 @@
-
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:i_movie_app/app/api.dart';
@@ -7,12 +7,17 @@ import 'package:i_movie_app/app/api.dart';
 import 'package:i_movie_app/app/colors.dart';
 import 'package:i_movie_app/data/api_models/GenreMoviesModel.dart';
 import 'package:i_movie_app/data/api_models/GenresModel.dart';
+import 'package:i_movie_app/data/api_models/TrendingMoviesModel.dart';
 import 'package:i_movie_app/data/api_models/TrendingPeople.dart' as tp;
 import 'package:i_movie_app/app/resources.dart';
+import 'package:i_movie_app/views/common/layout/global_movies_grid.dart';
 import 'package:i_movie_app/views/common/layout/trending_movies.dart';
 import 'package:i_movie_app/views/common/layout/trending_movies_this_week.dart';
 import 'package:i_movie_app/views/common/layout/cast_card.dart';
 import 'package:i_movie_app/views/common/responsive.dart';
+import 'package:i_movie_app/views/common/shimmers/carousel_shimmer.dart';
+import 'package:i_movie_app/views/common/shimmers/trending_movies_shimmer.dart';
+import 'package:i_movie_app/views/common/widgets/rounded_poster_image.dart';
 import 'package:i_movie_app/views/details/details_page.dart';
 
 import 'package:i_movie_app/views/factory/screen.dart';
@@ -27,7 +32,7 @@ import 'package:i_movie_app/views/common/utils.dart';
 
 import 'package:i_movie_app/views/common/slide_list_view.dart';
 import 'package:injectable/injectable.dart';
-
+import 'package:provider/provider.dart';
 
 @injectable
 class HomePage extends Screen {
@@ -37,14 +42,8 @@ class HomePage extends Screen {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends ScreenState<HomePage, HomePageViewModel, HomeData> {
-
-  @override
-  void initState() {
-
-    super.initState();
-  }
-
+class _HomePageState
+    extends ScreenState<HomePage, HomePageViewModel, HomeData> {
   @override
   Widget buildScreen(BuildContext context) {
     return Scaffold(
@@ -79,16 +78,17 @@ class _HomePageState extends ScreenState<HomePage, HomePageViewModel, HomeData> 
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Top Rated Movies Posters.
-                TrendingMoviesThisWeek(),
+                _TrendingMoviesThisWeekSection(viewModel: viewModel),
                 //TabBars
                 mHeight(get20Size(context)),
-                _TabsAndMoviesSection(),
+                _TabsAndMoviesSection(viewModel: viewModel),
                 // --- GetTrendingPersons --- //
                 mHeight(get20Size(context)),
-                _TrendingActorsSection(),
+                _TrendingActorsSection(viewModel: viewModel),
                 mHeight(get10Size(context)),
                 // ---- Top Rated Movies ---- //
-                TrendingMovies(),
+                _TrendingMoviesSection(viewModel: viewModel),
+                mHeight(get100Size(context)),
               ],
             ),
           ),
@@ -98,20 +98,134 @@ class _HomePageState extends ScreenState<HomePage, HomePageViewModel, HomeData> 
   }
 }
 
+class _TrendingMoviesSection extends StatelessWidget {
+  final HomePageViewModel viewModel;
+
+  const _TrendingMoviesSection({Key? key, required this.viewModel})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<TrendingMoviesModel>(
+        future: viewModel.getTrendingMovies(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Text(
+                    "Trending Movies This Week",
+                    style: getTextTheme(context).caption,
+                  ),
+                ),
+                GlobalMoviesGridView(
+                  listOfMovies: snapshot.data!.results!,
+                ),
+              ],
+            );
+          } else if (snapshot.hasError) {
+            return SizedBox.shrink();
+          } else {
+            return TrendingMoviesShimmer();
+          }
+        });
+  }
+}
+
+class _TrendingMoviesThisWeekSection extends StatelessWidget {
+  final HomePageViewModel viewModel;
+
+  const _TrendingMoviesThisWeekSection({Key? key, required this.viewModel})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: getMediaHeight(context) * 0.5,
+      width: getMediaWidth(context),
+      child: FutureBuilder<TrendingMoviesModel>(
+        future: viewModel.getTrendingMovies(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return CarouselSlider(
+              options: CarouselOptions(
+                autoPlay: false,
+                aspectRatio: 0.8,
+                enlargeCenterPage: true,
+                viewportFraction: getMediaWidth(context) > 600 ? 0.5 : 0.7,
+              ),
+              items: List.generate(
+                10,
+                (index) {
+                  var _path = snapshot.data?.results![index];
+                  return GestureDetector(
+                    onTap: () async {
+                      navigateTo(
+                        context,
+                        DetailsPage(
+                          id: _path?.id?.toString() ?? "",
+                        ),
+                      );
+                    },
+                    child: RoundedPosterImage(
+                      image: R.getNetworkImagePath(
+                        _path?.posterPath ?? "",
+                        highQuality: true,
+                      ),
+                    ),
+                  );
+                },
+              ).toList(),
+            );
+          } else if (snapshot.hasError) {
+            return _ErrorPage();
+          } else {
+            return CarouselShimmer();
+          }
+        },
+      ),
+    );
+  }
+}
+
+class _ErrorPage extends StatelessWidget {
+  const _ErrorPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: getMediaHeight(context),
+      child: Center(
+        child: Text(
+          "Ops, something went wrong check your connection and try again :/",
+          style: getTextTheme(context).titleLarge,
+          textAlign: TextAlign.center,
+        ),
+      ),
+    );
+  }
+}
+
 class _TabsAndMoviesSection extends StatelessWidget {
-  const _TabsAndMoviesSection({Key? key}) : super(key: key);
+  final HomePageViewModel viewModel;
+
+  const _TabsAndMoviesSection({Key? key, required this.viewModel})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<GenresModel>(
-      future: ApiClient.apiClient.getGenres(),
+      future: viewModel.getGenres(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          //we call API then give it the required data
-          //this is better for performance & code cleaning.
           return _TabsAndMovies(
             data: snapshot.data!,
+            viewModel: viewModel,
           );
+        } else if (snapshot.hasError) {
+          return SizedBox.shrink();
         } else {
           return TabsAndMoviesShimmer();
         }
@@ -121,88 +235,84 @@ class _TabsAndMoviesSection extends StatelessWidget {
 }
 
 class _TrendingActorsSection extends StatelessWidget {
-  _TrendingActorsSection({Key? key}) : super(key: key);
-  final vvv = ValueNotifier<bool>(false);
+  final HomePageViewModel viewModel;
+
+  _TrendingActorsSection({Key? key, required this.viewModel}) : super(key: key);
+
+  // final vvv = ValueNotifier<bool>(false);
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ValueListenableBuilder(
-            valueListenable: vvv,
-            builder: (context, bool value1, _) {
-              return Visibility(
-                visible: value1,
-                child: Padding(
+    return FutureBuilder<tp.TreindingPeopleModel>(
+        future: viewModel.getTrendinPersons(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            var _path = snapshot.data!.results;
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
                   padding: const EdgeInsets.all(8),
                   child: Text(
                     "Trending Actors This Week",
                     style: getTextTheme(context).caption,
                   ),
                 ),
-              );
-            }),
-        Container(
-          height: get160Size(context) + 10,
-          child: FutureBuilder<tp.TreindingPeopleModel>(
-            future: ApiClient.apiClient.getTrendinPersons(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                var _path = snapshot.data!.results;
-                _updateView();
-                return ListView.builder(
-                  itemCount: _path?.length??0,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    var _data = _path![index];
-                    return AspectRatio(
-                      aspectRatio: 0.8,
-                      child: CastCard(
-                        imagePath:
-                            R.getNetworkImagePath(_data.profilePath ?? ""),
-                        actorName: _data.name ?? "",
-                        bio: "",
-                      ),
-                    );
-                  },
-                );
-              } else {
-                return TrendingActorsShimmer();
-              }
-            },
-          ),
-        ),
-      ],
-    );
-  }
-
-  Future _updateView() {
-    return Future.delayed(Duration.zero, () => vvv.value = true);
+                Container(
+                  height: get160Size(context) + 10,
+                  child: ListView.builder(
+                    itemCount: _path?.length ?? 0,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) {
+                      var _data = _path![index];
+                      return AspectRatio(
+                        aspectRatio: 0.8,
+                        child: CastCard(
+                          imagePath:
+                              R.getNetworkImagePath(_data.profilePath ?? ""),
+                          actorName: _data.name ?? "",
+                          bio: "",
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            );
+          } else if (snapshot.hasError) {
+            return SizedBox.shrink();
+          } else {
+            return TrendingActorsShimmer();
+          }
+        });
   }
 }
 
 class _TabsAndMovies extends StatefulWidget {
   final GenresModel data;
+  final HomePageViewModel viewModel;
 
   const _TabsAndMovies({
     Key? key,
     required this.data,
+    required this.viewModel,
   }) : super(key: key);
 
   @override
   _TabsAndMoviesState createState() => _TabsAndMoviesState();
 }
 
-class _TabsAndMoviesState extends State<_TabsAndMovies>
-    with SingleTickerProviderStateMixin {
+class _TabsAndMoviesState extends State<_TabsAndMovies> with SingleTickerProviderStateMixin {
   late TabController _tabController;
   int movies = 0;
+
+  late final HomePageViewModel viewModel = widget.viewModel;
+
 
   @override
   void initState() {
     _tabController = new TabController(
-      length: widget.data.genres?.length??0,
+      length: widget.data.genres?.length ?? 0,
       vsync: this,
     );
     super.initState();
@@ -217,7 +327,7 @@ class _TabsAndMoviesState extends State<_TabsAndMovies>
           labelColor: secondaryColor,
           indicatorColor: secondaryColor,
           tabs: List.generate(
-            widget.data.genres?.length??0,
+            widget.data.genres?.length ?? 0,
             (index) {
               return Tab(
                 child: Text("${widget.data.genres![index].name ?? ""}"),
@@ -233,11 +343,10 @@ class _TabsAndMoviesState extends State<_TabsAndMovies>
           height: get200Size(context) + get100Size(context),
           child: TabBarView(
             children: List.generate(
-              widget.data.genres?.length??0,
+              widget.data.genres?.length ?? 0,
               (index) {
                 return FutureBuilder<GenreMoviesModel>(
-                    future: ApiClient.apiClient
-                        .getGenreMovies(widget.data.genres![index].id!),
+                    future: viewModel.getGenreMovies(widget.data.genres![index].id!),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         return Column(
@@ -345,8 +454,10 @@ class _TabsAndMoviesState extends State<_TabsAndMovies>
                             ),
                           ],
                         );
-                      } else {
+                      } else if(snapshot.hasError){
                         return SizedBox.shrink();
+                      } else {
+                        return TabsAndMoviesShimmer();
                       }
                     });
               },
