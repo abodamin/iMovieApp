@@ -1,10 +1,11 @@
 
 import 'package:i_movie_app/app/imports.dart';
 import 'package:i_movie_app/app/resources.dart';
-import 'package:i_movie_app/views/details/DetailsPage.dart';
+
 
 import 'package:i_movie_app/views/common/widgets/credits_footer.dart';
 import 'package:i_movie_app/views/common/layout/trending_movies.dart';
+import 'package:i_movie_app/views/details/details_page.dart';
 
 
 ///returns list of movies in gridview only.

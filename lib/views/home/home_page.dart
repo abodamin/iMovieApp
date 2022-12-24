@@ -13,7 +13,8 @@ import 'package:i_movie_app/views/common/layout/trending_movies.dart';
 import 'package:i_movie_app/views/common/layout/trending_movies_this_week.dart';
 import 'package:i_movie_app/views/common/layout/cast_card.dart';
 import 'package:i_movie_app/views/common/responsive.dart';
-import 'package:i_movie_app/views/details/DetailsPage.dart';
+import 'package:i_movie_app/views/details/details_page.dart';
+
 import 'package:i_movie_app/views/factory/screen.dart';
 import 'package:i_movie_app/views/favorite/favorite_movies_page.dart';
 import 'package:i_movie_app/views/home/home_data.dart';

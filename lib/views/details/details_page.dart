@@ -20,10 +20,14 @@ import 'package:i_movie_app/views/common/widgets/credits_footer.dart';
 import 'package:i_movie_app/views/common/widgets/global_icons.dart';
 
 import 'package:i_movie_app/views/common/layout/trending_movies.dart';
+import 'package:i_movie_app/views/details/details_page_data.dart';
+import 'package:i_movie_app/views/details/details_page_viewmodel.dart';
+import 'package:i_movie_app/views/factory/screen.dart';
+import 'package:injectable/injectable.dart';
 import 'package:intl/intl.dart';
 
-
-class DetailsPage extends StatelessWidget {
+@injectable
+class DetailsPage extends Screen {
   final String id;
 
 
@@ -32,9 +36,15 @@ class DetailsPage extends StatelessWidget {
     required this.id,
   }) : super(key: key);
 
+  @override
+  _DetailsPageState createState() => _DetailsPageState();
+}
+
+class _DetailsPageState extends ScreenState<DetailsPage, DetailsPageViewModel, DetailsPageData> {
+
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildScreen(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -48,7 +58,7 @@ class DetailsPage extends StatelessWidget {
               SingleChildScrollView(
                 child: Container(
                   child: FutureBuilder<MovieDertailsModel>(
-                      future: ApiClient.apiClient.getMovieDetails(id),
+                      future: ApiClient.apiClient.getMovieDetails(widget.id),
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           return Column(
@@ -68,10 +78,10 @@ class DetailsPage extends StatelessWidget {
                               _GenresSection(data: snapshot.data,),
                               mHeight(get20Size(context)),
                               // --- Cast --- //
-                              _CastSection(movieId: id),
+                              _CastSection(movieId: widget.id),
                               mHeight(get20Size(context)),
                               // --- Similar Movies --- //
-                              _SimilarMoviesSection(movieId: id),
+                              _SimilarMoviesSection(movieId: widget.id),
                               mHeight(get80Size(context)),
                               //
                             ],
@@ -96,6 +106,7 @@ class DetailsPage extends StatelessWidget {
       ),
     );
   }
+
 }
 
 class _TitleAndValue extends StatelessWidget {

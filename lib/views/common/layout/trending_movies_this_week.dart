@@ -4,8 +4,9 @@ import 'package:i_movie_app/app/resources.dart';
 import 'package:i_movie_app/data/api_models/TrendingMoviesModel.dart';
 import 'package:i_movie_app/app/imports.dart';
 import 'package:i_movie_app/views/common/widgets/rounded_poster_image.dart';
-import 'package:i_movie_app/views/details/DetailsPage.dart';
+
 import 'package:i_movie_app/views/common/shimmers/carousel_shimmer.dart';
+import 'package:i_movie_app/views/details/details_page.dart';
 
 class TrendingMoviesThisWeek extends StatelessWidget {
   @override

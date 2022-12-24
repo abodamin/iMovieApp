@@ -5,8 +5,9 @@ import 'package:i_movie_app/app/imports.dart';
 import 'package:i_movie_app/app/resources.dart';
 import 'package:i_movie_app/data/api_models/SimilarMoviesModel.dart';
 
-import 'package:i_movie_app/views/details/DetailsPage.dart';
+
 import 'package:i_movie_app/views/common/widgets/my_loading_widget.dart';
+import 'package:i_movie_app/views/details/details_page.dart';
 
 
 class FavoriteMoviesPage extends StatelessWidget {
