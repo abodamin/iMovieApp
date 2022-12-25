@@ -2,7 +2,6 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:i_movie_app/app/api.dart';
 
 import 'package:i_movie_app/app/colors.dart';
 import 'package:i_movie_app/data/api_models/GenreMoviesModel.dart';
@@ -10,9 +9,9 @@ import 'package:i_movie_app/data/api_models/GenresModel.dart';
 import 'package:i_movie_app/data/api_models/TrendingMoviesModel.dart';
 import 'package:i_movie_app/data/api_models/TrendingPeople.dart' as tp;
 import 'package:i_movie_app/app/resources.dart';
+import 'package:i_movie_app/views/common/layout/error_page.dart';
 import 'package:i_movie_app/views/common/layout/global_movies_grid.dart';
-import 'package:i_movie_app/views/common/layout/trending_movies.dart';
-import 'package:i_movie_app/views/common/layout/trending_movies_this_week.dart';
+
 import 'package:i_movie_app/views/common/layout/cast_card.dart';
 import 'package:i_movie_app/views/common/responsive.dart';
 import 'package:i_movie_app/views/common/shimmers/carousel_shimmer.dart';
@@ -180,7 +179,7 @@ class _TrendingMoviesThisWeekSection extends StatelessWidget {
               ).toList(),
             );
           } else if (snapshot.hasError) {
-            return _ErrorPage();
+            return ErrorPage();
           } else {
             return CarouselShimmer();
           }
@@ -190,23 +189,6 @@ class _TrendingMoviesThisWeekSection extends StatelessWidget {
   }
 }
 
-class _ErrorPage extends StatelessWidget {
-  const _ErrorPage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: getMediaHeight(context),
-      child: Center(
-        child: Text(
-          "Ops, something went wrong check your connection and try again :/",
-          style: getTextTheme(context).titleLarge,
-          textAlign: TextAlign.center,
-        ),
-      ),
-    );
-  }
-}
 
 class _TabsAndMoviesSection extends StatelessWidget {
   final HomePageViewModel viewModel;

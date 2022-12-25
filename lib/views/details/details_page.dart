@@ -1,20 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:i_movie_app/app/Globals.dart';
-import 'package:i_movie_app/app/api.dart';
 import 'package:i_movie_app/data/api_models/MovieCastModel.dart';
 import 'package:i_movie_app/data/api_models/MovieDetailsModel.dart';
 import 'package:i_movie_app/data/api_models/SimilarMoviesModel.dart';
 import 'package:i_movie_app/app/resources.dart';
-import 'package:i_movie_app/data/api_models/TrendingMoviesModel.dart';
 import 'package:i_movie_app/views/common/layout/app_loading_widget.dart';
-import 'package:i_movie_app/views/common/layout/global_movies_grid.dart';
 import 'package:i_movie_app/views/common/layout/movie_rate_bar.dart';
-import 'package:i_movie_app/views/common/layout/trending_movies_this_week.dart';
+
 import 'package:i_movie_app/views/common/responsive.dart';
 import 'package:i_movie_app/views/common/shimmers/trending_actors_shimmer.dart';
 import 'package:i_movie_app/views/common/shimmers/trending_movies_shimmer.dart';
-import 'package:i_movie_app/views/common/widgets/my_loading_widget.dart';
 import 'package:i_movie_app/views/common/utils.dart';
 import 'package:i_movie_app/views/common/widgets/favoriteIcon.dart';
 import 'package:i_movie_app/views/common/layout/cast_card.dart';
@@ -22,6 +18,7 @@ import 'package:i_movie_app/views/common/widgets/credits_footer.dart';
 import 'package:i_movie_app/views/common/widgets/global_icons.dart';
 
 import 'package:i_movie_app/views/common/layout/trending_movies.dart';
+import 'package:i_movie_app/views/common/widgets/gradient_image.dart';
 import 'package:i_movie_app/views/details/details_page_data.dart';
 import 'package:i_movie_app/views/details/details_page_viewmodel.dart';
 import 'package:i_movie_app/views/factory/screen.dart';
@@ -80,7 +77,7 @@ class _DetailsPageState extends ScreenState<DetailsPage, DetailsPageViewModel, D
                               _GenresSection(data: snapshot.data,),
                               mHeight(get20Size(context)),
                               // --- Cast --- //
-                              _CastSection(movieId: widget.id),
+                              _CastSection(movieId: widget.id, viewModel: viewModel,),
                               mHeight(get20Size(context)),
                               // --- Similar Movies --- //
                               _SimilarMoviesSection(

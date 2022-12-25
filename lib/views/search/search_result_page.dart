@@ -2,24 +2,10 @@ import 'package:i_movie_app/app/imports.dart';
 import 'package:i_movie_app/app/resources.dart';
 import 'package:i_movie_app/data/api_models/search_by_genre_result.dart';
 import 'package:i_movie_app/data/api_models/search_movies_result.dart';
+import 'package:i_movie_app/domain/models/category_enum.dart';
 import 'package:i_movie_app/views/common/widgets/my_loading_widget.dart';
 import 'package:i_movie_app/views/common/widgets/adaptve_button.dart';
 import 'package:i_movie_app/views/common/layout/global_movies_grid.dart';
-
-//TODO: move to class
-
-Map<String, int> moviesGenreIDs = {
-  "Action": 28,
-  "Adventure": 12,
-  "Animation": 16,
-  "Comedy": 35,
-  "Crime": 80,
-  "Documentary": 99,
-  "Drama": 18,
-  "Family": 10751,
-  "Fantasy": 14,
-  "History": 36,
-};
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);

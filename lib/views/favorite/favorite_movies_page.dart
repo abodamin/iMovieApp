@@ -4,17 +4,29 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:i_movie_app/app/imports.dart';
 import 'package:i_movie_app/app/resources.dart';
 import 'package:i_movie_app/data/api_models/SimilarMoviesModel.dart';
-
+import 'package:i_movie_app/views/common/layout/error_page.dart';
+import 'package:i_movie_app/views/common/layout/movie_rate_bar.dart';
 
 import 'package:i_movie_app/views/common/widgets/my_loading_widget.dart';
 import 'package:i_movie_app/views/details/details_page.dart';
+import 'package:i_movie_app/views/factory/screen.dart';
+import 'package:i_movie_app/views/favorite/favorite_page_data.dart';
+import 'package:i_movie_app/views/favorite/favorite_page_viewmodel.dart';
+import 'package:injectable/injectable.dart';
 
-
-class FavoriteMoviesPage extends StatelessWidget {
+@injectable
+class FavoriteMoviesPage extends Screen {
   const FavoriteMoviesPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  _FavoriteMoviesPageState createState() => _FavoriteMoviesPageState();
+}
+
+class _FavoriteMoviesPageState extends ScreenState<FavoriteMoviesPage,
+    FavoritePageViewModel,
+    FavoritePageData> {
+  @override
+  Widget buildScreen(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Favorite Movies"),
@@ -22,131 +34,125 @@ class FavoriteMoviesPage extends StatelessWidget {
       body: Container(
         height: getMediaHeight(context),
         child: FutureBuilder<SimilarMoviesModel>(
-            future: ApiClient.apiClient.getSimilarMovis(500.toString()),
+            future: viewModel.getSimilarMovis("500"),
             builder: (context, snapshot) {
-              return snapshot.hasData
-                  ? Column(
-                      children: [
-                        // ---
-                        SizedBox(
-                          height: getMediaHeight(context) * 0.88,
-                          child: ListView.builder(
-                              itemCount: snapshot.data?.results?.length??0,
-                              itemBuilder: (context, index) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    navigateTo(
-                                      context,
-                                      DetailsPage(
-                                        id: snapshot.data!.results![index].id.toString(),
-                                      ),
-                                    );
-                                  },
-                                  child: Container(
-                                    height: 150,
-                                    margin: mHor16Vert8,
-                                    child: Row(
-                                      children: [
-                                        // ---Poster Image ---
-                                        AspectRatio(
-                                          aspectRatio: 0.8,
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              color: Colors.transparent,
-                                              image: DecorationImage(
-                                                fit: BoxFit.cover,
-                                                image: NetworkImage(
-                                                  R.getNetworkImagePath(
-                                                    snapshot.data?.results![index]
-                                                            .posterPath ??
-                                                        "",
-                                                    highQuality:
-                                                        getMediaWidth(context) >
-                                                            600,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        // --- Title and others ---
-                                        Expanded(
-                                          child: Padding(
-                                            padding: mHor16Vert8,
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.max,
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                // --- Title ---
-                                                AutoSizeText(
-                                                  "${snapshot.data?.results![index].title ?? ""}",
-                                                  maxLines: 2,
-                                                  style: getTextTheme(context).titleMedium!.copyWith(fontWeight: FontWeight.bold),
-                                                ),
-                                                // --- rating --- //
-
-                                                Padding(
-                                                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                    children: [
-                                                      Text(
-                                                          "${snapshot.data?.results![index].voteAverage?.toStringAsFixed(1) ?? ""}"),
-                                                      mWidth(10),
-                                                      Container(
-                                                        child: RatingBar.builder(
-                                                          initialRating:
-                                                          snapshot.data!.results![index].voteAverage! / 2,
-                                                          itemSize: 15,
-                                                          minRating: 0,
-                                                          maxRating: 5,
-                                                          ignoreGestures: true,
-                                                          direction: Axis.horizontal,
-                                                          allowHalfRating: true,
-                                                          itemCount: 5,
-                                                          itemPadding: EdgeInsets.symmetric(
-                                                              horizontal: 0.0),
-                                                          itemBuilder: (context, _) => Icon(
-                                                            Icons.star,
-                                                            color: Colors.amber,
-                                                          ),
-                                                          onRatingUpdate: (rating) {
-                                                            print(rating);
-                                                          },
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                // --- overview --- //
-                                                Expanded(
-                                                  child: AutoSizeText(
-                                                    "${snapshot.data?.results![index].overview ?? ""}",
-                                                    textAlign:
-                                                        TextAlign.justify,
-                                                    overflow: TextOverflow.fade,
-                                                    maxLines: 20,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        // --- Favorite icon --- //
-                                        // FavoriteIcon(movie: snapshot.data.results![index]),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              }),
-                        ),
-                        //
-                      ],
-                    )
-                  : MyLoadingWidget();
+              if (snapshot.hasData) {
+                return Column(
+                  children: [
+                    // ---
+                    SizedBox(
+                      height: getMediaHeight(context) * 0.88,
+                      child: ListView.builder(
+                        itemCount: snapshot.data?.results?.length ?? 0,
+                        itemBuilder: (context, index) {
+                          return _ListViewItemSection(data: snapshot.data!
+                              .results![index], viewModel: viewModel);
+                        },
+                      ),
+                    ),
+                    //
+                  ],
+                );
+              } else if (snapshot.hasError) {
+                return ErrorPage();
+              } else {
+                return MyLoadingWidget();
+              }
             }),
       ),
     );
+  }
+}
+
+
+class _ListViewItemSection extends StatelessWidget {
+  final Result data;
+  final FavoritePageViewModel viewModel;
+
+  const _ListViewItemSection({
+    Key? key,
+    required this.data,
+    required this.viewModel,
+  })
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        navigateTo(
+          context,
+          DetailsPage(
+            id: data.id.toString(),
+          ),
+        );
+      },
+      child: Container(
+        height: 150,
+        margin: mHor16Vert8,
+        child: Row(
+          children: [
+            // --- Poster Image --- //
+            AspectRatio(
+              aspectRatio: 0.8,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.transparent,
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: NetworkImage(
+                      R.getNetworkImagePath(
+                        data.posterPath ?? "",
+                        highQuality: getMediaWidth(context) > 600,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            // --- Title and others ---
+            Expanded(
+              child: Padding(
+                padding: mHor16Vert8,
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment:
+                  CrossAxisAlignment.start,
+                  children: [
+                    // --- Title ---
+                    AutoSizeText(
+                      "${data.title ?? ""}",
+                      maxLines: 2,
+                      style: getTextTheme(context)
+                          .titleMedium!
+                          .copyWith(
+                          fontWeight:
+                          FontWeight.bold),
+                    ),
+                    // --- rating --- //
+                    MovieRateBar(voteAverage: _formatVotesCount(data.voteAverage!)),
+                    // --- overview --- //
+                    Expanded(
+                      child: AutoSizeText(
+                        "${data.overview ?? ""}",
+                        textAlign: TextAlign.justify,
+                        overflow: TextOverflow.fade,
+                        maxLines: 20,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            // --- Favorite icon --- //
+            // FavoriteIcon(movie: snapshot.data.results![index]),
+          ],
+        ),
+      ),
+    );
+  }
+
+  double _formatVotesCount(double votesCount) {
+    return double.parse(votesCount.toDouble().toStringAsFixed(1));
   }
 }
