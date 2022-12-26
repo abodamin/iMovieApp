@@ -18,15 +18,15 @@ import '../data/network/interceptors/auth_interceptor.dart' as _i3;
 import '../data/network/interceptors/loggin_interceptor.dart' as _i15;
 import '../data/network/rest_api.dart' as _i16;
 import '../data/network/urls.dart' as _i18;
-import '../domain/repository/movies_repository.dart' as _i20;
+import '../domain/repository/movies_repository.dart' as _i21;
 import '../domain/repository/storage_repository.dart' as _i17;
 import '../views/details/details_page.dart' as _i4;
 import '../views/details/details_page_data.dart' as _i6;
-import '../views/details/details_page_viewmodel.dart' as _i21;
+import '../views/details/details_page_viewmodel.dart' as _i22;
 import '../views/factory/view_model_factory.dart' as _i19;
 import '../views/favorite/favorite_movies_page.dart' as _i9;
 import '../views/favorite/favorite_page_data.dart' as _i11;
-import '../views/favorite/favorite_page_viewmodel.dart' as _i22;
+import '../views/favorite/favorite_page_viewmodel.dart' as _i20;
 import '../views/home/home_page.dart' as _i12;
 import '../views/home/home_page_viewmodel.dart' as _i23;
 import 'register_module.dart' as _i24; // ignore_for_file: unnecessary_lambdas
@@ -63,16 +63,16 @@ _i1.GetIt $initGetIt(
   gh.singleton<_i17.StorageRepository>(_i17.StorageRepository());
   gh.singleton<_i18.URLS>(_i18.URLS());
   gh.singleton<_i19.ViewModelFactory>(_i19.ViewModelFactoryImpl());
-  gh.singleton<_i20.MoviesRepository>(
-      _i20.MoviesRepository(get<_i16.RestApi>()));
-  gh.factory<_i21.DetailsPageViewModel>(() => _i21.DetailsPageViewModel(
-        get<_i20.MoviesRepository>(),
+  gh.factory<_i20.FavoritePageViewModel>(
+      () => _i20.FavoritePageViewModel(get<_i17.StorageRepository>()));
+  gh.singleton<_i21.MoviesRepository>(
+      _i21.MoviesRepository(get<_i16.RestApi>()));
+  gh.factory<_i22.DetailsPageViewModel>(() => _i22.DetailsPageViewModel(
+        get<_i21.MoviesRepository>(),
         get<_i17.StorageRepository>(),
       ));
-  gh.factory<_i22.FavoritePageViewModel>(
-      () => _i22.FavoritePageViewModel(get<_i20.MoviesRepository>()));
   gh.factory<_i23.HomePageViewModel>(
-      () => _i23.HomePageViewModel(get<_i20.MoviesRepository>()));
+      () => _i23.HomePageViewModel(get<_i21.MoviesRepository>()));
   return get;
 }
 

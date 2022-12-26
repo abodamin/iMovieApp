@@ -41,9 +41,10 @@ class DetailsPageViewModel extends ViewModel<DetailsPageData> {
         return false;
       }
         MovieStorageModel movieStorageModel = movieStorageModelFromJson(_favoriteMovies);
+
         // favorite movies are stored in String, convert them to MovieDetailsModel.
         List<MovieDertailsModel> _moviesDetails = movieStorageModel.favoriteMovies!.map((e) => movieDertailsModelFromJson(e)).toList();
-        // _details.addAll(movieStorageModel.favoriteMovies!.map((e) => movieDertailsModelFromJson(e)).toList());
+
         return _moviesDetails.any((element) => element.title == movie.title);
       } catch(e){
       print("___ERRORRRR >> $e");
@@ -53,6 +54,10 @@ class DetailsPageViewModel extends ViewModel<DetailsPageData> {
 
   Future<void> saveMovieAsFavorite(MovieDertailsModel movie) async {
       await _storageRepository.saveMovieAsFavorite(movie);
+  }
+
+  Future removeMovieFromFavorite(MovieDertailsModel movie) async {
+    await _storageRepository.deleteMovieFromFavorite(movie);
   }
 
 

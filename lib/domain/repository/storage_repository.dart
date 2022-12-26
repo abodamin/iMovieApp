@@ -1,23 +1,15 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:i_movie_app/data/api_models/MovieDetailsModel.dart';
-import 'package:i_movie_app/data/local_models/local_storage_manager.dart';
 import 'package:i_movie_app/data/local_models/movie_details_starage.dart';
 import 'package:injectable/injectable.dart';
-import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 @singleton
 class StorageRepository {
   const StorageRepository();
   static const FAV_LIST = "FAV_LIST";
   static const FAV_LIST_FILE = "FAV_LIST_FILE.txt";
-
-
-  // final LocalStorageManager _storageManager;
-  // final Logger _logger;
 
   Future<void> _write(String text) async {
     final Directory directory = await getApplicationDocumentsDirectory();
@@ -54,16 +46,25 @@ class StorageRepository {
       );
       movieStorageModel.favoriteMovies!.add(movieStr);
 
-      String storage = json.encode(movieStorageModel.toJson());
+      String storage = movieStorageModelToJson(movieStorageModel);
       _write(storage);
     } else {
 
-      //convert file string to MovieStorageModel model
+      //convert string coming from file to MovieStorageModel object.
       MovieStorageModel movieStorageModel = movieStorageModelFromJson(_favoriteMovies);
+
+      // favorite movies are stored in String, convert them to MovieDetailsModel.
+      List<MovieDertailsModel> _moviesDetails = movieStorageModel.favoriteMovies!.map((e) => movieDertailsModelFromJson(e)).toList();
+
+      //if Movie is already registered
+      if(_moviesDetails.any((element) => element.title == movie.title)){
+        return;
+      }
 
       //convert movie to jsonString() to add it easily in favoriteMoviesList<String>
       String movieStr = movieDertailsModelToJson(movie);
       movieStorageModel.favoriteMovies!.add(movieStr);
+
 
       // movieStorageModel is not a String,
       // so convert it to String then save it in file.
@@ -77,10 +78,34 @@ class StorageRepository {
     return (text == null || text.isEmpty) ? null : text;
   }
 
-  Future deleteMovieFromFavorite() async {
-    final Directory directory = await getApplicationDocumentsDirectory();
-    final File file = File('${directory.path}/$FAV_LIST_FILE');
-    file.delete();
+  Future deleteMovieFromFavorite(MovieDertailsModel movie) async {
+    String? _favoriteMovies;
+    try {
+      _favoriteMovies = await getFavoriteMovies();
+    } catch (e) {
+      _favoriteMovies = null;
+      return;
+    }
+
+    //convert string coming from file to MovieStorageModel object.
+    MovieStorageModel movieStorageModel = movieStorageModelFromJson(_favoriteMovies!);
+
+    // favorite movies are stored in String, convert them to MovieDetailsModel.
+    List<MovieDertailsModel> _moviesDetails = movieStorageModel.favoriteMovies!.map((e) => movieDertailsModelFromJson(e)).toList();
+
+    //remove movie
+    _moviesDetails.removeWhere((element) => element.title == movie.title);
+
+    //edit/update favoriteMovies
+    movieStorageModel.favoriteMovies!.clear();
+    movieStorageModel.favoriteMovies!.addAll(_moviesDetails.map((e) => movieDertailsModelToJson(e)).toList());
+
+
+    // movieStorageModel is not a String,
+    // so convert it to String then save it in file.
+    String storage = movieStorageModelToJson(movieStorageModel);
+    _write(storage);
+
   }
 
 }

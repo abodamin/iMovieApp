@@ -357,28 +357,20 @@ class _OverviewSection extends StatelessWidget {
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       return FavoriteIcon(
-                      movie: movie,
-                      isFavorite:  snapshot.data!,
-                      onStoreCallback: () async {
-                        await viewModel
-                            .saveMovieAsFavorite(movie)
-                            .whenComplete(() {
-                              print("saveMovieAsFavorite>> ${movie.toJson()}");
-                            });
-                      },
-                    );
+                        movie: movie,
+                        isFavorite: snapshot.data!,
+                        onStoreCallback: () async {
+                          _favoriteClick(snapshot);
+                        },
+                      );
                     } else {
                       return FavoriteIcon(
-                      movie: movie,
-                      isFavorite:  false,
-                      onStoreCallback: () async {
-                        await viewModel
-                            .saveMovieAsFavorite(movie)
-                            .whenComplete(() {
-                          print("saveMovieAsFavorite>> ${movie.toJson()}");
-                        });
-                      },
-                    );
+                        movie: movie,
+                        isFavorite: false,
+                        onStoreCallback: () async {
+                          _favoriteClick(snapshot);
+                        },
+                      );
                     }
                   }),
             ],
@@ -393,6 +385,17 @@ class _OverviewSection extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  Future<void> _favoriteClick(AsyncSnapshot<bool> snapshot) async {
+    if (snapshot.data ?? false) {
+      await viewModel.removeMovieFromFavorite(movie);
+      print(
+          "___removingMovieFromFavorite>> ${movie.title}");
+    } else {
+      await viewModel.saveMovieAsFavorite(movie);
+      print("___saveMovieAsFavorite>> ${movie.title}");
+    }
   }
 }
 

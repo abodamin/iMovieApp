@@ -3,6 +3,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 import 'package:i_movie_app/app/imports.dart';
 import 'package:i_movie_app/app/resources.dart';
+import 'package:i_movie_app/data/api_models/MovieDetailsModel.dart';
 import 'package:i_movie_app/data/api_models/SimilarMoviesModel.dart';
 import 'package:i_movie_app/views/common/layout/error_page.dart';
 import 'package:i_movie_app/views/common/layout/movie_rate_bar.dart';
@@ -33,8 +34,8 @@ class _FavoriteMoviesPageState extends ScreenState<FavoriteMoviesPage,
       ),
       body: Container(
         height: getMediaHeight(context),
-        child: FutureBuilder<SimilarMoviesModel>(
-            future: viewModel.getSimilarMovis("500"),
+        child: FutureBuilder<Set<MovieDertailsModel>>(
+            future: viewModel.getFavoriteMovies(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return Column(
@@ -43,10 +44,9 @@ class _FavoriteMoviesPageState extends ScreenState<FavoriteMoviesPage,
                     SizedBox(
                       height: getMediaHeight(context) * 0.88,
                       child: ListView.builder(
-                        itemCount: snapshot.data?.results?.length ?? 0,
+                        itemCount: snapshot.data?.length ?? 0,
                         itemBuilder: (context, index) {
-                          return _ListViewItemSection(data: snapshot.data!
-                              .results![index], viewModel: viewModel);
+                          return _ListViewItemSection(data: snapshot.data!.elementAt(index), viewModel: viewModel);
                         },
                       ),
                     ),
@@ -66,7 +66,7 @@ class _FavoriteMoviesPageState extends ScreenState<FavoriteMoviesPage,
 
 
 class _ListViewItemSection extends StatelessWidget {
-  final Result data;
+  final MovieDertailsModel data;
   final FavoritePageViewModel viewModel;
 
   const _ListViewItemSection({
