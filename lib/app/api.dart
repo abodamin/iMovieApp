@@ -257,7 +257,7 @@ class ApiClient {
 
     try {
       final response = await _httpClient.get(
-        Uri.parse("$BASE_URL/3/search/movie?api_key=$mApiKey&language=en-US&query=${searchURI}&page=1&include_adult=true"),
+        Uri.parse("$BASE_URL/3/search/movie?api_key=$mApiKey&language=en-US&query=${searchURI}&page=1&include_adult=false"),
         headers: header,
       );
 

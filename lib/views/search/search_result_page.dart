@@ -7,6 +7,23 @@ import 'package:i_movie_app/views/common/widgets/my_loading_widget.dart';
 import 'package:i_movie_app/views/common/widgets/adaptve_button.dart';
 import 'package:i_movie_app/views/common/layout/global_movies_grid.dart';
 
+
+
+///
+///
+///
+/// When I wrote this only GOD and I knew how it worked,
+/// now ONLY GOD knows it.
+///
+/// therefore if you are trying to optimize this code and fail
+/// please increase the counter as warning for next developer.
+///
+/// total_hrs_wasted_here: 256
+///
+///
+///
+/// *just kidding, TODO: refactor code
+///
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
 
@@ -77,9 +94,11 @@ class _SearchPageState extends State<SearchPage> {
                 ),
               ),
               //result ListView
-              (_searchKeyWord == null || _searchKeyWord.isEmpty)
-                  ? SearchByGenreFragment()
-                  : SearchWithKeyword(searchKeyWord: _searchKeyWord),
+              // (_searchKeyWord == null || _searchKeyWord.isEmpty)
+              //     ?
+              // SearchByGenreFragment(),
+              //     :
+          SearchWithKeyword(searchKeyWord: _searchKeyWord),
             ],
           ),
         ),
@@ -304,9 +323,12 @@ class _SearchByGenreState extends State<SearchByGenre> {
           .searchByGenre(_sortedGenreIDs, DateTime.now().year.toString()),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return GlobalMoviesGridView(listOfMovies: snapshot.data!.results!, onReset: (){
-            _resetSearchResults();
-          },);
+          return GlobalMoviesGridView(
+            listOfMovies: snapshot.data!.results!,
+            onReset: () {
+              _resetSearchResults();
+            },
+          );
         } else if (snapshot.hasError) {
           return Text("Ops, something went wrong");
         } else {

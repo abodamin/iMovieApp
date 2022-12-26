@@ -3,11 +3,10 @@
 //////BACKLOG//
 ### BACKLOG //
 //////////////
-- add store favorite movies to local storage
-- error handling
+- refactor search page
 
 
 //////////////////
 ### Current Step/
 //////////////////
-- add store favorite movies to local storage
+- refactor search page

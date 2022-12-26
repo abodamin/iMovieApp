@@ -185,7 +185,7 @@ class RestApi {
 
     try {
       final response = await _dio.get(
-          "3/search/movie?api_key=$mApiKey&language=en-US&query=${searchURI}&page=1&include_adult=true");
+          "3/search/movie?api_key=$mApiKey&language=en-US&query=${searchURI}&page=1&include_adult=false");
 
       // print("___searchforMovie API " + "3/search/movie?api_key=$mApiKey&language=en-US&query=$searchURI&page=1&include_adult=true");
       // print("searchforMovie " + response.data);
