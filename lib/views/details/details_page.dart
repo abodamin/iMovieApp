@@ -29,7 +29,6 @@ import 'package:intl/intl.dart';
 class DetailsPage extends Screen {
   final String id;
 
-
   DetailsPage({
     Key? key,
     required this.id,
@@ -39,9 +38,8 @@ class DetailsPage extends Screen {
   _DetailsPageState createState() => _DetailsPageState();
 }
 
-class _DetailsPageState extends ScreenState<DetailsPage, DetailsPageViewModel, DetailsPageData> {
-
-
+class _DetailsPageState
+    extends ScreenState<DetailsPage, DetailsPageViewModel, DetailsPageData> {
   @override
   Widget buildScreen(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -64,20 +62,33 @@ class _DetailsPageState extends ScreenState<DetailsPage, DetailsPageViewModel, D
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               // --- GradientImg --- //
-                              _GradientImgSection(data: snapshot.data!,),
+                              _GradientImgSection(
+                                data: snapshot.data!,
+                              ),
                               // --- Rating --- //
-                              MovieRateBar(voteAverage: snapshot.data!.voteAverage!,),
+                              MovieRateBar(
+                                voteAverage: snapshot.data!.voteAverage!,
+                              ),
                               // --- overview --- //
-                              _OverviewSection(data: snapshot.data!,),
+                              _OverviewSection(
+                                movie: snapshot.data!,
+                                viewModel: viewModel,
+                              ),
                               mHeight(get20Size(context)),
                               // --- Budget Duration ReleaseData --- //
-                              _BudgetDurationReleaseDateSection(data: snapshot.data),
+                              _BudgetDurationReleaseDateSection(
+                                  data: snapshot.data),
                               mHeight(get20Size(context)),
                               // --- Genres --- //
-                              _GenresSection(data: snapshot.data,),
+                              _GenresSection(
+                                data: snapshot.data,
+                              ),
                               mHeight(get20Size(context)),
                               // --- Cast --- //
-                              _CastSection(movieId: widget.id, viewModel: viewModel,),
+                              _CastSection(
+                                movieId: widget.id,
+                                viewModel: viewModel,
+                              ),
                               mHeight(get20Size(context)),
                               // --- Similar Movies --- //
                               _SimilarMoviesSection(
@@ -88,12 +99,14 @@ class _DetailsPageState extends ScreenState<DetailsPage, DetailsPageViewModel, D
                               //
                             ],
                           );
-                        } else if(snapshot.hasError){
+                        } else if (snapshot.hasError) {
                           return SizedBox(
                             height: getMediaHeight(context),
                             child: Center(
-                              child: Text("Something went wrong check your connection.", style: getTextTheme(context).titleLarge,
-                                  textAlign: TextAlign.center,
+                              child: Text(
+                                "Something went wrong check your connection.",
+                                style: getTextTheme(context).titleLarge,
+                                textAlign: TextAlign.center,
                               ),
                             ),
                           );
@@ -117,7 +130,6 @@ class _DetailsPageState extends ScreenState<DetailsPage, DetailsPageViewModel, D
       ),
     );
   }
-
 }
 
 class _TitleAndValue extends StatelessWidget {
@@ -204,7 +216,8 @@ class SimilarMovies extends StatelessWidget {
                   mainAxisSpacing: 4,
                   crossAxisSpacing: 4,
                 ),
-                itemCount: data.results!.length > 18 ? 18 : data.results!.length,
+                itemCount:
+                    data.results!.length > 18 ? 18 : data.results!.length,
                 itemBuilder: (context, index) {
                   return GestureDetector(
                     onTap: () {
@@ -249,9 +262,9 @@ class SimilarMovies extends StatelessWidget {
   }
 }
 
-
 class _GradientImgSection extends StatelessWidget {
   final MovieDertailsModel data;
+
   const _GradientImgSection({Key? key, required this.data}) : super(key: key);
 
   @override
@@ -267,16 +280,15 @@ class _GradientImgSection extends StatelessWidget {
             children: [
               GredientImage(
                   imageName: R.getNetworkImagePath(
-                    data.posterPath??"",
-                    highQuality: true,
-                  )),
+                data.posterPath ?? "",
+                highQuality: true,
+              )),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  "${data.title??""}",
+                  "${data.title ?? ""}",
                   maxLines: 4,
-                  style:
-                  getTextTheme(context).headline6,
+                  style: getTextTheme(context).headline6,
                 ),
               ),
             ],
@@ -289,8 +301,7 @@ class _GradientImgSection extends StatelessWidget {
             padding: mHor16Vert8,
             child: ClipOval(
               child: Material(
-                color: getTheme(context)
-                    .accentColor, // Button color
+                color: getTheme(context).accentColor, // Button color
                 child: InkWell(
                   onTap: () {
                     //TODO
@@ -318,10 +329,15 @@ class _GradientImgSection extends StatelessWidget {
   }
 }
 
-
 class _OverviewSection extends StatelessWidget {
-  final MovieDertailsModel data;
-  const _OverviewSection({Key? key, required this.data}) : super(key: key);
+  final MovieDertailsModel movie;
+  final DetailsPageViewModel viewModel;
+
+  const _OverviewSection({
+    Key? key,
+    required this.movie,
+    required this.viewModel,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -336,16 +352,42 @@ class _OverviewSection extends StatelessWidget {
                 style: getTextTheme(context).caption,
               ),
               Spacer(),
-              FavoriteIcon(
-                movie: data,
-              ),
+              FutureBuilder<bool>(
+                  future: viewModel.isMovieFavorite(movie),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return FavoriteIcon(
+                      movie: movie,
+                      isFavorite:  snapshot.data!,
+                      onStoreCallback: () async {
+                        await viewModel
+                            .saveMovieAsFavorite(movie)
+                            .whenComplete(() {
+                              print("saveMovieAsFavorite>> ${movie.toJson()}");
+                            });
+                      },
+                    );
+                    } else {
+                      return FavoriteIcon(
+                      movie: movie,
+                      isFavorite:  false,
+                      onStoreCallback: () async {
+                        await viewModel
+                            .saveMovieAsFavorite(movie)
+                            .whenComplete(() {
+                          print("saveMovieAsFavorite>> ${movie.toJson()}");
+                        });
+                      },
+                    );
+                    }
+                  }),
             ],
           ),
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(
-            "${data.overview}",
+            "${movie.overview}",
             textAlign: TextAlign.justify,
           ),
         ),
@@ -358,7 +400,8 @@ class _BudgetDurationReleaseDateSection extends StatelessWidget {
   final MovieDertailsModel? data;
   final _currency = NumberFormat("#,##0", "en_US");
 
-  _BudgetDurationReleaseDateSection({Key? key, required this.data}) : super(key: key);
+  _BudgetDurationReleaseDateSection({Key? key, required this.data})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -367,22 +410,20 @@ class _BudgetDurationReleaseDateSection extends StatelessWidget {
       child: Container(
         height: get40Size(context),
         child: Row(
-          mainAxisAlignment:
-          MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             _TitleAndValue(
               title: "Budget",
-              value:
-              "${_currency.format(data?.budget??"0")}\$",
+              value: "${_currency.format(data?.budget ?? "0")}\$",
             ),
             _TitleAndValue(
               title: "Duration",
-              value: "${data?.runtime??"0"} min",
+              value: "${data?.runtime ?? "0"} min",
             ),
             _TitleAndValue(
               title: "Release Date",
               value:
-              "${data?.releaseDate != null? DateFormat('yyyy-MM-dd').format(data!.releaseDate!): ""}",
+                  "${data?.releaseDate != null ? DateFormat('yyyy-MM-dd').format(data!.releaseDate!) : ""}",
             ),
           ],
         ),
@@ -393,7 +434,8 @@ class _BudgetDurationReleaseDateSection extends StatelessWidget {
 
 class _GenresSection extends StatelessWidget {
   final MovieDertailsModel? data;
-  const _GenresSection({Key? key , required this.data}) : super(key: key);
+
+  const _GenresSection({Key? key, required this.data}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -404,10 +446,9 @@ class _GenresSection extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: Text(
             "GENRES",
-            style:
-            getTextTheme(context).bodyText2!.copyWith(
-              color: Colors.grey,
-            ),
+            style: getTextTheme(context).bodyText2!.copyWith(
+                  color: Colors.grey,
+                ),
           ),
         ),
         Padding(
@@ -416,11 +457,10 @@ class _GenresSection extends StatelessWidget {
             direction: Axis.horizontal,
             spacing: 15,
             children: List.generate(
-              data!.genres?.length??0,
-                  (index) {
+              data!.genres?.length ?? 0,
+              (index) {
                 return Genre(
-                  title:
-                  "${data?.genres![index].name}",
+                  title: "${data?.genres![index].name}",
                 );
               },
             ).toList(),
@@ -430,7 +470,6 @@ class _GenresSection extends StatelessWidget {
     );
   }
 }
-
 
 class _CastSection extends StatelessWidget {
   final String movieId;
@@ -448,10 +487,9 @@ class _CastSection extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: Text(
             "CAST",
-            style:
-            getTextTheme(context).bodyText2!.copyWith(
-              color: Colors.grey,
-            ),
+            style: getTextTheme(context).bodyText2!.copyWith(
+                  color: Colors.grey,
+                ),
           ),
         ),
         Container(
@@ -465,17 +503,15 @@ class _CastSection extends StatelessWidget {
                   return ListView.builder(
                     shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
-                    itemCount: snapshot.data?.cast?.length??0,
+                    itemCount: snapshot.data?.cast?.length ?? 0,
                     itemBuilder: (context, index) {
                       return AspectRatio(
                         aspectRatio: 0.8,
                         child: CastCard(
                           imagePath:
-                          "$imgBaseURLLQ${snapshot.data?.cast![index].profilePath}",
-                          actorName:
-                          "${snapshot.data?.cast![index].name}",
-                          bio:
-                          "${snapshot.data?.cast![index].character}",
+                              "$imgBaseURLLQ${snapshot.data?.cast![index].profilePath}",
+                          actorName: "${snapshot.data?.cast![index].name}",
+                          bio: "${snapshot.data?.cast![index].character}",
                         ),
                       );
                     },
@@ -493,7 +529,10 @@ class _CastSection extends StatelessWidget {
 class _SimilarMoviesSection extends StatelessWidget {
   final String movieId;
   final DetailsPageViewModel viewModel;
-  const _SimilarMoviesSection({Key? key, required this.movieId, required this.viewModel}) : super(key: key);
+
+  const _SimilarMoviesSection(
+      {Key? key, required this.movieId, required this.viewModel})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -504,10 +543,9 @@ class _SimilarMoviesSection extends StatelessWidget {
           padding: mHor8Vert8,
           child: Text(
             "SIMILAR MOVIES",
-            style:
-            getTextTheme(context).bodyText2!.copyWith(
-              color: Colors.grey,
-            ),
+            style: getTextTheme(context).bodyText2!.copyWith(
+                  color: Colors.grey,
+                ),
           ),
         ),
         Container(
@@ -519,14 +557,15 @@ class _SimilarMoviesSection extends StatelessWidget {
                   // if there is similar movies, bring any movies.
                   if (snapshot.data?.results!.length == 0) {
                     return Column(
-                      crossAxisAlignment:
-                      CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           "Couldn't find similar movies",
                         ),
                         mHeight(5),
-                        TrendingMovies(viewModel: viewModel,),
+                        TrendingMovies(
+                          viewModel: viewModel,
+                        ),
                       ],
                     );
                   } else {
@@ -535,7 +574,7 @@ class _SimilarMoviesSection extends StatelessWidget {
                       data: snapshot.data!,
                     );
                   }
-                } else if(snapshot.hasError){
+                } else if (snapshot.hasError) {
                   return SizedBox.shrink();
                 } else {
                   return TrendingMoviesShimmer();
@@ -546,4 +585,3 @@ class _SimilarMoviesSection extends StatelessWidget {
     );
   }
 }
-

@@ -14,6 +14,7 @@ import 'package:injectable/injectable.dart';
 
 @singleton
 class MoviesRepository {
+
   final RestApi _restApi;
 
   MoviesRepository(this._restApi);
