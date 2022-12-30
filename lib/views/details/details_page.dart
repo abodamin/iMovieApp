@@ -5,6 +5,7 @@ import 'package:i_movie_app/data/api_models/MovieCastModel.dart';
 import 'package:i_movie_app/data/api_models/MovieDetailsModel.dart';
 import 'package:i_movie_app/data/api_models/SimilarMoviesModel.dart';
 import 'package:i_movie_app/app/resources.dart';
+import 'package:i_movie_app/views/common/app_navigation.dart';
 import 'package:i_movie_app/views/common/layout/app_loading_widget.dart';
 import 'package:i_movie_app/views/common/layout/movie_rate_bar.dart';
 
@@ -221,11 +222,8 @@ class SimilarMovies extends StatelessWidget {
                 itemBuilder: (context, index) {
                   return GestureDetector(
                     onTap: () {
-                      navigateTo(
-                        context,
-                        DetailsPage(
-                          id: data.results![index].id.toString(),
-                        ),
+                      AppNav.navigateToDetailsPage(context,
+                              data.results![index].id.toString(),
                       );
                     },
                     child: Container(

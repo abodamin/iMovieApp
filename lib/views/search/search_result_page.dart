@@ -24,7 +24,6 @@ class _SearchPageState
         child: Container(
           child: Selector<SearchPageData, String>(
               selector: (context, data) => data.searchKeyword,
-              shouldRebuild: (prev, next) => false,
               child: _SearchBarSection(
                 viewModel: viewModel,
               ),

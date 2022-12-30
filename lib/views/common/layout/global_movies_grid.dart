@@ -1,6 +1,7 @@
 
 import 'package:i_movie_app/app/imports.dart';
 import 'package:i_movie_app/app/resources.dart';
+import 'package:i_movie_app/views/common/app_navigation.dart';
 
 
 import 'package:i_movie_app/views/common/widgets/credits_footer.dart';
@@ -55,12 +56,7 @@ class GlobalMoviesGridView extends StatelessWidget {
                   } else {
                     return GestureDetector(
                       onTap: () {
-                        navigateTo(
-                          context,
-                          DetailsPage(
-                            id: listOfMovies[index].id.toString(),
-                          ),
-                        );
+                        AppNav.navigateToDetailsPage(context, listOfMovies[index].id.toString());
                       },
                       child: Container(
                         margin: const EdgeInsets.all(4),

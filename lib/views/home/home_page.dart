@@ -9,6 +9,7 @@ import 'package:i_movie_app/data/api_models/GenresModel.dart';
 import 'package:i_movie_app/data/api_models/TrendingMoviesModel.dart';
 import 'package:i_movie_app/data/api_models/TrendingPeople.dart' as tp;
 import 'package:i_movie_app/app/resources.dart';
+import 'package:i_movie_app/views/common/app_navigation.dart';
 import 'package:i_movie_app/views/common/layout/error_page.dart';
 import 'package:i_movie_app/views/common/layout/global_movies_grid.dart';
 
@@ -57,13 +58,13 @@ class _HomePageState
           IconButton(
             icon: Icon(Icons.search),
             onPressed: () async {
-              navigateTo(context, SearchPage());
+              AppNav.navigateToSearchPage(context);
             },
           ),
           IconButton(
             icon: Icon(Icons.favorite_border_outlined),
             onPressed: () async {
-              navigateTo(context, FavoriteMoviesPage());
+              AppNav.navigateToFavoriteMoviesPage(context);
             },
           ),
         ],
@@ -161,11 +162,8 @@ class _TrendingMoviesThisWeekSection extends StatelessWidget {
                   var _path = snapshot.data?.results![index];
                   return GestureDetector(
                     onTap: () async {
-                      navigateTo(
-                        context,
-                        DetailsPage(
-                          id: _path?.id?.toString() ?? "",
-                        ),
+                      AppNav.navigateToDetailsPage(context,
+                        _path?.id?.toString() ?? "",
                       );
                     },
                     child: RoundedPosterImage(
@@ -345,11 +343,9 @@ class _TabsAndMoviesState extends State<_TabsAndMovies> with SingleTickerProvide
                                 itemBuilder: (context, index) {
                                   return InkWell(
                                     onTap: () {
-                                      navigateTo(
+                                      AppNav.navigateToDetailsPage(
                                         context,
-                                        DetailsPage(
-                                          id: "${snapshot.data?.results![index].id ?? 0}",
-                                        ),
+                                        "${snapshot.data?.results![index].id ?? 0}",
                                       );
                                     },
                                     child: Container(

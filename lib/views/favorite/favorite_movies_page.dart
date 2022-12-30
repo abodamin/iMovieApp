@@ -5,6 +5,7 @@ import 'package:i_movie_app/app/imports.dart';
 import 'package:i_movie_app/app/resources.dart';
 import 'package:i_movie_app/data/api_models/MovieDetailsModel.dart';
 import 'package:i_movie_app/data/api_models/SimilarMoviesModel.dart';
+import 'package:i_movie_app/views/common/app_navigation.dart';
 import 'package:i_movie_app/views/common/layout/error_page.dart';
 import 'package:i_movie_app/views/common/layout/movie_rate_bar.dart';
 
@@ -24,8 +25,7 @@ class FavoriteMoviesPage extends Screen {
 }
 
 class _FavoriteMoviesPageState extends ScreenState<FavoriteMoviesPage,
-    FavoritePageViewModel,
-    FavoritePageData> {
+    FavoritePageViewModel, FavoritePageData> {
   @override
   Widget buildScreen(BuildContext context) {
     return Scaffold(
@@ -46,7 +46,9 @@ class _FavoriteMoviesPageState extends ScreenState<FavoriteMoviesPage,
                       child: ListView.builder(
                         itemCount: snapshot.data?.length ?? 0,
                         itemBuilder: (context, index) {
-                          return _ListViewItemSection(data: snapshot.data!.elementAt(index), viewModel: viewModel);
+                          return _ListViewItemSection(
+                              data: snapshot.data!.elementAt(index),
+                              viewModel: viewModel);
                         },
                       ),
                     ),
@@ -64,7 +66,6 @@ class _FavoriteMoviesPageState extends ScreenState<FavoriteMoviesPage,
   }
 }
 
-
 class _ListViewItemSection extends StatelessWidget {
   final MovieDertailsModel data;
   final FavoritePageViewModel viewModel;
@@ -73,18 +74,15 @@ class _ListViewItemSection extends StatelessWidget {
     Key? key,
     required this.data,
     required this.viewModel,
-  })
-      : super(key: key);
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        navigateTo(
+        AppNav.navigateToDetailsPage(
           context,
-          DetailsPage(
-            id: data.id.toString(),
-          ),
+          data.id.toString(),
         );
       },
       child: Container(
@@ -116,8 +114,7 @@ class _ListViewItemSection extends StatelessWidget {
                 padding: mHor16Vert8,
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment:
-                  CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // --- Title ---
                     AutoSizeText(
@@ -125,12 +122,11 @@ class _ListViewItemSection extends StatelessWidget {
                       maxLines: 2,
                       style: getTextTheme(context)
                           .titleMedium!
-                          .copyWith(
-                          fontWeight:
-                          FontWeight.bold),
+                          .copyWith(fontWeight: FontWeight.bold),
                     ),
                     // --- rating --- //
-                    MovieRateBar(voteAverage: _formatVotesCount(data.voteAverage!)),
+                    MovieRateBar(
+                        voteAverage: _formatVotesCount(data.voteAverage!)),
                     // --- overview --- //
                     Expanded(
                       child: AutoSizeText(

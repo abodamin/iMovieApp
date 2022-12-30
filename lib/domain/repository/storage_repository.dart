@@ -30,6 +30,21 @@ class StorageRepository {
   }
 
 
+  ///
+  ///
+  ///
+  /// Movies are stored as JSON in .txt file,  for simple access and fast reading.
+  ///
+  /// to explain in short, we always map movie object to a JSON string,
+  /// then add that string to List<String> called [favoriteMovies] in  [MovieStorageModel]
+  ///
+  /// finally map the object of [MovieStorageModel] to JSON String then store it in file.
+  ///
+  ///
+  ///
+
+
+
   Future<void> saveMovieAsFavorite(MovieDertailsModel movie) async {
     String? _favoriteMovies;
 
@@ -39,6 +54,7 @@ class StorageRepository {
       _favoriteMovies = null;
     }
 
+    // there are no movies stored yet.
     if(_favoriteMovies == null) {
       String movieStr = movieDertailsModelToJson(movie);
       var movieStorageModel = MovieStorageModel(
