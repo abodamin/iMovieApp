@@ -68,4 +68,9 @@ class SearchPageViewModel extends ViewModel<SearchPageData> {
       genreIDs: mGenreIDs,
     );
   }
+
+  void onReset() {
+    showResults(false);
+    _updateState(genreIDs: []);
+  }
 }

@@ -21,8 +21,6 @@ class R {
 
   static String getNetworkImagePath(String subPath, {bool highQuality = false}){
     return highQuality ? "${_image_base_url_highQ + subPath}": "${_image_base_url_lowQ + subPath}";
-    // print("___path>> $subPath");
-    // return path;
   }
 
   static String getAssetImagePath(String assetName){
