@@ -60,7 +60,9 @@ class MoviesRepository {
   }
 
   Future<SearchByGenreResult> searchByGenre(
-      String genreIDs, String year) async {
+    String genreIDs,
+    String year,
+  ) async {
     return await _restApi.searchByGenre(genreIDs, year);
   }
 }

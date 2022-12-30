@@ -28,7 +28,9 @@ class GlobalMoviesGridView extends StatelessWidget {
             Visibility(
               visible: onReset != null,
               child: GestureDetector(
-                onTap: onReset?.call()??null,
+                onTap: (){
+                  onReset?.call();
+                },
                 child: Container(
                   padding: mHor16Vert8,
                   alignment: Alignment.topLeft,

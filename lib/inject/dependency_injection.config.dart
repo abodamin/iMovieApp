@@ -17,19 +17,22 @@ import '../data/network/dio_provider.dart' as _i8;
 import '../data/network/interceptors/auth_interceptor.dart' as _i3;
 import '../data/network/interceptors/loggin_interceptor.dart' as _i15;
 import '../data/network/rest_api.dart' as _i16;
-import '../data/network/urls.dart' as _i18;
-import '../domain/repository/movies_repository.dart' as _i21;
-import '../domain/repository/storage_repository.dart' as _i17;
+import '../data/network/urls.dart' as _i20;
+import '../domain/repository/movies_repository.dart' as _i23;
+import '../domain/repository/storage_repository.dart' as _i19;
 import '../views/details/details_page.dart' as _i4;
 import '../views/details/details_page_data.dart' as _i6;
-import '../views/details/details_page_viewmodel.dart' as _i22;
-import '../views/factory/view_model_factory.dart' as _i19;
+import '../views/details/details_page_viewmodel.dart' as _i25;
+import '../views/factory/view_model_factory.dart' as _i21;
 import '../views/favorite/favorite_movies_page.dart' as _i9;
 import '../views/favorite/favorite_page_data.dart' as _i11;
-import '../views/favorite/favorite_page_viewmodel.dart' as _i20;
+import '../views/favorite/favorite_page_viewmodel.dart' as _i22;
 import '../views/home/home_page.dart' as _i12;
-import '../views/home/home_page_viewmodel.dart' as _i23;
-import 'register_module.dart' as _i24; // ignore_for_file: unnecessary_lambdas
+import '../views/home/home_page_viewmodel.dart' as _i26;
+import '../views/search/search_page_data.dart' as _i18;
+import '../views/search/search_page_viewmodel.dart' as _i24;
+import '../views/search/search_result_page.dart' as _i17;
+import 'register_module.dart' as _i27; // ignore_for_file: unnecessary_lambdas
 
 // ignore_for_file: lines_longer_than_80_chars
 /// initializes the registration of provided dependencies inside of [GetIt]
@@ -60,20 +63,29 @@ _i1.GetIt $initGetIt(
   gh.lazySingleton<_i14.Logger>(() => registerModule.logger);
   gh.singleton<_i15.LoggingInterceptor>(_i15.LoggingInterceptor.create());
   gh.factory<_i16.RestApi>(() => _i16.RestApi(get<_i7.Dio>()));
-  gh.singleton<_i17.StorageRepository>(_i17.StorageRepository());
-  gh.singleton<_i18.URLS>(_i18.URLS());
-  gh.singleton<_i19.ViewModelFactory>(_i19.ViewModelFactoryImpl());
-  gh.factory<_i20.FavoritePageViewModel>(
-      () => _i20.FavoritePageViewModel(get<_i17.StorageRepository>()));
-  gh.singleton<_i21.MoviesRepository>(
-      _i21.MoviesRepository(get<_i16.RestApi>()));
-  gh.factory<_i22.DetailsPageViewModel>(() => _i22.DetailsPageViewModel(
-        get<_i21.MoviesRepository>(),
-        get<_i17.StorageRepository>(),
+  gh.factory<_i17.SearchPage>(() => _i17.SearchPage(key: get<_i10.Key>()));
+  gh.factory<_i18.SearchPageData>(() => _i18.SearchPageData(
+        searchKeyword: get<String>(),
+        didStartSearching: get<bool>(),
+        showResults: get<bool>(),
+        genreIDs: get<List<int>>(),
       ));
-  gh.factory<_i23.HomePageViewModel>(
-      () => _i23.HomePageViewModel(get<_i21.MoviesRepository>()));
+  gh.singleton<_i19.StorageRepository>(_i19.StorageRepository());
+  gh.singleton<_i20.URLS>(_i20.URLS());
+  gh.singleton<_i21.ViewModelFactory>(_i21.ViewModelFactoryImpl());
+  gh.factory<_i22.FavoritePageViewModel>(
+      () => _i22.FavoritePageViewModel(get<_i19.StorageRepository>()));
+  gh.singleton<_i23.MoviesRepository>(
+      _i23.MoviesRepository(get<_i16.RestApi>()));
+  gh.factory<_i24.SearchPageViewModel>(
+      () => _i24.SearchPageViewModel(get<_i23.MoviesRepository>()));
+  gh.factory<_i25.DetailsPageViewModel>(() => _i25.DetailsPageViewModel(
+        get<_i23.MoviesRepository>(),
+        get<_i19.StorageRepository>(),
+      ));
+  gh.factory<_i26.HomePageViewModel>(
+      () => _i26.HomePageViewModel(get<_i23.MoviesRepository>()));
   return get;
 }
 
-class _$RegisterModule extends _i24.RegisterModule {}
+class _$RegisterModule extends _i27.RegisterModule {}

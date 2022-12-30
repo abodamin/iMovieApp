@@ -206,9 +206,7 @@ class RestApi {
     try {
       final response = await _dio.get(
           "3/discover/movie?api_key=$mApiKey&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&primary_release_date.gte=1990-01-01&primary_release_date.lte=$year-12-31&vote_average.gte=6&with_genres=$genreIDs");
-      //  // print("___searchforMovie API " + "3/search/movie?api_key=$mApiKey&language=en-US&query=$searchURI&page=1&include_adult=true");
-      // print("searchByGenre " + response.data);
-      // final parsed = json.decode(response.data);
+
       return SearchByGenreResult.fromJson(response.data);
     } on DioError catch (err) {
       final errorMessage = ResponseException.fromDioError(err).toString();

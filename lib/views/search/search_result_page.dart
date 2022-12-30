@@ -6,8 +6,11 @@ import 'package:i_movie_app/domain/models/category_enum.dart';
 import 'package:i_movie_app/views/common/widgets/my_loading_widget.dart';
 import 'package:i_movie_app/views/common/widgets/adaptve_button.dart';
 import 'package:i_movie_app/views/common/layout/global_movies_grid.dart';
-
-
+import 'package:i_movie_app/views/factory/screen.dart';
+import 'package:i_movie_app/views/search/search_page_data.dart';
+import 'package:i_movie_app/views/search/search_page_viewmodel.dart';
+import 'package:injectable/injectable.dart';
+import 'package:provider/provider.dart';
 
 ///
 ///
@@ -24,117 +27,126 @@ import 'package:i_movie_app/views/common/layout/global_movies_grid.dart';
 ///
 /// *just kidding, TODO: refactor code
 ///
-class SearchPage extends StatefulWidget {
+@injectable
+class SearchPage extends Screen {
   const SearchPage({Key? key}) : super(key: key);
 
   @override
   _SearchPageState createState() => _SearchPageState();
 }
 
-class _SearchPageState extends State<SearchPage> {
-  String _searchKeyWord = "";
-  late TextEditingController _controller;
-
+class _SearchPageState
+    extends ScreenState<SearchPage, SearchPageViewModel, SearchPageData> {
   @override
   void initState() {
-    _searchKeyWord = "";
-    _controller = TextEditingController();
+    // viewModel.init();
     super.initState();
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildScreen(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Container(
-          child: Column(
-            children: [
-              mHeight(get10Size(context)),
-              //search textField
-              Container(
-                decoration: containerColorRadiusBorder(
-                  Colors.black38,
-                  10,
-                  Colors.transparent,
-                ),
-                margin: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 0.0),
-                        child: TextField(
-                          controller: _controller,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            focusedBorder: InputBorder.none,
-                            enabledBorder: InputBorder.none,
-                            errorBorder: InputBorder.none,
-                            hintStyle: TextStyle(color: Colors.grey),
-                            hintText: "Search by name.. .",
-                            disabledBorder: InputBorder.none,
-                            contentPadding: const EdgeInsets.only(
-                              left: 15,
-                              right: 15,
-                            ),
-                          ),
-                          onChanged: (text) {
-                            _refreshPage(text);
-                          },
-                        ),
-                      ),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.search),
-                      onPressed: () {
-                        _refreshPage(_controller.text);
-                      },
-                    ),
-                  ],
-                ),
+          child: Selector<SearchPageData, String>(
+              selector: (context, data) => data.searchKeyword,
+              shouldRebuild: (prev, next) => false,
+              child: _SearchBarSection(
+                viewModel: viewModel,
               ),
-              //result ListView
-              // (_searchKeyWord == null || _searchKeyWord.isEmpty)
-              //     ?
-              // SearchByGenreFragment(),
-              //     :
-          SearchWithKeyword(searchKeyWord: _searchKeyWord),
-            ],
-          ),
+              builder: (context, searchKeyword, _searchBarSection) {
+                return Column(
+                  children: [
+                    mHeight(get10Size(context)),
+                    //search textField
+                    _searchBarSection!,
+                    //result ListView
+                    (searchKeyword.isEmpty)
+                        ? SearchByGenreFragment(viewModel: viewModel)
+                        : SearchWithKeyword(
+                            viewModel: viewModel,
+                            searchKeyword: searchKeyword,
+                          ),
+                  ],
+                );
+              }),
         ),
       ),
     );
   }
+}
+
+class _SearchBarSection extends StatelessWidget {
+  _SearchBarSection({Key? key, required this.viewModel}) : super(key: key);
+
+  final SearchPageViewModel viewModel;
+  final TextEditingController _controller = TextEditingController();
 
   @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  void _refreshPage(String text) {
-    setState(() {
-      _searchKeyWord = text;
-      SearchWithKeyword(searchKeyWord: text);
-    });
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: containerColorRadiusBorder(
+        Colors.black38,
+        10,
+        Colors.transparent,
+      ),
+      margin: const EdgeInsets.all(8.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 0.0),
+              child: TextField(
+                controller: _controller,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  errorBorder: InputBorder.none,
+                  hintStyle: TextStyle(color: Colors.grey),
+                  hintText: "Search by name.. .",
+                  disabledBorder: InputBorder.none,
+                  contentPadding: const EdgeInsets.only(
+                    left: 15,
+                    right: 15,
+                  ),
+                ),
+                onChanged: (text) {
+                  viewModel.onTextChange(text);
+                },
+              ),
+            ),
+          ),
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {
+              viewModel.onTextChange(_controller.text);
+            },
+          ),
+        ],
+      ),
+    );
   }
 }
 
 class SearchWithKeyword extends StatelessWidget {
-  final searchKeyWord;
-
-  const SearchWithKeyword({Key? key, required this.searchKeyWord})
+  const SearchWithKeyword(
+      {Key? key, required this.viewModel, required this.searchKeyword})
       : super(key: key);
+
+  final String searchKeyword;
+  final SearchPageViewModel viewModel;
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: FutureBuilder<SearchMovieResult>(
-        future: ApiClient.apiClient.searchforMovie(searchKeyWord ?? " "),
+        future: viewModel.searchMovieByKeyword(searchKeyword),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return GlobalMoviesGridView(
-                listOfMovies: snapshot?.data?.results ?? []);
+              listOfMovies: snapshot.data?.results ?? [],
+            );
           } else if (snapshot.hasError) {
             return Text("Ops, something went wrong");
           } else {
@@ -146,31 +158,38 @@ class SearchWithKeyword extends StatelessWidget {
   }
 }
 
-class SearchByGenreFragment extends StatefulWidget {
-  const SearchByGenreFragment({Key? key}) : super(key: key);
+class SearchByGenreFragment extends StatelessWidget {
+  final SearchPageViewModel viewModel;
 
-  @override
-  _SearchByGenreFragmentState createState() => _SearchByGenreFragmentState();
-}
-
-class _SearchByGenreFragmentState extends State<SearchByGenreFragment> {
-  bool _didStartSearching = false;
+  SearchByGenreFragment({required this.viewModel});
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: AnimatedCrossFade(
-        crossFadeState: _didStartSearching
-            ? CrossFadeState.showSecond
-            : CrossFadeState.showFirst,
-        duration: Duration(milliseconds: 400),
-        firstChild: _searchByGenreIntro(),
-        secondChild: SearchByGenre(),
-      ),
+      child: Selector<SearchPageData, bool>(
+          selector: (context, data) => data.didStartSearching,
+          builder: (context, didStartSearching, _) {
+            return AnimatedCrossFade(
+              crossFadeState: didStartSearching
+                  ? CrossFadeState.showSecond
+                  : CrossFadeState.showFirst,
+              duration: Duration(milliseconds: 400),
+              firstChild: _IntroSection(viewModel: viewModel),
+              secondChild: SearchByGenre(
+                viewModel: viewModel,
+              ),
+            );
+          }),
     );
   }
+}
 
-  Widget _searchByGenreIntro() {
+class _IntroSection extends StatelessWidget {
+  const _IntroSection({Key? key, required this.viewModel}) : super(key: key);
+  final SearchPageViewModel viewModel;
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       children: [
         Container(
@@ -183,9 +202,7 @@ class _SearchByGenreFragmentState extends State<SearchByGenreFragment> {
         ),
         GestureDetector(
           onTap: () {
-            setState(() {
-              _didStartSearching = true;
-            });
+            viewModel.onSearch();
           },
           child: RichText(
             text: TextSpan(
@@ -208,44 +225,46 @@ class _SearchByGenreFragmentState extends State<SearchByGenreFragment> {
 }
 
 class SearchByGenre extends StatefulWidget {
-  const SearchByGenre({Key? key}) : super(key: key);
+  SearchByGenre({Key? key, required this.viewModel}) : super(key: key);
+
+  final SearchPageViewModel viewModel;
 
   @override
-  _SearchByGenreState createState() => _SearchByGenreState();
+  State<SearchByGenre> createState() => _SearchByGenreState();
 }
 
+// Stateful just to update the FilterChips color/style
 class _SearchByGenreState extends State<SearchByGenre> {
-  bool _showResults = false;
+  late SearchPageViewModel viewModel;
   List<int> genreIDs = [];
-  List<bool> _selectedGenres = [
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false
-  ];
+  List<bool> _selectedGenres = List<bool>.filled(moviesGenreIDs.length, false);
+
+  @override
+  void initState() {
+    viewModel = widget.viewModel;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return _showResults
-        ? Container(
+    return Selector<SearchPageData, bool>(
+      selector: (context, data) => data.showResults,
+      builder: (context, showResults, _) {
+        if (showResults) {
+          return Container(
             height: getMediaHeight(context),
-            child: _performSearchByGenre(genreIDs),
-          )
-        : Column(
+            child: _SearchByGenreResultsSection(viewModel: viewModel),
+          );
+        } else {
+          return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12.0),
                 child: Text("Select category(s)",
                     style: getTextTheme(context)
-                        .bodyText2
-                        !.copyWith(color: Colors.grey)),
+                        .bodyText2!
+                        .copyWith(color: Colors.grey)),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -261,7 +280,8 @@ class _SearchByGenreState extends State<SearchByGenre> {
                         selectedColor: getTheme(context).accentColor,
                         backgroundColor: primaryColor,
                         shape: RoundedRectangleBorder(
-                          side: BorderSide(color: getTheme(context).accentColor, width: 1),
+                          side: BorderSide(
+                              color: getTheme(context).accentColor, width: 1),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         label: Text(
@@ -289,52 +309,64 @@ class _SearchByGenreState extends State<SearchByGenre> {
                     ],
                   ),
                   onPressed: () {
+                    //this is forIndexed in kotlin
                     for (int i = 0; i < _selectedGenres.length; i++) {
                       if (_selectedGenres[i]) {
-                        //don't even try to get it.
-                        genreIDs.add(
-                          moviesGenreIDs.entries.toList().elementAt(i).value,
-                        );
+                        viewModel.addGenreId(i);
+                        // genreIDs.add(
+                        //   moviesGenreIDs.entries
+                        //       .toList()
+                        //       .elementAt(i)
+                        //       .value,
+                        // );
                       }
-                      setState(() {
-                        _showResults = true;
-                      });
+                      viewModel.updateGenreIdsList();
+                      viewModel.showResults(true);
                     }
                   },
                 ),
               ),
             ],
           );
-  }
-
-
-  _resetSearchResults(){
-    setState(() {
-      _showResults = false;
-    });
-  }
-
-  Widget _performSearchByGenre(List genreIDs) {
-    String _sortedGenreIDs =
-        genreIDs.toString().replaceAll("[", "").replaceAll("]", "");
-
-    return FutureBuilder<SearchByGenreResult>(
-      future: ApiClient.apiClient
-          .searchByGenre(_sortedGenreIDs, DateTime.now().year.toString()),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return GlobalMoviesGridView(
-            listOfMovies: snapshot.data!.results!,
-            onReset: () {
-              _resetSearchResults();
-            },
-          );
-        } else if (snapshot.hasError) {
-          return Text("Ops, something went wrong");
-        } else {
-          return MyLoadingWidget();
         }
       },
     );
+  }
+}
+
+class _SearchByGenreResultsSection extends StatelessWidget {
+  const _SearchByGenreResultsSection({
+    Key? key,
+    required this.viewModel,
+  }) : super(key: key);
+
+  final SearchPageViewModel viewModel;
+
+  @override
+  Widget build(BuildContext context) {
+    return Selector<SearchPageData, List<int>>(
+        selector: (context, data) => data.genreIDs!,
+        builder: (context, genreIds, _) {
+          return FutureBuilder<SearchByGenreResult>(
+            future: viewModel.searchByGenre(
+              viewModel.getSortedGenresIds(genreIds),
+              DateTime.now().year.toString(),
+            ),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return GlobalMoviesGridView(
+                  listOfMovies: snapshot.data!.results!,
+                  onReset: () {
+                    viewModel.showResults(false);
+                  },
+                );
+              } else if (snapshot.hasError) {
+                return Text("Ops, something went wrong");
+              } else {
+                return MyLoadingWidget();
+              }
+            },
+          );
+        });
   }
 }
